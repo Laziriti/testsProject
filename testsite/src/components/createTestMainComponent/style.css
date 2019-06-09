@@ -1,0 +1,231 @@
+textarea{
+    resize: none;
+}
+label {
+    margin-right: 20px;
+    font-weight: 500;
+}
+
+.createTestForm {
+    padding: 15px;
+    border: 2px solid black;
+    border-radius: 10px;
+}
+
+.absolute {
+    position: absolute;
+}
+
+.inputField {
+    margin-top: 35px;
+    width: 550px;
+    display: flex;
+    position: relative;
+}
+.inputField:first-child {
+    margin-top: 15px;
+}
+
+.inputField label {
+    font-size: 18px;
+}
+
+.inputField textarea {
+    width: 300px;
+    height: 40px;
+}
+
+.inputField textarea:focus {
+    background-color: rgb(190, 190, 190);
+}
+
+.inputField input[type=file]::-webkit-file-upload-button {
+    visibility: hidden;
+}
+
+.inputField input[type=file] {
+    content: 'Select some files';
+    background: linear-gradient(top, #f9f9f9, #e3e3e3);
+    border: 1px solid #999;
+    border-radius: 3px;
+    outline: none;
+    white-space: nowrap;
+    -webkit-user-select: none;
+    cursor: pointer;
+    text-shadow: 1px 1px #fff;
+    font-weight: 700;
+    font-size: 10pt;
+}
+
+.quest textarea {
+    width: 300px;
+    height: 100px;
+}
+
+.answers {
+    display: flex;
+}
+
+.answers textarea {
+    width: 300px;
+    white-space: normal;
+}
+
+.answers button {
+    width: 200px;
+    height: 30px;
+}
+
+.testInput {
+    position: absolute;
+    right:0;
+    width: 300px;
+}
+
+button {
+    margin: 10px 10px 0 0;
+}
+
+
+.addQuest {
+    position: absolute;
+    right: 0;
+    z-index: 2;
+}
+
+.mainInform {
+    display: flex;
+    width: 400px;
+}
+
+.createTestBody {
+    position: relative;
+    margin: 0;
+    width: 100%;
+    display: flex;
+}
+/* .answerFeildSequence{
+    display: flex;
+}
+.answerFeildSequence textarea {
+    margin-right: 10px;
+}
+
+.answerFeildSequence input {
+    width: 50px;
+    height: 50px;
+} */
+.answerFeild{
+    display: flex;
+}
+.answerFeild textarea {
+    margin-right: 10px;
+}
+
+.answerFeild input {
+    width: 50px;
+    height: 50px;
+}
+
+.triggerDiv {
+    position: absolute;
+    right: 0;
+    width: 300px;
+}
+
+.triggerDivItem {
+    margin-top: 10px;
+    width: 300px;
+}
+
+.triggerDivItem:first-child {
+    margin-top: 0;
+}
+
+.triggerDiv button {
+    width: 300px;
+}
+
+/* .oneVariantTrigger{
+    position: absolute;
+    right: 0;
+    z-index: 2;
+    width: 200px;
+  }
+  .manyVariantTrigger{
+    position: absolute;
+    right: 0;
+    top:60px;
+    z-index: 2;
+    width: 200px;
+  }
+  .sequenceTrigger{
+    position: absolute;
+    right: 0;
+    top:120px;
+    z-index: 2;
+    width: 200px;
+  } */
+
+select {
+    width: 200px;
+}
+
+/* .resultsTrigger{
+    position: absolute;
+    right: 0;
+    top:190px;
+    z-index: 2;
+    width: 200px;
+  } */
+
+.resultGap label {
+    display: block;
+}
+
+.questionCard {
+    margin-top: 30px;
+}
+
+.createFormTestMainBtn {
+    margin-top: 25px;
+}
+.formButton{
+    width: 49%;
+    height: 45px;
+    cursor: pointer;
+    transition: .1s;
+    border: 1px solid black;
+    border-radius: 30px;
+    font-size: 20px;
+}
+
+
+.createFormTestMainBtn button:hover {
+    background-color: aliceblue;
+}
+
+.createFormTestMainBtn button:active {
+    background-color: rgb(189, 189, 189);
+}
+
+.createFormTestMainBtn button:focus {
+    outline: 0;
+}
+
+.createFormTestMainBtn button:last-child {
+    margin-right: 0;
+}
+
+#insertDataOneVariant {
+    display: none;
+}
+#insertDataManyVariant{
+    display: none;
+}
+#insertDataResult{
+    display: none;
+}
+#insertDataSequenceVariant{
+    display: none;
+}

@@ -1,0 +1,14 @@
+.passingBlock{
+    background-color: lightgray;
+    padding: 5px;
+    border:1px black solid;
+}
+.variantBlock{
+    background-color: rgb(233, 227, 227);
+}
+img{
+    width: 200px;
+}
+.resultBlock{
+    display: none;
+}
