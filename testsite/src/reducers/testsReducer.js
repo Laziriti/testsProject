@@ -1,9 +1,13 @@
 const initialState = {
     isReady: false,
+    isReadyToPass: false,
     items: null,
+    variantsCount: 0,
     testType: 'first',
     activePage: 'showTests',
-    passingTest: null
+    passingTest: null,
+    passingTestResults: null,
+    passingTestContent: null,
 
 };
 export default (state = initialState, action) => {
@@ -36,7 +40,28 @@ export default (state = initialState, action) => {
         case 'SET_PASSING_TEST':
             return {
                 ...state,
-                passingTest: action.payload
+                passingTest: action.payload,
+                passingTestResults: eval(action.payload.test_check_sum),
+                passingTestContent: (action.payload.test_content),
+                isReadyToPass: true
+            };
+        case 'CLEAR_PASSING_TEST':
+            return {
+                ...state,
+                passingTest: null,
+                passingTestResults: null,
+                passingTestContent: null,
+                isReadyToPass: false
+            };
+        case 'SAVE_VARIANT_STATE':
+            return {
+                ...state,
+                passingTestContent: action.payload,
+            };
+        case 'SET_VARIANTS_COUNT':
+            return {
+                ...state,
+                variantsCount: action.payload,
             };
         case 'ADD_TESTS':
             return {

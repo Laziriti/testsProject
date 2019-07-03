@@ -4,14 +4,12 @@ import { Button, Header, Image, Modal } from 'semantic-ui-react'
 // import validate from '../validate';
 import axios from 'axios';
 import { Container } from 'semantic-ui-react';
-var arr = [];
-var count = 0;
+
 class sequenceQuestion extends Component {
   state = {
     notFullPriceState: false || this.props.currentPriceState,
     modalOpen: false,
     actualImg: null,
-    actualImgVariant: null,
     variantImg: [],
     currentIndexVariantImg: null,
     editState: false,
@@ -51,7 +49,6 @@ class sequenceQuestion extends Component {
       })
   }
 
-
   FileSelectedHendlerVariants = ee => {
 
     let imgVarArr = this.state.variantImg;
@@ -71,7 +68,6 @@ class sequenceQuestion extends Component {
     console.log(this.state.variantImg)
   }
 
-
   FileVariantsRemove = index => {
     let imgVarArr = this.state.variantImg;
     imgVarArr.splice(index, 1);
@@ -79,38 +75,36 @@ class sequenceQuestion extends Component {
   }
   firstTypeHandler(object, variantImg) {
     var object1 = {};
-    var checkState = 0;
     var allVariants = [];
     var roll = 0;
-    var i = 0;
+    var index = 0;
     var formData = new FormData(document.forms.sequenceForm);
     var variantIndex = 0;
 
     formData.forEach(function (value, key) {
 
-
-      if (key === "variant_img" + i) {
+      if (key === "variant_img" + index) {
 
         object1["variant_Id"] = variantIndex;
         variantIndex++;
-        object1["variant_img"] = variantImg[i];
-        if (variantImg[i] == null) {
+        object1["variant_img"] = variantImg[index];
+        if (variantImg[index] == null) {
           object1["variant_img"] = "null";
         }
       }
-      if (key === "variants[" + i + "]priceVar") {
+      if (key === "variants[" + index + "]priceVar") {
         object1["priceVar"] = value;
       }
-      if (key === "variants[" + i + "]variant") {
+      if (key === "variants[" + index + "]variant") {
         object1["variant"] = value;
 
       }
 
-      if (key === "variants[" + i + "]answerState") {
+      if (key === "variants[" + index + "]answerState") {
         console.log(11)
         object1["answer_state"] = Number(value);
         allVariants[roll] = object1;
-        i++;
+        index++;
         object1 = {};
         roll++;
       }
@@ -123,9 +117,9 @@ class sequenceQuestion extends Component {
     return object;
   }
 
-  serv(questions, setQuests, actualImg, variantImg, testType, currentIndex) {
+  createQuestion(questions, setQuests, actualImg, variantImg, testType, currentIndex) {
 
-    arr = questions;
+    let arr = questions;
     var object = {};
     var formData = new FormData(document.forms.sequenceForm);
     var variantIndex = 0;
@@ -139,7 +133,7 @@ class sequenceQuestion extends Component {
     formData.forEach(function (value, key) {
       console.log(key);
 
-      if (variantIndex === count) {
+      if (variantIndex === this.props.variantsCount) {
         variantIndex = 0;
       }
       if (key === 'questImg') {
@@ -162,7 +156,7 @@ class sequenceQuestion extends Component {
       object = this.firstTypeHandler(object, variantImg);
     }
 
-    object["number_answers"] = count;
+    object["number_answers"] = this.props.variantsCount;
 
     if (typeof currentIndex === "number") {
       arr[currentIndex] = object;
@@ -171,20 +165,10 @@ class sequenceQuestion extends Component {
       arr.push(object);
     }
 
-
     setQuests(arr);
-    count = 0;
+    this.props.variantsCount = 0;
     var json = JSON.stringify(questions);
-
     console.log(json);
-
-
-    // var xhr = new XMLHttpRequest();
-    // xhr.open("POST", '/submit', true)
-    // xhr.setRequestHeader('Content-type', 'application/json; charset=utf-8');
-
-    // // Отсылаем объект в формате JSON и с Content-Type application/json
-    // xhr.send(json);
 
   }
   insertCurrentData(currentVariants) {
@@ -196,7 +180,6 @@ class sequenceQuestion extends Component {
         elem.focus()
       })
     }
-
   }
 
   deleteFromEditArr(index) {
@@ -204,6 +187,7 @@ class sequenceQuestion extends Component {
       this.handleEditClose();
     }
   }
+
   changeArr(index, value) {
     let editIndexArr = this.state.editStateArray;
     editIndexArr[index] = value;
@@ -216,21 +200,35 @@ class sequenceQuestion extends Component {
     arr[index] = value;
     this.setState({ notFullPriceArr: arr })
   }
+
   addToArrPriceArr(value) {
     let arr = this.state.notFullPriceArr;
     arr.push(value);
     this.setState({ notFullPriceArr: arr })
   }
+
   delFromArrPriceArr(index) {
     let arr = this.state.notFullPriceArr;
     arr.splice(index, 1);
     this.setState({ notFullPriceArr: arr })
   }
+
   render() {
 
-
-
-    const { handleSubmit, questions, setQuests, reset, testType, className, currentVariants, currentQuestion, currentIndex, currentCount, currentPrice, currentPriceState } = this.props
+    const { handleSubmit,
+      questions,
+      setQuests,
+      reset,
+      testType,
+      variantsCount,
+      setVariantsCount,
+      currentVariants,
+      currentQuestion,
+      currentIndex,
+      currentCount,
+      currentPrice,
+      currentPriceState,
+      currentQuestImg } = this.props
 
     const renderField = ({ input, label, type, answer, currentVariants, index, meta: { touched, error } }) => (
       <div>
@@ -266,7 +264,7 @@ class sequenceQuestion extends Component {
       <div>
         {typeof currentVariants !== "undefined" ?
           <button type="button" id="insertDataSequenceVariant" onClick={() => {
-
+            this.setState({ actualImg: currentQuestImg })
             if (fields.length <= globalField.length) {
               globalField.forEach((elem, index) => {
 
@@ -292,7 +290,7 @@ class sequenceQuestion extends Component {
                 this.setState({ variantImg: imgVarArr })
 
                 console.log(this.state.variantImg)
-                count++
+                setVariantsCount(variantsCount + 1)
 
               });
 
@@ -302,10 +300,8 @@ class sequenceQuestion extends Component {
           ""
         }
 
-        <button type="button" onClick={() => { fields.push({}); count++; this.addToArrPriceArr(0) }}>Добавить вариант ответа</button>
+        <button type="button" onClick={() => { fields.push({}); setVariantsCount(variantsCount + 1); this.addToArrPriceArr(0) }}>Добавить вариант ответа</button>
         <ul>
-
-
 
           {fields.map((answer, index, item) =>
             <li key={index}>
@@ -315,7 +311,7 @@ class sequenceQuestion extends Component {
                 type="button"
                 title="Удалить вариант"
 
-                onClick={() => { fields.remove(index); count--; this.FileVariantsRemove(index); this.deleteFromEditArr(index); this.delFromArrPriceArr(index) }}>Удалить</button>
+                onClick={() => { fields.remove(index); setVariantsCount(variantsCount - 1); this.FileVariantsRemove(index); this.deleteFromEditArr(index); this.delFromArrPriceArr(index) }}>Удалить</button>
               <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
               <input type="file" name={"variant_img" + index} onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }}></input>
               <div className='answerFeild'>
@@ -341,7 +337,6 @@ class sequenceQuestion extends Component {
 
                 />
 
-
               </div>
 
             </li>
@@ -352,7 +347,6 @@ class sequenceQuestion extends Component {
 
     return (
       <Container>
-
 
         <Modal trigger={<Button onClick={() => { this.handleOpen(); this.insertCurrentData(currentVariants) }} className='sequenceTrigger'>Последовательность</Button>} open={this.state.modalOpen} centered={false}>
           <Modal.Header>{"Последовательность"}</Modal.Header>
@@ -406,7 +400,7 @@ class sequenceQuestion extends Component {
             <Button onClick={() => { this.handleClose(); reset(); }} color="primary">
               Отмена
             </Button>
-            <Button type="sumbit" onClick={() => { this.serv(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
+            <Button type="sumbit" onClick={() => { this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
               Готово
             </Button>
 

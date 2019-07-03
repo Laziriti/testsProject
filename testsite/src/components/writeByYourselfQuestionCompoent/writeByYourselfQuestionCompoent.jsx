@@ -5,9 +5,6 @@ import validate from '../../validate';
 import axios from 'axios';
 import { Container } from 'semantic-ui-react';
 import { func } from 'prop-types';
-var arr = [];
-var count = 0;
-var globalField = [{}, {}];
 
 class writeByYourselfQuest extends Component {
     state = {
@@ -48,14 +45,8 @@ class writeByYourselfQuest extends Component {
     }
 
     firstTypeHandler(object, variantImg) {
-        var objectVariant = {};
-
-        var allVariants = [];
-        var roll = 0;
-        var i = 0;
 
         var formData = new FormData(document.forms.oneVariantForm);
-        var variantIndex = 0;
 
         formData.forEach(function (value, key) {
 
@@ -70,9 +61,9 @@ class writeByYourselfQuest extends Component {
         return object;
     }
 
-    serv(questions, setQuests, actualImg, variantImg, testType, currentIndex, currentVariants) {
+    createQuestion(questions, setQuests, actualImg, variantImg, testType, currentIndex, currentVariants) {
 
-        arr = questions;
+        let arr = questions;
         var object = {};
         var formData = new FormData(document.forms.oneVariantForm);
         if (typeof currentIndex === "number") {
@@ -107,7 +98,7 @@ class writeByYourselfQuest extends Component {
             object = this.firstTypeHandler(object, variantImg)
         }
 
-        object["number_answers"] = count;
+        object["number_answers"] = 1;
         if (typeof currentIndex === "number") {
             arr[currentIndex] = object;
         }
@@ -116,18 +107,30 @@ class writeByYourselfQuest extends Component {
         }
 
         setQuests(arr);
-        count = 0;
         var json = JSON.stringify(questions);
         console.log(json);
     }
+    setCurrentQuestionImg() {
+        this.setState({ actualImg: this.props.currentQuestImg })
+        console.log(this.props.currentQuestImg)
+    }
 
     render() {
-        const { handleSubmit, questions, setQuests,answers_arr, reset, testType, results, currentVariants, currentQuestion, currentIndex, currentCount, currentPrice } = this.props;
-
+        const { handleSubmit,
+            questions,
+            setQuests,
+            answers_arr,
+            reset,
+            testType,
+            currentVariants,
+            currentQuestion,
+            currentIndex,
+            currentPrice,
+            currentQuestImg } = this.props;
 
         return (
             <Container>
-                <Modal trigger={<Button onClick={() => { this.setState({ checkArr: [] }); this.handleOpen(); }} className='oneVariantTrigger'>Самописный вопрос</Button>} open={this.state.modalOpen} centered={false}>
+                <Modal trigger={<Button onClick={() => { this.setState({ checkArr: [] }); this.handleOpen(); this.setCurrentQuestionImg() }} className='oneVariantTrigger'>Самописный вопрос</Button>} open={this.state.modalOpen} centered={false}>
                     <Modal.Header>{"Одновариантный вопрос"}</Modal.Header>
                     <Modal.Content image>
                         <Image wrapped size='small' src='https://react.semantic-ui.com/images/avatar/large/rachel.png' />
@@ -155,7 +158,7 @@ class writeByYourselfQuest extends Component {
                                         </div>
                                         <div className='quest'>
                                             <textarea name="answersArr" placeholder="Возможные ответы через запятую, регистр значения не имеет">
-                                            {answers_arr?answers_arr.join(','):""}
+                                                {answers_arr ? answers_arr.join(',') : ""}
                                             </textarea>
                                         </div>
                                     </div>
@@ -169,11 +172,11 @@ class writeByYourselfQuest extends Component {
                             Отмена
             </Button>
                         {typeof currentIndex === "number" ?
-                            <Button type="sumbit" onClick={() => { this.serv(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex, currentVariants); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
+                            <Button type="sumbit" onClick={() => { this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex, currentVariants); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
                                 Готово
             </Button>
                             :
-                            <Button type="sumbit" onClick={() => { console.log(this.state.variantImg); this.serv(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex, currentVariants); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
+                            <Button type="sumbit" onClick={() => { console.log(this.state.variantImg); this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex, currentVariants); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
                                 Готово
             </Button>
                         }

@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import * as switchActions from '../actions/switchAction';
-import * as testTypeActions from '../actions/cangeTestTypeAction';
+import * as testTypeActions from '../actions/changeTestTypeAction';
 import { bindActionCreators } from 'redux';
 import Menu from '../components/mainMenuComponent/mainMenuComponent';
 import * as setPassingTestAct from '../actions/setPassingTestAction';

@@ -4,7 +4,7 @@ import Cards from '../../containers/testCardContainer';
 import Filter from '../../containers/FilterContainer';
 import { Container } from 'semantic-ui-react';
 import { Card } from 'semantic-ui-react';
-
+import './style.css';
 
 class ShowAllTests extends Component {
   componentDidMount() {
@@ -14,7 +14,7 @@ class ShowAllTests extends Component {
       .then((response) => {
         setTests(response.data);
         console.log(response.data);
-        setPassingTest({})
+
       })
       .catch(e => {
         console.log(e)
@@ -25,9 +25,9 @@ class ShowAllTests extends Component {
     const { tests, isReady } = this.props;
     return (
       <Container>
-        <Filter />
-        <Card.Group itemsPerRow={4}>{
-          !isReady ? 'Загрузка...'
+
+        <Card.Group itemsPerRow={3}>{
+          !isReady ? <div className="lds-facebook"><div></div><div></div><div></div></div>
             : tests.map((test, index) => <Cards key={test.id} {...test} currentTest={test} />)
         }
         </Card.Group>

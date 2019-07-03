@@ -1,6 +1,7 @@
-textarea{
+textarea {
     resize: none;
 }
+
 label {
     margin-right: 20px;
     font-weight: 500;
@@ -22,6 +23,7 @@ label {
     display: flex;
     position: relative;
 }
+
 .inputField:first-child {
     margin-top: 15px;
 }
@@ -78,14 +80,13 @@ label {
 
 .testInput {
     position: absolute;
-    right:0;
+    right: 0;
     width: 300px;
 }
 
 button {
     margin: 10px 10px 0 0;
 }
-
 
 .addQuest {
     position: absolute;
@@ -104,6 +105,7 @@ button {
     width: 100%;
     display: flex;
 }
+
 /* .answerFeildSequence{
     display: flex;
 }
@@ -115,9 +117,11 @@ button {
     width: 50px;
     height: 50px;
 } */
-.answerFeild{
+
+.answerFeild {
     display: flex;
 }
+
 .answerFeild textarea {
     margin-right: 10px;
 }
@@ -190,7 +194,8 @@ select {
 .createFormTestMainBtn {
     margin-top: 25px;
 }
-.formButton{
+
+.formButton {
     width: 49%;
     height: 45px;
     cursor: pointer;
@@ -199,7 +204,6 @@ select {
     border-radius: 30px;
     font-size: 20px;
 }
-
 
 .createFormTestMainBtn button:hover {
     background-color: aliceblue;
@@ -220,12 +224,15 @@ select {
 #insertDataOneVariant {
     display: none;
 }
-#insertDataManyVariant{
+
+#insertDataManyVariant {
     display: none;
 }
-#insertDataResult{
+
+#insertDataResult {
     display: none;
 }
-#insertDataSequenceVariant{
+
+#insertDataSequenceVariant {
     display: none;
 }

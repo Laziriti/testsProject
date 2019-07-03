@@ -4,15 +4,11 @@ import { Button, Header, Image, Modal } from 'semantic-ui-react'
 import validate from '../../validate';
 import axios from 'axios';
 import { Container } from 'semantic-ui-react';
-import { func } from 'prop-types';
-var arr = [];
-var count = 0;
-var globalField = [{}, {}];
+
 class oneVarQuest extends Component {
   state = {
     modalOpen: false,
     actualImg: null,
-    actualImgVariant: null,
     variantImg: [1],
     currentIndexVariantImg: null,
     editState: false,
@@ -80,7 +76,7 @@ class oneVarQuest extends Component {
     imgVarArr.splice(index, 1);
     this.setState({ variantImg: imgVarArr });
   }
-  firstTypeHandler(object, variantImg) {
+  firstTypeHandler(object, variantImg, variantsCount) {
     var objectVariant = {};
 
     var allVariants = [];
@@ -91,11 +87,12 @@ class oneVarQuest extends Component {
     var variantIndex = 0;
 
     formData.forEach(function (value, key) {
+
       if (key !== 'questImg' && key !== 'question') {
 
         if (key === "variant_img" + i) {
 
-          if (!objectVariant.hasOwnProperty("answer_state") && objectVariant.hasOwnProperty("variant_Id") && i !== count) {
+          if (!objectVariant.hasOwnProperty("answer_state") && objectVariant.hasOwnProperty("variant_Id") && i !== variantsCount) {
             console.log(i)
             objectVariant["answer_state"] = 0;
             allVariants[roll] = objectVariant;
@@ -126,7 +123,7 @@ class oneVarQuest extends Component {
           roll++;
         }
 
-        if (!objectVariant.hasOwnProperty("answer_state") && i === count && key === "variants[" + Number(i - 1) + "]variant") {
+        if (!objectVariant.hasOwnProperty("answer_state") && i === variantsCount && key === "variants[" + Number(i - 1) + "]variant") {
           console.log(objectVariant.hasOwnProperty("answer_state"))
           console.log(objectVariant)
           objectVariant["answer_state"] = 0;
@@ -173,9 +170,9 @@ class oneVarQuest extends Component {
     return object;
   }
 
-  serv(questions, setQuests, actualImg, variantImg, testType, currentIndex, currentVariants) {
+  createQuestion(questions, setQuests, actualImg, variantImg, testType, currentIndex, currentVariants) {
 
-    arr = questions;
+    let arr = questions;
     var object = {};
     var formData = new FormData(document.forms.oneVariantForm);
     if (typeof currentIndex === "number") {
@@ -186,7 +183,8 @@ class oneVarQuest extends Component {
     }
 
     object["type_question"] = "one_answer";
-
+  
+    object["groups_object"] = this.props.groupsObject;
     formData.forEach(function (value, key) {
       console.log(key);
 
@@ -199,14 +197,20 @@ class oneVarQuest extends Component {
       if (key === 'priceQuestion') {
         object["price_question"] = Number(value);
       }
+      if (key === 'groupNumber') {
+
+        object["group_number"] = Number(value);
+      }
+      if (key === 'timerQuestion') {
+        if (value !== "0:0") {
+          object["timer_question"] = value;
+        }
+
+      }
     });
 
-    // formData.forEach(function (value, key) {
-    //   console.log(key);
-    // })
-
     if (testType === 'first') {
-      object = this.firstTypeHandler(object, variantImg)
+      object = this.firstTypeHandler(object, variantImg, this.props.variantsCount)
     }
     else if (testType === 'second') {
       object = this.secondTypeHandler(object, variantImg);
@@ -214,7 +218,7 @@ class oneVarQuest extends Component {
     else if (testType === 'third') {
       object = this.thirdTypeHandler(object, variantImg)
     }
-    object["number_answers"] = count;
+    object["number_answers"] = this.props.variantsCount;
     if (typeof currentIndex === "number") {
       arr[currentIndex] = object;
     }
@@ -223,7 +227,7 @@ class oneVarQuest extends Component {
     }
 
     setQuests(arr);
-    count = 0;
+    this.props.setVariantsCount(0);
 
     var json = JSON.stringify(questions);
 
@@ -277,50 +281,47 @@ class oneVarQuest extends Component {
     this.setState({ checkArr: arr })
   }
 
-
-  // neuronTest(){
-  //   axios.get('https://gifts4every2.herokuapp.com/neuron/')
-  //   .then((response) => {
-  //     console.log(response);
-  //   }).catch(e => {
-  //     console.log(e)
-  //   })
-  // }
-
-  neuronTestJson() {
-
-    let formData11 = new FormData();
-    let asd = {
-      "gift_name": "test",
-      "gift_image": null,
-      "gift_sex": "f",
-      "gift_reason": "birthday",
-      "gift_forwho": "wife",
-      "gift_hobbies": "sport",
-      "gift_age": 20,
-      "gift_cost_max": 100,
-      "gift_cost_min": 0
-    }
-    Object.keys(asd).forEach(elem => {
-      console.log(elem)
-      console.log(asd[elem])
-      formData11.append(elem, asd[elem])
+  setGroups() {
+    var formData = new FormData(document.forms.oneVariantForm);
+    var propName = document.getElementsByName("groupNumber");
+    var propValue = document.getElementsByName("groupTimer");
+    let groupObj = this.props.groupsObject;
+    formData.forEach((value, key) => {
+      if (key === "groupNumber") {
+        propName = value;
+      }
+      if (key === "groupTimer") {
+        propValue = value;
+      }
     })
-    formData11.forEach((value, key) => {
-      console.log(key);
-      console.log(value)
-    })
-    let zxc = JSON.stringify(asd);
-    console.log(zxc)
-    axios.post('https://gifts4every2.herokuapp.com/filter2/', formData11)
-      .then((response) => {
-        console.log(response);
-      }).catch(e => {
-        console.log(e)
-      })
+    groupObj[propName] = propValue;
+    this.props.setGroupObject(groupObj);
+    console.log(this.props.groupsObject)
   }
+  handleGroups(value) {
+    if (this.props.groupsObject.hasOwnProperty(value)) {
+      document.querySelector('#groupTimer').value = this.props.groupsObject[value];
+    }
+  }
+
   render() {
-    const { handleSubmit, questions, setQuests, reset, testType, results, currentVariants, currentQuestion, currentIndex, currentCount, currentPrice } = this.props;
+    const {
+      setGroupObject,
+      groupsObject,
+      handleSubmit,
+      questions,
+      setQuests,
+      reset,
+      testType,
+      results,
+      variantsCount,
+      setVariantsCount,
+      currentVariants,
+      currentQuestion,
+      currentIndex,
+      currentCount,
+      currentPrice,
+      currentQuestImg } = this.props;
 
     const renderField = ({ input, label, type, currentVariants, index, meta: { touched, error } }) => (
       <div>
@@ -350,6 +351,7 @@ class oneVarQuest extends Component {
         {typeof currentVariants !== "undefined" ?
           <button type="button" id="insertDataOneVariant" onClick={() => {
             this.handleEdit();
+            this.setState({ actualImg: currentQuestImg })
             if (fields.length <= globalField.length) {
               globalField.forEach((elem, index) => {
                 fields.push(elem);
@@ -371,16 +373,16 @@ class oneVarQuest extends Component {
                     imgVarArr[fields.length + index] = currentVariants[elem.variant_Id].variant_img;
                   }
                 }
-                this.setState({ variantImg: imgVarArr })
-                console.log(this.state.variantImg)
-                count++
+                this.setState({ variantImg: imgVarArr });
+                console.log(this.state.variantImg);
+                setVariantsCount(variantsCount + 1);
               });
             };
           }}> Загрузить свои ответы </button> :
           ""
         }
 
-        <button type="button" onClick={() => { fields.push({}); count++; console.log(this.state.imgArr); this.addToArr(false) }}>Добавить вариант ответа</button>
+        <button type="button" onClick={() => { fields.push({}); setVariantsCount(variantsCount + 1); console.log(this.state.imgArr); this.addToArr(false) }}>Добавить вариант ответа</button>
         <ul>
           {fields.map((answer, index) =>
             <div>
@@ -388,7 +390,7 @@ class oneVarQuest extends Component {
               <button
                 type="button"
                 title="Удалить вариант"
-                onClick={() => { this.handleEditClose(); fields.remove(index); count--; this.FileVariantsRemove(index); this.delFromArr(index) }}
+                onClick={() => { this.handleEditClose(); fields.remove(index); setVariantsCount(variantsCount - 1); this.FileVariantsRemove(index); this.delFromArr(index) }}
               >Удалить</button>
               <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
               <input type="file" id={index} name={"variant_img" + index} onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target); }} />
@@ -417,7 +419,6 @@ class oneVarQuest extends Component {
             <Image wrapped size='small' src='https://react.semantic-ui.com/images/avatar/large/rachel.png' />
             <Modal.Description>
               <div>
-                <button onClick={() => this.neuronTestJson()}>asdsadsad</button>
                 <form onSubmit={handleSubmit} name='oneVariantForm'>
                   <div className='inputQuest'>
                     <label>Введите вопрос:</label>
@@ -437,6 +438,22 @@ class oneVarQuest extends Component {
                         type="file"
                         onChange={this.FileSelectedHendler}
                       />
+
+
+
+                      <div>
+                        <label>Номер/название группы (опционально)</label>
+                        <input name="groupNumber" type="string" defaultValue={0} onChange={(event) => { this.handleGroups(event.target.value) }}></input>
+                      </div>
+                      <div>
+                        <label>Таймер группы</label>
+                        <input name="groupTimer" id="groupTimer" type="string" placeholder="10:22 = 10 минут 22 секунды" defaultValue="0:0"></input>
+                      </div>
+                      <div>
+                        <label>Таймер для вопроса</label>
+                        <input name="timerQuestion" type="string" placeholder="10:22 = 10 минут 22 секунды" defaultValue="0:0"></input>
+                      </div>
+
                     </div>
                   </div>
                   <label>Варианты ответа</label>
@@ -459,11 +476,11 @@ class oneVarQuest extends Component {
               Отмена
             </Button>
             {typeof currentIndex === "number" ?
-              <Button type="sumbit" onClick={() => { this.serv(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex, currentVariants); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
+              <Button type="sumbit" onClick={() => { this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex, currentVariants); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
                 Готово
             </Button>
               :
-              <Button type="sumbit" onClick={() => { console.log(this.state.variantImg); this.serv(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex, currentVariants); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
+              <Button type="sumbit" onClick={() => { this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex, currentVariants); this.setGroups(); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
                 Готово
             </Button>
             }

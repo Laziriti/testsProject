@@ -1,0 +1,240 @@
+.user-block__container {
+    display: flex;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.user-block__profile {
+    display: flex;
+    height: 300px;
+    width: 45%;
+}
+
+.user-block__logo {
+    width: 42%;
+}
+
+.user-block__logo-content {
+    width: 174px;
+    height: 174px;
+    border-radius: 50%;
+    background-color: #828282;
+}
+
+.user-block__logo-text {
+    color: #ff8400;
+    line-height: 174px;
+    text-align: center;
+    font-family: "Gilroy-bold";
+    font-size: 36px;
+    font-weight: 400;
+}
+
+.user-block__info {
+    width: 58%;
+}
+
+.user-block__info-text {
+    margin-top: 11px;
+    font-family: Gilroy;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+.user-block__info-text_margin {
+    margin-top: 0px;
+}
+
+.user-block__name {
+    color: #202020;
+    font-family: "Gilroy-bold";
+    font-size: 36px;
+    line-height: 90px;
+}
+
+.user-block__email {
+    color: #545454;
+    cursor: pointer;
+}
+
+.user-block__status {
+    margin-top: 5px;
+    color: #ff8400;
+    font-family: Gilroy;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+.user-block__edit {
+    color: #171717;
+    cursor: pointer;
+}
+
+.user-block__edit:hover {
+    color: #ff8400;
+}
+
+.user-block__logOut {
+    color: #171717;
+    cursor: pointer;
+}
+
+.user-block__logOut:hover {
+    color: #ff8400;
+}
+
+.user-block__tests-config {
+    height: 300px;
+    width: 65%;
+}
+
+.user-block__config-container {
+    display: flex;
+    margin-top: 35px;
+    padding-left: 0;
+    justify-content: space-around;
+    list-style: none;
+}
+
+.user-block__create-test {
+    position: relative;
+    width: 40%;
+    height: 53px;
+    box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #ff8400;
+    cursor: pointer;
+    line-height: 53px;
+    color: #ffffff;
+    text-align: center;
+    font-family: "Gilroy-bold";
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+.user-block__create-test:hover .user-block_create-ul {
+    opacity: 1;
+    display: block;
+    top: 100%;
+    transition: .4s opacity;
+}
+
+.user-block__create-test:hover .iconTests {
+    transition: .4s;
+    transform: rotate(180deg)
+}
+
+.user-block_create-ul {
+    z-index: 2;
+    position: absolute;
+    top: -999em;
+    opacity: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.user-block_create-li {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 2px;
+    cursor: pointer;
+    background-color: #ff8400;
+    border: 1px solid black;
+}
+
+.user-block_create-li:hover {
+    padding-left: 6px;
+    transition: 0.2s;
+    background-color: #fdad00;
+}
+
+.user-block__all-tests {
+    width: 30%;
+    height: 53px;
+    box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #6b2a98;
+    cursor: pointer;
+    text-align: center;
+    line-height: 53px;
+    color: #ffffff;
+    font-family: "Gilroy-Bold";
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+.user-block__all-tests:hover {
+    padding-left: 3px;
+    transition: 0.2s;
+    background-color: #8036b4;
+}
+
+.user-block__search-container {
+    position: relative;
+    z-index: 1;
+    width: 40%;
+}
+
+.user-block__search {
+    height: 48px;
+    width: 100%;
+}
+
+.user-block__filter {
+    position: relative;
+    width: 30%;
+    height: 48px;
+    box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #ff8400;
+    cursor: pointer;
+    line-height: 53px;
+    color: #ffffff;
+    text-align: center;
+    font-family: "Gilroy-bold";
+    font-size: 18px;
+    font-weight: 400;
+    letter-spacing: 1px;
+}
+
+.user-block_filter-ul {
+    z-index: 2;
+    position: absolute;
+    top: -999em;
+    opacity: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.user-block_filter-li {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 2px;
+    cursor: pointer;
+    background-color: #ff8400;
+    border: 1px solid black;
+}
+
+.user-block_filter-li:hover {
+    padding-left: 6px;
+    transition: 0.2s;
+    background-color: #fdad00;
+}
+
+.user-block__filter:hover .user-block_filter-ul {
+    opacity: 1;
+    display: block;
+    top: 100%;
+    transition: .4s opacity;
+}
+
+.user-block__filter:hover .iconFilter {
+    transition: .4s;
+    transform: rotate(180deg)
+}

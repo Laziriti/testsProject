@@ -12,40 +12,17 @@ import TestResults from '../../containers/testResultsContainer';
 import AddToList from '../../containers/addToListContainer';
 import { Card } from 'semantic-ui-react';
 
-
-class SimpleForm extends Component {
+class createTestForm extends Component {
   constructor(props) {
     super(props);
-
-
-
     this.state = {
-      userInput: ``,
-      shouldShowElem: false,
       selectedFile: null,
       isOpen: false,
-      questionID: 0,
       actualImg: null
     };
   }
 
-
-  // FileSelectedHendler = event=>{
-  //   this.setState({
-  //     selectedFile: event.target.files[0]
-  //   })
-  // }
-  // fileUploadHandler = event=>{
-  //   const fd = new FormData();
-  //   fd.append('image',this.state.selectedFile, this.state.selectedFile.name);
-  //  axios.post('./', fd).then(res=>{
-  //    console.log(res);
-  //  });
-  // }
-
   OpenHandler = () => this.setState({ isOpen: true })
-
-  SetQuestionID = (nowId) => { this.setState({ questionID: nowId + 1 }); console.log(nowId) }
 
   FileSelectedHendler = event => {
 
@@ -53,14 +30,11 @@ class SimpleForm extends Component {
       selectedFile: event.target.files[0]
     })
 
-
     let files = event.target.files[0];
 
     const formData = new FormData();
     formData.append("img_field", files);
     console.log(formData);
-
-
 
     axios.post('https://psychotestmodule.herokuapp.com/api/img/', formData)
       .then((response) => {
@@ -69,13 +43,6 @@ class SimpleForm extends Component {
       }).catch(e => {
         console.log(e)
       })
-
-
-  }
-
-
-  fileUploadHandler = () => {
-    console.log(this.state.actualImg);
 
   }
 
@@ -86,27 +53,20 @@ class SimpleForm extends Component {
     console.log(this.state.tt);
     var object = {};
 
-    var arr = [];
     var formData = new FormData(document.forms.createTestForm);
-    object["id"] = "1";
 
 
-    var obj = {};
-    obj["asd"] = this.props.questions;
-
-  
     formData.append("test_content", JSON.stringify(this.props.questions));
     formData.append("test_check_sum", JSON.stringify(this.props.results));
-    formData.append("test_type",this.props.testType);
-    formData.set("test_img", this.state.actualImg)
+    formData.append("test_type", this.props.testType);
+    formData.set("test_img", this.state.actualImg);
 
-   
-    var obj = {}
     formData.forEach(function (value, key) {
       console.log(key)
       console.log(value)
       object[key] = value;
     })
+
     console.log(JSON.stringify(object));
     console.log(object);
     axios.post('https://psychotestmodule.herokuapp.com/tests/', formData)
@@ -118,14 +78,11 @@ class SimpleForm extends Component {
     console.log(formData)
   }
 
-
   check = () => {
     console.log(this.props.questions)
   }
 
   render() {
-
-
 
     const { handleSubmit, pristine, reset, submitting, questions, isReady, results, testType } = this.props
     return (
@@ -186,12 +143,10 @@ class SimpleForm extends Component {
               <button className="formButton" type="button" onClick={this.handleSubmit} disabled={pristine || submitting}>
                 Submit
         </button>
-              <button className="formButton"  type="button" disabled={pristine || submitting} onClick={reset}>
+              <button className="formButton" type="button" disabled={pristine || submitting} onClick={reset}>
                 Clear Values
         </button>
             </div>
-
-
           </form>
 
           <div className="triggerDiv">
@@ -213,10 +168,9 @@ class SimpleForm extends Component {
                 ""
                 : <div className="triggerDivItem"><WriteByYourselfQuestion updateList={this.OpenHandler} /></div>
             }
-            
+
             <div className="triggerDivItem"> <TestResults currentResults={results} /></div>
           </div>
-
         </div>
 
         <div className="questionCard">
@@ -230,15 +184,10 @@ class SimpleForm extends Component {
 
       </div>
 
-
-
-
     )
   }
 }
 
-
-
 export default reduxForm({
-  form: 'simple' // a unique identifier for this form
-})(SimpleForm)
+  form: 'createTestForm' // a unique identifier for this form
+})(createTestForm)

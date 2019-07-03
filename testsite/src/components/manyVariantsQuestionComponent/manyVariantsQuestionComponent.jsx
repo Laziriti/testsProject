@@ -5,14 +5,11 @@ import validate from '../../validate';
 import axios from 'axios';
 import { Container } from 'semantic-ui-react';
 var arr = [];
-var count = 0;
-var rightCount = 0;
 class oneVarQuest extends Component {
   state = {
     notFullPriceState: false || this.props.currentPriceState,
     modalOpen: false,
     actualImg: null,
-    actualImgVariant: null,
     variantImg: [],
     currentIndexVariantImg: null,
     editState: false,
@@ -32,20 +29,6 @@ class oneVarQuest extends Component {
 
   setIndex = (index) => { this.setState({ currentIndexVariantImg: index }); console.log(index) }
 
-  SetSelect = (results, event) => {
-    var select = event.target;
-    console.log(event.target.className)
-    if (event.target.className !== "groupClass Active") {
-      for (var i = 0; i < results.length; i++) {
-        var option = document.createElement("option");
-        option.setAttribute("value", results[i].result);
-        option.text = results[i].result;
-        select.appendChild(option);
-      }
-      event.target.className += " Active";
-    }
-  }
-
   FileSelectedHendler = event => {
     this.setState({
       selectedFile: event.target.files[0]
@@ -64,7 +47,6 @@ class oneVarQuest extends Component {
         console.log(e)
       })
   }
-
 
   FileSelectedHendlerVariants = ee => {
     let imgVarArr = this.state.variantImg;
@@ -89,70 +71,68 @@ class oneVarQuest extends Component {
     this.setState({ variantImg: imgVarArr });
   }
 
-  firstTypeHandler(object, variantImg) {
+  firstTypeHandler(object, variantImg,variantsCount) {
+    let rightCount = 0;
     var objectVariant = {};
-    var checkState = 0;
-    var checkStateForCount = 0;
     var allVariants = [];
     var roll = 0;
-    var i = 0;
+    var index = 0;
     var formData = new FormData(document.forms.oneVariantForm);
     var variantIndex = 0;
 
     formData.forEach(function (value, key) {
 
       if (key !== 'questImg' && key !== 'question') {
-        if (key === "variant_img" + i) {
-          if (!objectVariant.hasOwnProperty("answer_state") && objectVariant.hasOwnProperty("variant_Id") && i !== count) {
+        if (key === "variant_img" + index) {
+          if (!objectVariant.hasOwnProperty("answer_state") && objectVariant.hasOwnProperty("variant_Id") && index !== variantsCount) {
             console.log(objectVariant)
             objectVariant["answer_state"] = 0;
             allVariants[roll] = objectVariant;
             objectVariant = {};
             roll++;
           }
-          checkState = 1;
           objectVariant["variant_Id"] = variantIndex;
           variantIndex++;
-          objectVariant["variant_img"] = variantImg[i];
-          if (variantImg[i] == null) {
+          objectVariant["variant_img"] = variantImg[index];
+          if (variantImg[index] == null) {
             objectVariant["variant_img"] = "null"
           }
         }
-        if (key === "variants[" + i + "]priceVar") {
+        if (key === "variants[" + index + "]priceVar") {
           objectVariant["priceVar"] = value;
         }
-        if (key === "variants[" + i + "]variant") {
+        if (key === "variants[" + index + "]variant") {
           objectVariant["variant"] = value;
-          checkStateForCount = 1
-          i++;
+          index++;
         }
         if (key === "answerState") {
           objectVariant["answer_state"] = 1;
-          checkStateForCount = 0;
           rightCount++;
           allVariants[roll] = objectVariant;
           objectVariant = {};
           roll++;
         }
-        if (!objectVariant.hasOwnProperty("answer_state") && i === count && key === "variants[" + Number(i - 1) + "]variant") {
+        if (!objectVariant.hasOwnProperty("answer_state") && index === variantsCount && key === "variants[" + Number(index - 1) + "]variant") {
           objectVariant["answer_state"] = 0;
           allVariants[roll] = objectVariant;
         }
       }
+
     }
     );
     object["variants"] = allVariants;
+    object["number_answers"] = rightCount;
     return object;
   }
 
-  secondTypeHandler(object, variantImg) {
+  secondTypeHandler(object, variantImg,variantsCount) {
     var object1 = {};
     var allVariants = [];
     var roll = 0;
     var formData = new FormData(document.forms.oneVariantForm);
     var variantIndex = 0;
     formData.forEach(function (value, key) {
-      for (var i = 0; i < count; i++) {
+      for (var i = 0; i < variantsCount; i++) {
         if (key === "variant_img" + i) {
           object1["variant_Id"] = variantIndex;
           variantIndex++;
@@ -166,6 +146,7 @@ class oneVarQuest extends Component {
         }
         if (key === "variants[" + i + "]variant") {
           object1["variant"] = value;
+          this.props.variantsCount++;
         }
       }
 
@@ -178,9 +159,10 @@ class oneVarQuest extends Component {
     }
     );
     object["variants"] = allVariants;
+    object["number_answers"] = variantsCount;
     return object;
   }
-  serv(questions, setQuests, actualImg, variantImg, testType, currentIndex) {
+  createQuestion(questions, setQuests, actualImg, variantImg, testType, currentIndex) {
     arr = questions;
     var object = {};
     var formData = new FormData(document.forms.oneVariantForm);
@@ -203,12 +185,10 @@ class oneVarQuest extends Component {
     });
 
     if (testType === 'first') {
-      object = this.firstTypeHandler(object, variantImg)
-      object["number_answers"] = rightCount;
+      object = this.firstTypeHandler(object, variantImg,this.props.variantsCount)
     }
     else if (testType === 'second') {
-      object = this.secondTypeHandler(object, variantImg);
-      object["number_answers"] = count;
+      object = this.secondTypeHandler(object, variantImg,this.props.variantsCount);
     }
 
     if (typeof currentIndex === "number") {
@@ -218,7 +198,7 @@ class oneVarQuest extends Component {
       arr.push(object);
     }
     setQuests(arr);
-    count = 0;
+    this.props.setVariantsCount(0);
     var json = JSON.stringify(questions);
     console.log(json);
   }
@@ -237,7 +217,6 @@ class oneVarQuest extends Component {
   }
 
   saveDataSelect(index, value) {
-    // console.log(value.target.value)
     let arr = this.state.checkBoxArr;
     arr[index] = value.target.value;
     this.setState({ checkBoxArr: arr })
@@ -281,10 +260,24 @@ class oneVarQuest extends Component {
     arr.splice(index, 1);
     this.setState({ notFullPriceArr: arr })
   }
- 
+
   render() {
- 
-    const { handleSubmit, questions, setQuests, reset, testType, results, currentVariants, currentQuestion, currentIndex, currentCount, currentPrice,currentPriceState } = this.props;
+
+    const { handleSubmit,
+      questions,
+      setQuests,
+      reset,
+      testType,
+      results,
+      variantsCount,
+      setVariantsCount,
+      currentVariants,
+      currentQuestion,
+      currentIndex,
+      currentCount,
+      currentPrice,
+      currentPriceState,
+      currentQuestImg } = this.props;
 
     const renderField = ({ input, index, label, type, meta: { touched, error }, answer }) => (
       <div>
@@ -325,6 +318,7 @@ class oneVarQuest extends Component {
       <div>
         {typeof currentVariants !== "undefined" ?
           <button type="button" id="insertDataManyVariant" onClick={() => {
+            this.setState({ actualImg: currentQuestImg })
             this.handleEdit();
             if (fields.length <= globalField.length) {
               globalField.forEach((elem, index) => {
@@ -352,8 +346,8 @@ class oneVarQuest extends Component {
                   }
                 }
                 this.setState({ variantImg: imgVarArr })
-                console.log(this.state.variantImg)
-                count++
+                console.log(this.state.variantImg);
+                setVariantsCount(variantsCount + 1)
               });
             };
 
@@ -361,7 +355,7 @@ class oneVarQuest extends Component {
           ""
         }
 
-        <button type="button" onClick={() => { fields.push({}); count++; this.addToArr(false); this.addToArrPriceArr(0) }}>Добавить вариант ответа</button>
+        <button type="button" onClick={() => { fields.push({}); setVariantsCount(variantsCount + 1); this.addToArr(false); this.addToArrPriceArr(0) }}>Добавить вариант ответа</button>
         <ul>
 
           {fields.map((answer, index) =>
@@ -373,7 +367,7 @@ class oneVarQuest extends Component {
                 type="button"
                 title="Удалить вариант"
 
-                onClick={() => { fields.remove(index); count--; this.FileVariantsRemove(index); this.handleEditClose(); this.delFromArr(index); this.delFromArrPriceArr(index) }}>Удалить</button>
+                onClick={() => { fields.remove(index); setVariantsCount(variantsCount - 1); this.FileVariantsRemove(index); this.handleEditClose(); this.delFromArr(index); this.delFromArrPriceArr(index) }}>Удалить</button>
               <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
               <input type="file" name={"variant_img" + index} onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }}></input>
               <div className='answerFeild'>
@@ -398,9 +392,7 @@ class oneVarQuest extends Component {
                   type="text"
                   component={renderFieldCheck}
                 />
-
               </div>
-
             </li>
           )}
         </ul>
@@ -432,7 +424,7 @@ class oneVarQuest extends Component {
                       </div>
                       <div>
                         <label>Неполный ответ</label>
-                        <input name="notFullPriceQuestion" defaultChecked={currentPriceState?currentPriceState:false} type="checkBox" onClick={() => { this.setState({ notFullPriceState: !this.state.notFullPriceState }) }}></input>
+                        <input name="notFullPriceQuestion" defaultChecked={currentPriceState ? currentPriceState : false} type="checkBox" onClick={() => { this.setState({ notFullPriceState: !this.state.notFullPriceState }) }}></input>
                       </div>
                       <input
                         name="questImg"
@@ -459,15 +451,14 @@ class oneVarQuest extends Component {
 
           </Modal.Content>
           <Modal.Actions>
-            <Button onClick={() => { this.handleClose(); reset(); rightCount = 0 }} color="primary">
+            <Button onClick={() => { this.handleClose(); reset(); }} color="primary">
               Отмена
             </Button>
-            <Button type="sumbit" onClick={() => { this.serv(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex); this.handleClose(); reset(); this.props.updateList(); rightCount = 0 }} color="primary" autoFocus>
+            <Button type="sumbit" onClick={() => { this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
               Готово
             </Button>
           </Modal.Actions>
         </Modal>
-
 
       </Container >
     )

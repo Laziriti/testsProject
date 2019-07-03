@@ -8,22 +8,19 @@ import axios from 'axios';
 import { Container } from 'semantic-ui-react';
 import { Card } from 'semantic-ui-react'
 
-var count = 0;
 class testResults extends Component {
   state = {
-    modalOpen1: false,
+    modalOpenResult: false,
     variantImg: [],
     currentIndexVariantImg: null,
     editState: false,
-    editArr: []
   }
 
-  handleOpen = () => this.setState({ modalOpen1: true })
+  handleOpen = () => this.setState({ modalOpenResult: true })
 
-  handleClose = () => this.setState({ modalOpen1: false })
+  handleClose = () => this.setState({ modalOpenResult: false })
 
   setIndex = (index) => { this.setState({ currentIndexVariantImg: index }); console.log(index) }
-
 
   handleEdit = () => {
     this.setState({ editState: true });
@@ -32,10 +29,10 @@ class testResults extends Component {
     this.setState({ editState: false });
   }
 
-  FileSelectedHendlerVariants = ee => {
+  FileSelectedHendlerVariants = img => {
 
     let imgVarArr = this.state.variantImg;
-    let files = ee;
+    let files = img;
     let formData = new FormData();
     formData.append("img_field", files);
     console.log(formData);
@@ -58,8 +55,8 @@ class testResults extends Component {
   }
 
   firstTypeHandler(formData, variantImg) {
-    var arr1 = [];
-    var object = {};
+    var resultArr = [];
+    var resultObject = {};
     var check = 0;
     var index = 0;
     formData.forEach(function (value, key) {
@@ -67,31 +64,31 @@ class testResults extends Component {
       check++;
       if (check === 1) {
         if (key === "result_img" + index) {
-          object["result_img"] = variantImg[index];
+          resultObject["result_img"] = variantImg[index];
         }
         if (variantImg[index] == null) {
-          object["result_img"] = "null"
+          resultObject["result_img"] = "null"
         }
       }
       if (check === 2) {
-        object["min"] = Number(value);
+        resultObject["min"] = Number(value);
       }
       if (check === 3) {
-        object["max"] = Number(value);
+        resultObject["max"] = Number(value);
       }
       if (check === 4) {
-        object["result"] = value;
+        resultObject["result"] = value;
         check = 0;
-        arr1.push(object);
-        object = {};
+        resultArr.push(resultObject);
+        resultObject = {};
         index++;
       }
     });
-    return arr1;
+    return resultArr;
   }
   secondTypeHandler(formData, variantImg) {
-    var arr1 = [];
-    var object = {};
+    var resultArr = [];
+    var resultObject = {};
     var check = 0;
     var index = 0;
     formData.forEach(function (value, key) {
@@ -99,41 +96,40 @@ class testResults extends Component {
       check++;
       if (check === 1) {
         if (key === "result_img" + index) {
-          object["index"] = index;
-          object["result_img"] = variantImg[index];
+          resultObject["index"] = index;
+          resultObject["result_img"] = variantImg[index];
         }
         if (variantImg[index] == null) {
-          object["result_img"] = "null"
+          resultObject["result_img"] = "null"
         }
       }
       if (check === 2) {
-        object["result"] = value;
+        resultObject["result"] = value;
       }
       if (check === 3) {
-        object["description"] = value;
+        resultObject["description"] = value;
         check = 0;
-        arr1.push(object);
-        object = {};
+        resultArr.push(resultObject);
+        resultObject = {};
         index++;
       }
     });
-    return arr1;
+    return resultArr;
   }
   serv(results, setResults, questions, variantImg, testType) {
-    var arr1 = [];
+    var resultArr = [];
     var formData = new FormData(document.forms.resultsForm);
     if (testType === "first") {
-      arr1 = this.firstTypeHandler(formData, variantImg)
+      resultArr = this.firstTypeHandler(formData, variantImg)
     }
     if (testType === "second") {
-      arr1 = this.secondTypeHandler(formData, variantImg)
+      resultArr = this.secondTypeHandler(formData, variantImg)
     }
     if (testType === "third") {
-      arr1 = this.thirdTypeHandler(formData, variantImg)
+      resultArr = this.thirdTypeHandler(formData, variantImg)
     }
-    setResults(arr1);
-    count = 0;
-    var json = JSON.stringify(arr1);
+    setResults(resultArr);
+    var json = JSON.stringify(resultArr);
     console.log(json);
   }
 
@@ -151,7 +147,7 @@ class testResults extends Component {
     const { results, setResults, questions, testType, currentResults, reset } = this.props
     const renderField = ({ input, label, type, globalField, textValue, index, meta: { touched, error } }) => (
       <div>
-        <label>Текст результата</label>
+        <label>{label}</label>
         <div>
           {this.state.editState && globalField.length > index ?
             <textarea {...input} type={type} />
@@ -200,13 +196,13 @@ class testResults extends Component {
                 }
                 this.setState({ variantImg: imgVarArr })
                 console.log(this.state.variantImg)
-                count++
+
               });
             };
           }}> Загрузить свои ответы </button> :
           ""
         }
-        <button type="button" onClick={() => { fields.push({}); count++ }}>Добавить результат</button>
+        <button type="button" onClick={() => { fields.push({}); }}>Добавить результат</button>
         <ul>
           {fields.map((answer, index) =>
             <li key={index}>
@@ -214,7 +210,7 @@ class testResults extends Component {
               <button
                 type="button"
                 title="Удалить результат"
-                onClick={() => { fields.remove(index); count--; }}>Удалить</button>
+                onClick={() => { fields.remove(index); }}>Удалить</button>
               {variantsImgArray[index] ? <img src={variantsImgArray[index]} alt='' />
                 : ""}
               <input type="file" name={"result_img" + index} onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }}></input>
@@ -238,11 +234,12 @@ class testResults extends Component {
                   index={index}
                 />
               </div>
-              <div className='answerFeild'>
+              <div>
                 <Field
                   className="answerVar"
                   name={index + `result`}
                   type="text"
+                  label="Краткий вариант"
                   component={renderField}
                   globalField={globalField}
                   index={index}
@@ -254,6 +251,7 @@ class testResults extends Component {
                       className="answerVar"
                       name={index + `description`}
                       type="text"
+                      label="Текст результата"
                       component={renderField}
                       globalField={globalField}
                       index={index}
@@ -271,7 +269,7 @@ class testResults extends Component {
 
     return (
       <Container>
-        <Modal trigger={<Button onClick={() => { this.handleOpen(); }} className='resultsTrigger' id="22">Результаты</Button>} open={this.state.modalOpen1} centered={false}>
+        <Modal trigger={<Button onClick={() => { this.handleOpen(); }} className='resultsTrigger' id="22">Результаты</Button>} open={this.state.modalOpenResult} centered={false}>
           <Modal.Header>{"Результаты"}</Modal.Header>
           <Modal.Content image>
             <Image wrapped size='medium' src='https://react.semantic-ui.com/images/avatar/large/rachel.png' />

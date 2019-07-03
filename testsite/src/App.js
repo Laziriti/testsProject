@@ -3,7 +3,7 @@ import * as testsActions from './actions/testsAction';
 import * as switchActions from './actions/switchAction';
 import { bindActionCreators } from 'redux';
 import App from './components/AppComponent';
-
+import {withRouter} from 'react-router-dom'
 const mapStateToProps = () => ({
 });
 
@@ -12,4 +12,4 @@ const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(switchActions, dispatch)
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

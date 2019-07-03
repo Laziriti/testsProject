@@ -6,35 +6,30 @@ import { Route } from 'react-router-dom';
 import Show from '../containers/showAllTestsContainer';
 import CreateTestMain from '../containers/createTestMainContainer';
 import PassingTest from '../containers/passingTestContainer';
+import Filter from '../containers/FilterContainer';
 class App extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-        
+
     };
-};
+  };
 
   render() {
-  
-    
-      return (
-        <Container>
-          <Menu />
-          
-          <Route exact path='/' component={Show}/>
-          <Route exact path='/createTest/rostersss' component={''}/>
-          <Route exact path='/createTest' render={props=>{
-            return(
-              <CreateTestMain/>
-            )
-          }
-          }/>
-           <Route exact path='/passingTest' component={PassingTest}/>
-        </Container>
-      )
-    
-    
+
+
+    return (
+      <Container>
+        
+        <Filter />
+        <Route exact path='/' component={Show} />
+        <Route exact path='/createTest' component={CreateTestMain} />
+        <Route exact path='/passingTest' component={PassingTest} />
+      </Container>
+    )
+
+
   }
 }
 
