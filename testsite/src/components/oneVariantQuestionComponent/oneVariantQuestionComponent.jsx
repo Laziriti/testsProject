@@ -13,7 +13,8 @@ class oneVarQuest extends Component {
     currentIndexVariantImg: null,
     editState: false,
     imgArr: [],
-    checkArr: []
+    checkArr: [],
+    questionsCount: 0
   }
 
   handleEdit = () => {
@@ -85,17 +86,20 @@ class oneVarQuest extends Component {
 
     var formData = new FormData(document.forms.oneVariantForm);
     var variantIndex = 0;
-
+    objectVariant = {}
     formData.forEach(function (value, key) {
 
-      if (key !== 'questImg' && key !== 'question') {
+      if (key !== 'questImg' && key !== 'question' && key !== 'priceQuestion' && key !== 'groupNumber' && key !== 'timerQuestion') {
 
         if (key === "variant_img" + i) {
-
+          console.log(variantsCount)
+          // console.log(!objectVariant.hasOwnProperty("answer_state") && objectVariant.hasOwnProperty("variant_Id") && i !== variantsCount)
           if (!objectVariant.hasOwnProperty("answer_state") && objectVariant.hasOwnProperty("variant_Id") && i !== variantsCount) {
             console.log(i)
             objectVariant["answer_state"] = 0;
             allVariants[roll] = objectVariant;
+            console.log(objectVariant)
+            console.log(allVariants[roll])
             objectVariant = {};
             roll++;
           }
@@ -110,6 +114,7 @@ class oneVarQuest extends Component {
         }
 
         if (key === "variants[" + i + "]variant") {
+          console.log(key)
           objectVariant["variant"] = value;
           i++;
         }
@@ -124,10 +129,11 @@ class oneVarQuest extends Component {
         }
 
         if (!objectVariant.hasOwnProperty("answer_state") && i === variantsCount && key === "variants[" + Number(i - 1) + "]variant") {
-          console.log(objectVariant.hasOwnProperty("answer_state"))
-          console.log(objectVariant)
+          // console.log(objectVariant.hasOwnProperty("answer_state"))
+          // console.log(objectVariant)
           objectVariant["answer_state"] = 0;
           allVariants[roll] = objectVariant;
+          console.log(allVariants)
         }
       }
     }
@@ -183,7 +189,7 @@ class oneVarQuest extends Component {
     }
 
     object["type_question"] = "one_answer";
-  
+
     object["groups_object"] = this.props.groupsObject;
     formData.forEach(function (value, key) {
       console.log(key);
@@ -242,7 +248,6 @@ class oneVarQuest extends Component {
       console.log(this.state.checkArr[index])
 
       if (this.state.checkArr[index] == i) {
-        console.log(12312)
         item = <option key={i} value={i} selected>{results[i].result} </option>;
       }
       items.push(item);
@@ -283,8 +288,8 @@ class oneVarQuest extends Component {
 
   setGroups() {
     var formData = new FormData(document.forms.oneVariantForm);
-    var propName = document.getElementsByName("groupNumber");
-    var propValue = document.getElementsByName("groupTimer");
+    var propName = null;
+    var propValue = null;
     let groupObj = this.props.groupsObject;
     formData.forEach((value, key) => {
       if (key === "groupNumber") {
@@ -346,14 +351,16 @@ class oneVarQuest extends Component {
       </div>
     )
 
-    const renderAnswers = ({ fields, globalField, currentIndex, currentVariants, currentCount, variantsImgArray }) => (
+    const renderAnswers = ({ fields, currentVariantsArr, currentIndex, currentVariants, currentCount, variantsImgArray }) => (
       <div>
         {typeof currentVariants !== "undefined" ?
           <button type="button" id="insertDataOneVariant" onClick={() => {
+            setVariantsCount(currentVariantsArr.length);
             this.handleEdit();
             this.setState({ actualImg: currentQuestImg })
-            if (fields.length <= globalField.length) {
-              globalField.forEach((elem, index) => {
+            if (fields.length <= currentVariantsArr.length) {
+              currentVariantsArr.forEach((elem, index) => {
+                this.setState({ questionsCount: this.state.questionsCount + 2 });
                 fields.push(elem);
                 if (testType === "second") {
                   this.addToArr(elem.answer_state)
@@ -375,14 +382,14 @@ class oneVarQuest extends Component {
                 }
                 this.setState({ variantImg: imgVarArr });
                 console.log(this.state.variantImg);
-                setVariantsCount(variantsCount + 1);
+
               });
             };
           }}> Загрузить свои ответы </button> :
           ""
         }
 
-        <button type="button" onClick={() => { fields.push({}); setVariantsCount(variantsCount + 1); console.log(this.state.imgArr); this.addToArr(false) }}>Добавить вариант ответа</button>
+        <button type="button" onClick={() => { fields.push({}); setVariantsCount(variantsCount + 1); this.setState({ questionsCount: this.state.questionsCount + 1 }); this.addToArr(false) }}>Добавить вариант ответа</button>
         <ul>
           {fields.map((answer, index) =>
             <div>
@@ -426,8 +433,9 @@ class oneVarQuest extends Component {
                       <textarea
                         name="question"
                         placeholder="Текст результата"
+                        defaultValue={currentQuestion}
                       >
-                        {currentQuestion}
+
                       </textarea>
                       <div>
                         <label>Количество баллов за ответ</label>
@@ -459,7 +467,7 @@ class oneVarQuest extends Component {
                   <label>Варианты ответа</label>
                   <div className='answers'>
                     <FieldArray name="variants"
-                      globalField={currentVariants}
+                      currentVariantsArr={currentVariants}
                       component={renderAnswers}
                       currentIndex={currentIndex}
                       currentVariants={currentVariants}
@@ -475,14 +483,15 @@ class oneVarQuest extends Component {
             <Button onClick={() => { this.handleClose(); reset(); }} color="primary">
               Отмена
             </Button>
-            {typeof currentIndex === "number" ?
-              <Button type="sumbit" onClick={() => { this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex, currentVariants); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
-                Готово
+
+            {
+              this.state.questionsCount > 1 ?
+
+                <Button type="sumbit" onClick={() => { this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex, currentVariants); this.setGroups(); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
+                  Готово
             </Button>
-              :
-              <Button type="sumbit" onClick={() => { this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex, currentVariants); this.setGroups(); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
-                Готово
-            </Button>
+                : ""
+
             }
           </Modal.Actions>
         </Modal>

@@ -71,7 +71,7 @@ class oneVarQuest extends Component {
     this.setState({ variantImg: imgVarArr });
   }
 
-  firstTypeHandler(object, variantImg,variantsCount) {
+  firstTypeHandler(object, variantImg, variantsCount) {
     let rightCount = 0;
     var objectVariant = {};
     var allVariants = [];
@@ -83,13 +83,15 @@ class oneVarQuest extends Component {
     formData.forEach(function (value, key) {
 
       if (key !== 'questImg' && key !== 'question') {
+       
         if (key === "variant_img" + index) {
           if (!objectVariant.hasOwnProperty("answer_state") && objectVariant.hasOwnProperty("variant_Id") && index !== variantsCount) {
-            console.log(objectVariant)
+
             objectVariant["answer_state"] = 0;
             allVariants[roll] = objectVariant;
             objectVariant = {};
             roll++;
+            console.log(key)
           }
           objectVariant["variant_Id"] = variantIndex;
           variantIndex++;
@@ -122,10 +124,11 @@ class oneVarQuest extends Component {
     );
     object["variants"] = allVariants;
     object["number_answers"] = rightCount;
+    console.log(object)
     return object;
   }
 
-  secondTypeHandler(object, variantImg,variantsCount) {
+  secondTypeHandler(object, variantImg, variantsCount) {
     var object1 = {};
     var allVariants = [];
     var roll = 0;
@@ -185,10 +188,11 @@ class oneVarQuest extends Component {
     });
 
     if (testType === 'first') {
-      object = this.firstTypeHandler(object, variantImg,this.props.variantsCount)
+      console.log("asd")
+      object = this.firstTypeHandler(object, variantImg, this.props.variantsCount)
     }
     else if (testType === 'second') {
-      object = this.secondTypeHandler(object, variantImg,this.props.variantsCount);
+      object = this.secondTypeHandler(object, variantImg, this.props.variantsCount);
     }
 
     if (typeof currentIndex === "number") {
@@ -314,14 +318,15 @@ class oneVarQuest extends Component {
       </div>
     )
 
-    const renderAnswers = ({ fields, globalField, currentIndex, currentVariants, currentCount, variantsImgArray }) => (
+    const renderAnswers = ({ fields, currentVariantsArr, currentIndex, currentVariants, currentCount, variantsImgArray }) => (
       <div>
         {typeof currentVariants !== "undefined" ?
           <button type="button" id="insertDataManyVariant" onClick={() => {
+            setVariantsCount(currentVariantsArr.length);
             this.setState({ actualImg: currentQuestImg })
             this.handleEdit();
-            if (fields.length <= globalField.length) {
-              globalField.forEach((elem, index) => {
+            if (fields.length <= currentVariantsArr.length) {
+              currentVariantsArr.forEach((elem, index) => {
                 fields.push(elem);
                 if (elem.priceVar) {
                   this.addToArrPriceArr(elem.priceVar)
@@ -347,7 +352,7 @@ class oneVarQuest extends Component {
                 }
                 this.setState({ variantImg: imgVarArr })
                 console.log(this.state.variantImg);
-                setVariantsCount(variantsCount + 1)
+       
               });
             };
 
@@ -437,7 +442,7 @@ class oneVarQuest extends Component {
                   <div className='answers'>
                     <FieldArray
                       name="variants"
-                      globalField={currentVariants}
+                      currentVariantsArr={currentVariants}
                       component={renderAnswers}
                       currentIndex={currentIndex}
                       currentVariants={currentVariants}

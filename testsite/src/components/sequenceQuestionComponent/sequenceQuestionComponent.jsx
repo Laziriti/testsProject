@@ -117,7 +117,7 @@ class sequenceQuestion extends Component {
     return object;
   }
 
-  createQuestion(questions, setQuests, actualImg, variantImg, testType, currentIndex) {
+  createQuestion(questions, setQuests, actualImg, variantImg, testType, currentIndex,variantsCount) {
 
     let arr = questions;
     var object = {};
@@ -133,7 +133,7 @@ class sequenceQuestion extends Component {
     formData.forEach(function (value, key) {
       console.log(key);
 
-      if (variantIndex === this.props.variantsCount) {
+      if (variantIndex === variantsCount) {
         variantIndex = 0;
       }
       if (key === 'questImg') {
@@ -156,7 +156,7 @@ class sequenceQuestion extends Component {
       object = this.firstTypeHandler(object, variantImg);
     }
 
-    object["number_answers"] = this.props.variantsCount;
+    object["number_answers"] =variantsCount;
 
     if (typeof currentIndex === "number") {
       arr[currentIndex] = object;
@@ -166,7 +166,7 @@ class sequenceQuestion extends Component {
     }
 
     setQuests(arr);
-    this.props.variantsCount = 0;
+   variantsCount = 0;
     var json = JSON.stringify(questions);
     console.log(json);
 
@@ -260,13 +260,14 @@ class sequenceQuestion extends Component {
       </div>
     )
 
-    const renderAnswers = ({ fields, globalField, currentIndex, currentVariants, currentCount, variantsImgArray }) => (
+    const renderAnswers = ({ fields, currentVariantsArr, currentIndex, currentVariants, currentCount, variantsImgArray }) => (
       <div>
         {typeof currentVariants !== "undefined" ?
           <button type="button" id="insertDataSequenceVariant" onClick={() => {
+            setVariantsCount(currentVariantsArr.length);
             this.setState({ actualImg: currentQuestImg })
-            if (fields.length <= globalField.length) {
-              globalField.forEach((elem, index) => {
+            if (fields.length <= currentVariantsArr.length) {
+              currentVariantsArr.forEach((elem, index) => {
 
                 this.setState({ currentVarIndex: index })
                 if (elem.priceVar) {
@@ -290,7 +291,7 @@ class sequenceQuestion extends Component {
                 this.setState({ variantImg: imgVarArr })
 
                 console.log(this.state.variantImg)
-                setVariantsCount(variantsCount + 1)
+
 
               });
 
@@ -383,7 +384,7 @@ class sequenceQuestion extends Component {
                   <label>Варианты ответа</label>
                   <div className='answers'>
                     <FieldArray name="variants"
-                      globalField={currentVariants}
+                      currentVariantsArr={currentVariants}
                       component={renderAnswers}
                       currentIndex={currentIndex}
                       currentVariants={currentVariants}
@@ -400,7 +401,7 @@ class sequenceQuestion extends Component {
             <Button onClick={() => { this.handleClose(); reset(); }} color="primary">
               Отмена
             </Button>
-            <Button type="sumbit" onClick={() => { this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
+            <Button type="sumbit" onClick={() => { this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex,variantsCount); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
               Готово
             </Button>
 

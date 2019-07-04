@@ -1,14 +1,48 @@
-.passingBlock{
+.passingBlock {
     background-color: lightgray;
     padding: 5px;
-    border:1px black solid;
+    border: 1px black solid;
 }
-.variantBlock{
+
+.variantBlock {
     background-color: rgb(233, 227, 227);
 }
-img{
+
+img {
     width: 200px;
 }
-.resultBlock{
+
+.resultBlock {
     display: none;
+}
+
+.questionMap {
+    margin: 10px 0;
+    padding: 0;
+    display: flex;
+  
+    flex-wrap: wrap;
+    list-style: none;
+}
+
+.questionMapItem {
+    margin: 3px 10px;
+    display: block;
+    width: 30px;
+    height: 30px;
+    color: black;
+    text-align: center;
+    cursor: pointer;
+    background-color: rgb(182, 164, 164);
+    border:solid black 1px;
+    line-height: 30px;
+}
+.questionMapItem:hover{
+    background-color: rgb(230, 214, 214);
+}
+.answered{
+    background-color: rgb(38, 86, 177);
+}
+.active{
+    background-color: rgb(134, 70, 70);
 }
