@@ -144,6 +144,7 @@
     cursor: pointer;
     background-color: #ff8400;
     border: 1px solid black;
+    border-radius: 10px;
 }
 
 .user-block_create-li:hover {
@@ -220,6 +221,7 @@
     cursor: pointer;
     background-color: #ff8400;
     border: 1px solid black;
+    border-radius: 10px;
 }
 
 .user-block_filter-li:hover {
