@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { Field, FieldArray, reduxForm, getFormValues } from 'redux-form'
+import { reduxForm } from 'redux-form'
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import Button from '@material-ui/core/Button';
 import { Container } from 'semantic-ui-react';
 import "./style.css"
 import TimerComponent from '../../containers/timerContainer'
@@ -39,12 +38,7 @@ class passForm extends Component {
         this.setState({ superObj: {} });
 
     }
-    componentWillUpdate() {
-        // document.getElementById("questionMap").addEventListener("click", (event) => {
-        //     event.target.classList.add("active");
-        // })
-        console.log("работает")
-    }
+
     OpenHandler = () => this.setState({ isOpen: true })
 
     saveFunc(varIndex, globalIndex, testContent) {
@@ -76,15 +70,15 @@ class passForm extends Component {
 
     saveFuncNumber(varIndex, globalIndex, value, testContent) {
         let currentContent = testContent;
-        console.log(document.getElementById(globalIndex + varIndex).value);
-        currentContent[globalIndex].variants[varIndex].answer_state = Number(document.getElementById(globalIndex + varIndex).value);
+        console.log(document.getElementById(globalIndex + "" + varIndex).value);
+        currentContent[globalIndex].variants[varIndex].answer_state = Number(document.getElementById(globalIndex + "" + varIndex).value);
         this.props.saveVariantState(currentContent)
     }
 
     saveFuncString(varIndex, globalIndex, value, testContent) {
         let currentContent = testContent;
-        console.log(document.getElementById(globalIndex + varIndex).value);
-        currentContent[globalIndex].answers_arr = document.getElementById(globalIndex + varIndex).value.toUpperCase();
+        console.log(document.getElementById(globalIndex + "" + varIndex).value);
+        currentContent[globalIndex].answers_arr = document.getElementById(globalIndex + "" + varIndex).value.toUpperCase();
         this.props.saveVariantState(currentContent)
     }
 
@@ -94,7 +88,7 @@ class passForm extends Component {
         let url = null;
 
         if (this.props.passingTest.test_type === "first") {
-            url = 'https://psychotestmodule.herokuapp.com/a/';
+            url = 'https://psychotestmodule.herokuapp.com/arr/';
         }
         else {
             url = 'https://psychotestmodule.herokuapp.com/class/';
@@ -126,16 +120,25 @@ class passForm extends Component {
         this.setState({ superObj: currentSuperObj })
     }
     checkAnswerState(question, globalIndex) {
-        for (let i = 0; i < question.variants.length; i++) {
-            if ((question.variants[i].answer_state && question.variants[i].answer_state !== 0) ||
-                (question.variants[i].answers_arr && question.variants[i].answers_arr !== 0)) {
-                document.getElementById(globalIndex).classList.add("answered");
-                break;
+        console.log(typeof question.answers_arr)
+        if (typeof question.answers_arr !== 'string') {
+            for (let i = 0; i < question.variants.length; i++) {
+                if ((question.variants[i].answer_state && question.variants[i].answer_state !== 0)) {
+                    document.getElementById(globalIndex).classList.add("passing-block__question-map-item_answered");
+                    break;
+                }
+            }
+        }
+        else {
+
+            if (question.answers_arr !== 0) {
+                document.getElementById(globalIndex).classList.add("passing-block__question-map-item_answered");
+
             }
         }
     }
     changeCurrentQuestion(nextQuest, globalIndex, index) {
-        document.getElementById(globalIndex).classList.remove("active")
+        document.getElementById(globalIndex).classList.remove("passing-block__question-map-item_active")
 
         if (this.props.testContent[globalIndex].timer_question) {
             this.props.testContent[globalIndex].timerState = false;
@@ -145,7 +148,7 @@ class passForm extends Component {
         clearInterval(this.state.timerInterval);
         this.changeSuperObj(globalIndex)
         this.props.setIndexOfQuestion(nextQuest);
-        setTimeout(() => document.querySelectorAll(".testol").forEach(elem => {
+        setTimeout(() => document.querySelectorAll(".passing-block__variant-item").forEach(elem => {
             if (this.props.testContent[globalIndex].type_question === "write_by_yourself_answer") {
                 elem.value = this.props.testContent[nextQuest].answers_arr;
             }
@@ -244,29 +247,30 @@ class passForm extends Component {
     }
     initializeQuestion(testContent, globalIndex, index) {
         if (document.getElementById(globalIndex)) {
-            document.getElementById(globalIndex).classList.add("active")
+            document.getElementById(globalIndex).classList.add("passing-block__question-map-item_active")
         }
         //ПОМЕТКА УСЛОВИЕ !
         if (testContent) {
-         
-                // console.log(testContent[globalIndex])
-                let inputsArr = document.querySelectorAll(".mainBlock input");
-                inputsArr.forEach(element => {
-                    if (testContent[globalIndex].timerState === false) {
-                        element.disabled = true;
-                    }
-                    else{
-                        element.disabled = false;
-                    }
-                   
-                });
-            
+
+            // console.log(testContent[globalIndex])
+            let inputsArr = document.querySelectorAll(".passing-block__container input");
+            inputsArr.forEach(element => {
+                if (testContent[globalIndex].timerState === false) {
+                    element.disabled = true;
+                }
+                else {
+                    element.disabled = false;
+                }
+
+            });
+
         }
         if (!this.state.superObj.hasOwnProperty(globalIndex)) {
             console.log(testContent);
             console.log("сработало")
 
             this.changeSuperObj(globalIndex);
+
             if (testContent) {
                 if (testContent[globalIndex].timer_question) {
                     this.startQuestionTimer(globalIndex, index)
@@ -302,7 +306,9 @@ class passForm extends Component {
     createQuestionMap(testContnet, globalIndex, index) {
         let items = [];
         testContnet.forEach((elem, elemIndex) => {
-            items.push(<li className="questionMapItem" id={elemIndex} onClick={() => { this.changeCurrentQuestion(elemIndex, globalIndex, index); }} >{elemIndex + 1}</li>)
+            items.push(<li className="passing-block__question-map-item"
+                id={elemIndex}
+                onClick={() => { this.changeCurrentQuestion(elemIndex, globalIndex, index); }} >{elemIndex + 1}</li>)
         })
         return items;
     }
@@ -312,80 +318,100 @@ class passForm extends Component {
             questIndex,
             passingTestResults,
             testContent,
-            clearPassingTest,
-            isReadyToPass,
-            setQuestionTimer,
-            questionMinutes,
-            questionSeconds,
-            setGroupTimer } = this.props;
+        } = this.props;
         var globalIndex = questIndex;
         var index = 0;
+        if (testContent) {
+            if (!globalIndex) {
+                globalIndex = 0;
+            }
+            this.initializeQuestion(testContent, globalIndex, index)
+        }
 
-        this.initializeQuestion(testContent, globalIndex, index)
 
         return (
             !testContent ? <div className="lds-facebook"><div></div><div></div><div></div></div> :
-                <Container>
-                    <ul className="questionMap" id="questionMap">
+                <Container className="passing-block">
+                    <ul className="passing-block__question-map" id="questionMap">
                         {this.createQuestionMap(testContent, globalIndex, index)}
                     </ul>
-                    <div className="mainBlock" id="id1">
-                        <div className="passingBlock">
+                    <div className="passing-block__container" id="id1">
+                        <div className="passing-block__pass">
                             <TimerComponent></TimerComponent>
                             <form name="passingForm" >
-                                <div>
-                                    <label>{testContent[globalIndex].question}</label>
-                                    {
-                                        testContent[globalIndex].questImg !== "null" ?
-                                            <img src={testContent[globalIndex].questImg} alt=""></img>
-                                            : ""
-                                    }
-                                    {testContent[globalIndex].type_question !== "write_by_yourself_answer"
-                                        ? testContent[globalIndex].variants.map((item, index) =>
-                                            <div className="variantBlock">
-                                                {item.variant_img !== "null" ?
-                                                    <div><img className="passImg" src={item.variant_img} alt="" /></div>
-                                                    : ""}
-                                                {testContent[globalIndex].type_question === "many_answers" ?
-                                                    <input type="checkbox" id={globalIndex + index} name={globalIndex} className="testol" onChange={() => this.saveFunc(index, globalIndex, testContent)} />
-                                                    : testContent[globalIndex].type_question === "one_answer" ?
-                                                        <input type="radio" id={globalIndex + index} name="radioAnswer" className="testol" onChange={() => this.saveFuncRadio(index, globalIndex, testContent)} />
-                                                        : testContent[globalIndex].type_question === "sequence_answer" ?
-                                                            <input type="number" id={globalIndex + index} name="numberAnswer" className="testol" onChange={() => this.saveFuncNumber(index, globalIndex, this.value, testContent)} />
-                                                            : ""
-                                                }
+                                <div className="passing-block__form">
+                                    <div className="passing-block__info-left">
+                                        <p className="passing-block__index">{globalIndex > 8 ? globalIndex + 1 : "0" + (globalIndex + 1)}</p>
+                                    </div>
+                                    <div className="passing-block__info-right">
+                                        <p className="passing-block__question">{testContent[globalIndex].question}</p>
 
-                                                <label>{item.variant}</label>
-                                            </div>
+                                        {
+                                            testContent[globalIndex].questImg !== "null" ?
+                                                <img src={testContent[globalIndex].questImg} alt=""></img>
+                                                : "asd"
+                                        }
+                                        {testContent[globalIndex].type_question !== "write_by_yourself_answer" ?
+                                            testContent[globalIndex].variants.map((item, index) =>
+                                                <div className="passing-block__variants">
+                                                    {item.variant_img !== null ?
+                                                        <div><img className="passing-block__variant-img" src={item.variant_img} alt="" /></div>
+                                                        : ""}
+                                                    {testContent[globalIndex].type_question === "many_answers" ?
+                                                        <input type="checkbox"
+                                                            id={globalIndex + "" + index}
+                                                            name={globalIndex}
+                                                            className="passing-block__variant-item"
+                                                            onChange={() => this.saveFunc(index, globalIndex, testContent)} />
+                                                        : testContent[globalIndex].type_question === "one_answer" ?
+                                                            <input type="radio"
+                                                                id={globalIndex + "" + index}
+                                                                name="radioAnswer"
+                                                                className="passing-block__variant-item"
+                                                                onChange={() => this.saveFuncRadio(index, globalIndex, testContent)} />
+                                                            : testContent[globalIndex].type_question === "sequence_answer" ?
+                                                                <input type="number"
+                                                                    id={globalIndex + "" + index}
+                                                                    name="numberAnswer"
+                                                                    className="passing-block__variant-item"
+                                                                    onChange={() => this.saveFuncNumber(index, globalIndex, this.value, testContent)} />
+                                                                : ""
+                                                    }
 
-                                        ) : <input type="text" id={globalIndex + index} name="stringAnswer" className="testol" onChange={() => this.saveFuncString(index, globalIndex, this.value, testContent)} />
-                                    }
+                                                    <label className="passing-block__variant-text">{item.variant}</label>
+                                                </div>
+
+                                            ) : <input type="text" id={globalIndex + "" + index} name="stringAnswer" className="passing-block__variant-item" onChange={() => this.saveFuncString(index, globalIndex, this.value, testContent)} />
+                                        }
+                                    </div>
                                 </div>
+
                             </form>
                         </div>
-                        {globalIndex === 0 ? "" :
-                            <button onClick={() => {
+                        {globalIndex === 0 ?
+                            ""
+                            : <button className="passing-block__button" onClick={() => {
                                 this.changeCurrentQuestion(globalIndex - 1, globalIndex, index)
                             }}>Предыдущий</button>
                         }
-                        {globalIndex < testContent.length - 1 ? <button onClick={() => {
-
-                            this.changeCurrentQuestion(globalIndex + 1, globalIndex, index)
-
-                        }}>Следующий</button>
+                        {globalIndex < testContent.length - 1 ?
+                            <button className="passing-block__button" onClick={() => {
+                                this.changeCurrentQuestion(globalIndex + 1, globalIndex, index)
+                            }}>Следующий</button>
                             : ""}
-                        {globalIndex === testContent.length - 1 ? <button onClick={() => { this.resultAxios(testContent); this.changeSuperObj(globalIndex); }}>Готово</button>
+                        {globalIndex === testContent.length - 1 ?
+                            <button className="passing-block__button" onClick={() => { this.resultAxios(testContent); this.changeSuperObj(globalIndex); }}>Готово</button>
                             : ""}
 
                     </div>
-                    <div className="resultBlock" id="resultBlock">
+                    <div className="passing-block__results" id="resultBlock">
                         <img src={passingTestResults[this.state.resultIndex].result_img} alt='' />
                         <p>
                             {passingTestResults[this.state.resultIndex].result}
                         </p>
                         <Link to="/" onClick={() => { this.setState({ superObj: {} }); setIndexOfQuestion(0); }}>Завершить</Link>
                     </div>
-                </Container>
+                </Container >
 
         )
     }

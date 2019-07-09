@@ -1,48 +1,111 @@
-.passingBlock {
-    background-color: lightgray;
+.passing-block__pass {
+    background-color: #efecec;
     padding: 5px;
-    border: 1px black solid;
+    border-radius: 10px;
 }
 
-.variantBlock {
-    background-color: rgb(233, 227, 227);
+.passing-block__variants {}
+
+.passing-block__form {
+    display: flex;
 }
+
+.passing-block__info {}
+
+.passing-block__index {
+    width: 85px;
+    padding-top: 20px;
+    margin: 0;
+    color: #dcc1ef;
+    font-family: 'Gilroy';
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 24px;
+}
+
+.passing-block__question {
+    width: 960px;
+    /* width: 850px; */
+    padding-top: 8px;
+    /* margin-right: 0; */
+    color: #2d2d2d;
+    font-family: gilroy;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.passing-block__variant-text {
+    padding-left: 8px;
+    color: #2d2d2d;
+    font-family: Gilroy;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 26px;
+}
+
+.passing-block__variant-item {}
 
 img {
     width: 200px;
 }
 
-.resultBlock {
+.passing-block__button {
+    width: 165px;
+    height: 38px;
+    cursor: pointer;
+    color: #ffffff;
+    box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.1);
+    outline: none;
+    border: none;
+    border-radius: 10px;
+    background-color: #ff8400;
+    font-family: "Gilroy";
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.passing-block__button:hover {
+    transition: 0.2s;
+    background-color: #842cc1;
+}
+
+.passing-block__results {
     display: none;
 }
 
-.questionMap {
+.passing-block__question-map {
     margin: 10px 0;
     padding: 0;
     display: flex;
-  
     flex-wrap: wrap;
     list-style: none;
 }
 
-.questionMapItem {
-    margin: 3px 10px;
+.passing-block__question-map-item {
     display: block;
-    width: 30px;
-    height: 30px;
-    color: black;
-    text-align: center;
+    margin: 3px 10px;
+    width: 57px;
+    height: 54px;
+    box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #c8aeda;
+    color: #ffffff;
     cursor: pointer;
-    background-color: rgb(182, 164, 164);
-    border:solid black 1px;
-    line-height: 30px;
+    text-align: center;
+    font-family: "Gilroy";
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 54px;
 }
-.questionMapItem:hover{
-    background-color: rgb(230, 214, 214);
+
+.passing-block__question-map-item:hover {
+    background-color: #842cc1;
 }
-.answered{
+
+.passing-block__question-map-item_answered {
     background-color: rgb(38, 86, 177);
 }
-.active{
-    background-color: rgb(134, 70, 70);
+
+.passing-block__question-map-item_active {
+    background-color: #842cc1;
 }

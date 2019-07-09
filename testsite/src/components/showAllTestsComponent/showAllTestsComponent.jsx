@@ -1,20 +1,18 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Cards from '../../containers/testCardContainer';
-import Filter from '../../containers/FilterContainer';
 import { Container } from 'semantic-ui-react';
 import { Card } from 'semantic-ui-react';
 import './style.css';
 
 class ShowAllTests extends Component {
   componentDidMount() {
-    const { setTests, setPassingTest } = this.props
+    const { setTests } = this.props
 
     axios.get('https://psychotestmodule.herokuapp.com/tests2/')
       .then((response) => {
         setTests(response.data);
         console.log(response.data);
-
       })
       .catch(e => {
         console.log(e)

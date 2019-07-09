@@ -1,19 +1,16 @@
 import React, { Component } from 'react'
-import { Field, FieldArray, reduxForm, getFormValues } from 'redux-form'
-import { Button, Header, Image, Modal } from 'semantic-ui-react'
-import { Radio } from 'semantic-ui-react'
+import { Field, FieldArray, reduxForm } from 'redux-form'
+import { Button, Image, Modal } from 'semantic-ui-react'
 // import validate from '../validate';
 import axios from 'axios';
-
 import { Container } from 'semantic-ui-react';
-import { Card } from 'semantic-ui-react'
 
 class testResults extends Component {
   state = {
     modalOpenResult: false,
     variantImg: [],
     currentIndexVariantImg: null,
-    editState: false,
+    currentResults: []
   }
 
   handleOpen = () => this.setState({ modalOpenResult: true })
@@ -21,13 +18,6 @@ class testResults extends Component {
   handleClose = () => this.setState({ modalOpenResult: false })
 
   setIndex = (index) => { this.setState({ currentIndexVariantImg: index }); console.log(index) }
-
-  handleEdit = () => {
-    this.setState({ editState: true });
-  }
-  handleEditClose = () => {
-    this.setState({ editState: false });
-  }
 
   FileSelectedHendlerVariants = img => {
 
@@ -116,7 +106,7 @@ class testResults extends Component {
     });
     return resultArr;
   }
-  serv(results, setResults, questions, variantImg, testType) {
+  createResults(results, setResults, questions, variantImg, testType) {
     var resultArr = [];
     var formData = new FormData(document.forms.resultsForm);
     if (testType === "first") {
@@ -125,9 +115,7 @@ class testResults extends Component {
     if (testType === "second") {
       resultArr = this.secondTypeHandler(formData, variantImg)
     }
-    if (testType === "third") {
-      resultArr = this.thirdTypeHandler(formData, variantImg)
-    }
+
     setResults(resultArr);
     var json = JSON.stringify(resultArr);
     console.log(json);
@@ -141,17 +129,28 @@ class testResults extends Component {
 
     }
   }
+  deleteFromArr(index) {
+    let imgVarArr = this.state.variantImg;
 
+    imgVarArr.splice(index, 1);
+    this.setState({ variantImg: imgVarArr });
+
+
+    // let resultsArr = this.state.currentResults;
+    this.state.currentResults.splice(index, 1);
+    console.log(this.state.currentResults)
+    // this.setState({ currentResults: resultsArr })
+  }
 
   render() {
-    const { results, setResults, questions, testType, currentResults, reset } = this.props
+    const { results, setResults, questions, testType, editResults, reset } = this.props
     const renderField = ({ input, label, type, globalField, textValue, index, meta: { touched, error } }) => (
       <div>
         <label>{label}</label>
         <div>
-          {this.state.editState && globalField.length > index ?
-            <textarea {...input} type={type} />
-            : <textarea {...input} type={type} />}
+          {this.state.currentResults[index] ? delete input.value : ""}
+          <textarea {...input} type={type} defaultValue={textValue} />
+
           {touched && error && <span>{error}</span>}
         </div>
       </div>
@@ -163,42 +162,55 @@ class testResults extends Component {
           testType === "first" ?
             <div>
               <label>{label}</label>
-              {this.state.editState && globalField.length > index ?
-                label === "Промежуток от:" ? <input {...input} type={type} value={globalField[index].min} />
-                  : <input {...input} type={type} value={globalField[index].max} />
-                : <input {...input} type={type} />}
-              {touched && error && <span>{error}</span>}
+              {this.state.currentResults[index] ? delete input.value : ""}
+              {label === "Промежуток от:" ? <input
+                {...input}
+                type={type}
+                defaultValue={this.state.currentResults[index] ? this.state.currentResults[index].min : ""} />
+                : <input {...input} type={type} defaultValue={this.state.currentResults[index] ? this.state.currentResults[index].max : ""} />}
+
+
             </div>
             : ""
         }
       </div>
     )
 
-    const renderAnswers = ({ fields, globalField, variantsImgArray }) => (
+    const renderAnswers = ({ fields, globalField, variantsImgArray, editResults }) => (
       <div>
         {typeof globalField !== "undefined" ?
           <button type="button" id="insertDataResult" onClick={() => {
-            this.handleEdit();
-            if (fields.length <= globalField.length) {
-              globalField.forEach((elem, index) => {
-                fields.push(elem);
-                let imgVarArr = this.state.variantImg;
-                if (fields.length > 0) {
-                  imgVarArr[fields.length + index + 1] = globalField[index].result_img;
-                }
-                else {
-                  if (index === 0) {
-                    imgVarArr[fields.length] = globalField[index].result_img;
-                  }
-                  else {
-                    imgVarArr[fields.length + index] = globalField[index].result_img;
-                  }
-                }
-                this.setState({ variantImg: imgVarArr })
-                console.log(this.state.variantImg)
+            console.log(editResults)
+       
+            if (fields.length <= editResults.length) {
+              editResults.forEach((elem, index) => {
 
+                let resultsArr = this.state.currentResults;
+                resultsArr.push(elem);
+                this.setState({ currentResults: resultsArr });
+
+                fields.push(elem);
+
+                let imgVarArr = this.state.variantImg;
+                // if (fields.length > 0) {
+                //   imgVarArr[fields.length + index + 1] = elem.result_img;
+                // }
+                // else {
+                //   if (index === 0) {
+                //     imgVarArr[fields.length] = elem.result_img;
+                //   }
+                //   else {
+                //     imgVarArr[fields.length + index] = elem.result_img;
+                //   }
+                // }
+                imgVarArr[index] = elem.result_img
+                this.setState({ variantImg: imgVarArr });
+                console.log(this.state.variantImg);
+                editResults = [];
               });
             };
+
+
           }}> Загрузить свои ответы </button> :
           ""
         }
@@ -210,10 +222,12 @@ class testResults extends Component {
               <button
                 type="button"
                 title="Удалить результат"
-                onClick={() => { fields.remove(index); }}>Удалить</button>
+                onClick={() => { fields.remove(index); this.deleteFromArr(index); }}>Удалить</button>
               {variantsImgArray[index] ? <img src={variantsImgArray[index]} alt='' />
                 : ""}
-              <input type="file" name={"result_img" + index} onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }}></input>
+              <input type="file"
+                name={"result_img" + index}
+                onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }}></input>
               <div className="resultGap">
                 <Field
                   label="Промежуток от:"
@@ -239,11 +253,11 @@ class testResults extends Component {
                   className="answerVar"
                   name={index + `result`}
                   type="text"
-                  label="Краткий вариант"
+                  label={testType === 'first' ? "Текст результата" : "Краткий вариант"}
                   component={renderField}
                   globalField={globalField}
                   index={index}
-                  textValue={this.state.editState && globalField.length > index ? globalField[index].description : ""}
+                  textValue={this.state.currentResults[index] ? this.state.currentResults[index].result : ""}
                 />
                 {testType === "second" ?
                   <div>
@@ -255,7 +269,7 @@ class testResults extends Component {
                       component={renderField}
                       globalField={globalField}
                       index={index}
-                      textValue={this.state.editState && globalField.length > index ? globalField[index].description : ""}
+                      textValue={this.state.currentResults[index] ? this.state.currentResults[index].description : ""}
                     />
                   </div>
                   : ""
@@ -269,7 +283,10 @@ class testResults extends Component {
 
     return (
       <Container>
-        <Modal trigger={<Button onClick={() => { this.handleOpen(); }} className='resultsTrigger' id="22">Результаты</Button>} open={this.state.modalOpenResult} centered={false}>
+        <Modal trigger={<Button onClick={() => { this.handleOpen(); this.insertCurrentData(editResults); }}
+          className='resultsTrigger' id="22">Результаты</Button>}
+          open={this.state.modalOpenResult}
+          centered={false}>
           <Modal.Header>{"Результаты"}</Modal.Header>
           <Modal.Content image>
             <Image wrapped size='medium' src='https://react.semantic-ui.com/images/avatar/large/rachel.png' />
@@ -281,7 +298,8 @@ class testResults extends Component {
                     <FieldArray
                       name="allResults"
                       component={renderAnswers}
-                      globalField={currentResults}
+                      globalField={editResults}
+                      editResults={editResults}
                       variantsImgArray={this.state.variantImg} />
                   </div>
                 </form>
@@ -289,10 +307,13 @@ class testResults extends Component {
             </Modal.Description>
           </Modal.Content>
           <Modal.Actions>
-            <Button onClick={() => { this.handleClose(); }} color="primary">
+            <Button onClick={() => { this.handleClose(); reset(); }} color="primary">
               Отмена
             </Button>
-            <Button type="submit" onClick={() => { this.serv(results, setResults, questions, this.state.variantImg, testType); this.handleClose(); }} color="primary" autoFocus>
+            <Button type="submit"
+              onClick={() => { this.createResults(results, setResults, questions, this.state.variantImg, testType); this.handleClose(); reset(); }}
+              color="primary"
+              autoFocus>
               Готово
             </Button>
           </Modal.Actions>

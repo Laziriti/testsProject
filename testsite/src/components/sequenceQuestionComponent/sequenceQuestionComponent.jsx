@@ -1,13 +1,13 @@
 import React, { Component } from 'react'
-import { Field, FieldArray, reduxForm, getFormValues } from 'redux-form'
-import { Button, Header, Image, Modal } from 'semantic-ui-react'
+import { Field, FieldArray, reduxForm } from 'redux-form'
+import { Button, Image, Modal } from 'semantic-ui-react'
 // import validate from '../validate';
 import axios from 'axios';
 import { Container } from 'semantic-ui-react';
 
 class sequenceQuestion extends Component {
   state = {
-    notFullPriceState: false || this.props.currentPriceState,
+    notFullPriceState: false || this.props.editPriceState,
     modalOpen: false,
     actualImg: null,
     variantImg: [],
@@ -117,14 +117,18 @@ class sequenceQuestion extends Component {
     return object;
   }
 
-  createQuestion(questions, setQuests, actualImg, variantImg, testType, currentIndex,variantsCount) {
+  createQuestion(questions, setQuests, actualImg, variantImg, testType, editIndex, variantsCount) {
 
-    let arr = questions;
+    let arr;
+    if (questions !== undefined) {
+      arr = questions;
+    }
+    else arr = [];
     var object = {};
     var formData = new FormData(document.forms.sequenceForm);
     var variantIndex = 0;
 
-    object["question_ID"] = questions.length + 1;
+    object["question_ID"] = arr.length;
     object["type_question"] = "sequence_answer";
 
     // formData.forEach(function (value, key) {
@@ -156,23 +160,23 @@ class sequenceQuestion extends Component {
       object = this.firstTypeHandler(object, variantImg);
     }
 
-    object["number_answers"] =variantsCount;
+    object["number_answers"] = variantsCount;
 
-    if (typeof currentIndex === "number") {
-      arr[currentIndex] = object;
+    if (typeof editIndex === "number") {
+      arr[editIndex] = object;
     }
     else {
       arr.push(object);
     }
 
     setQuests(arr);
-   variantsCount = 0;
+    variantsCount = 0;
     var json = JSON.stringify(questions);
     console.log(json);
 
   }
-  insertCurrentData(currentVariants) {
-    if (typeof currentVariants !== "undefined") {
+  insertCurrentData(editVariants) {
+    if (typeof editVariants !== "undefined") {
       setTimeout(() => {
         document.getElementById("insertDataSequenceVariant").click();
       }, 0);
@@ -183,7 +187,7 @@ class sequenceQuestion extends Component {
   }
 
   deleteFromEditArr(index) {
-    if (index < this.props.currentCount) {
+    if (index < this.props.editCount) {
       this.handleEditClose();
     }
   }
@@ -213,6 +217,7 @@ class sequenceQuestion extends Component {
     this.setState({ notFullPriceArr: arr })
   }
 
+
   render() {
 
     const { handleSubmit,
@@ -222,15 +227,13 @@ class sequenceQuestion extends Component {
       testType,
       variantsCount,
       setVariantsCount,
-      currentVariants,
-      currentQuestion,
-      currentIndex,
-      currentCount,
-      currentPrice,
-      currentPriceState,
-      currentQuestImg } = this.props
+      editIndex,
+      groupsObject,
+      groupsState,
+      groupsTimerState,
+      editQuest } = this.props
 
-    const renderField = ({ input, label, type, answer, currentVariants, index, meta: { touched, error } }) => (
+    const renderField = ({ input, label, type, answer, editVariants, index, meta: { touched, error } }) => (
       <div>
         <label>{label}</label>
         <div>
@@ -244,14 +247,15 @@ class sequenceQuestion extends Component {
         </div>
       </div>
     )
-    const renderFieldInput = ({ input, label, type, currentVariants, index, meta: { touched, error } }) => (
+    // пометка перепроверить условия
+    const renderFieldInput = ({ input, label, type,editCount, editVariants, index, meta: { touched, error } }) => (
       <div>
         <label>{label}</label>
         <div>
 
           {
-            this.state.editState && currentCount > index ?
-              delete input.value && <input {...input} type={type} placeholder={label} defaultValue={currentVariants[index].answer_state} />
+            this.state.editState && editCount > index ?
+              delete input.value && <input {...input} type={type} placeholder={label} defaultValue={editVariants[index].answer_state} />
               : <input {...input} type={type} placeholder={label} />
           }
           {console.log(document.getElementsByName(input.name))}
@@ -260,14 +264,14 @@ class sequenceQuestion extends Component {
       </div>
     )
 
-    const renderAnswers = ({ fields, currentVariantsArr, currentIndex, currentVariants, currentCount, variantsImgArray }) => (
+    const renderAnswers = ({ fields, editIndex, editVariants, editCount, variantsImgArray }) => (
       <div>
-        {typeof currentVariants !== "undefined" ?
+        {typeof editVariants !== "undefined" ?
           <button type="button" id="insertDataSequenceVariant" onClick={() => {
-            setVariantsCount(currentVariantsArr.length);
-            this.setState({ actualImg: currentQuestImg })
-            if (fields.length <= currentVariantsArr.length) {
-              currentVariantsArr.forEach((elem, index) => {
+            setVariantsCount(editVariants.length);
+            this.setState({ actualImg: editQuest.questImg  })
+            if (fields.length <= editVariants.length) {
+              editVariants.forEach((elem, index) => {
 
                 this.setState({ currentVarIndex: index })
                 if (elem.priceVar) {
@@ -277,14 +281,14 @@ class sequenceQuestion extends Component {
                 fields.push(elem);
                 let imgVarArr = this.state.variantImg;
                 if (fields.length > 0) {
-                  imgVarArr[fields.length + index + 1] = currentVariants[elem.variant_Id].variant_img;
+                  imgVarArr[fields.length + index + 1] = editVariants[elem.variant_Id].variant_img;
                 }
                 else {
                   if (index === 0) {
-                    imgVarArr[fields.length] = currentVariants[elem.variant_Id].variant_img;
+                    imgVarArr[fields.length] = editVariants[elem.variant_Id].variant_img;
                   }
                   else {
-                    imgVarArr[fields.length + index] = currentVariants[elem.variant_Id].variant_img;
+                    imgVarArr[fields.length + index] = editVariants[elem.variant_Id].variant_img;
                   }
 
                 }
@@ -301,7 +305,11 @@ class sequenceQuestion extends Component {
           ""
         }
 
-        <button type="button" onClick={() => { fields.push({}); setVariantsCount(variantsCount + 1); this.addToArrPriceArr(0) }}>Добавить вариант ответа</button>
+        <button type="button" onClick={() => {
+          fields.push({});
+          setVariantsCount(variantsCount + 1);
+          this.addToArrPriceArr(0)
+        }}>Добавить вариант ответа</button>
         <ul>
 
           {fields.map((answer, index, item) =>
@@ -312,17 +320,25 @@ class sequenceQuestion extends Component {
                 type="button"
                 title="Удалить вариант"
 
-                onClick={() => { fields.remove(index); setVariantsCount(variantsCount - 1); this.FileVariantsRemove(index); this.deleteFromEditArr(index); this.delFromArrPriceArr(index) }}>Удалить</button>
+                onClick={() => {
+                  fields.remove(index);
+                  setVariantsCount(variantsCount - 1);
+                  this.FileVariantsRemove(index);
+                  this.deleteFromEditArr(index);
+                  this.delFromArrPriceArr(index)
+                }}>Удалить</button>
               <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
-              <input type="file" name={"variant_img" + index} onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }}></input>
+              <input type="file"
+                name={"variant_img" + index}
+                onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }}></input>
               <div className='answerFeild'>
 
                 <Field
                   className="answerVar"
 
                   name={answer + "variant"}
-                  currentVariants={currentVariants}
-                  currentCount={currentCount}
+                  editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
+                  editCount={editQuest ? editQuest.number_answers : ""}
                   index={index}
                   answer={answer}
                   component={renderField}
@@ -331,8 +347,8 @@ class sequenceQuestion extends Component {
                   className="answerVar"
                   type="number"
                   name={answer + "answerState"}
-                  currentVariants={currentVariants}
-                  currentCount={currentCount}
+                  editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
+                  editCount={editQuest ? editQuest.number_answers : ""}
                   index={index}
                   component={renderFieldInput}
 
@@ -349,7 +365,13 @@ class sequenceQuestion extends Component {
     return (
       <Container>
 
-        <Modal trigger={<Button onClick={() => { this.handleOpen(); this.insertCurrentData(currentVariants) }} className='sequenceTrigger'>Последовательность</Button>} open={this.state.modalOpen} centered={false}>
+        <Modal trigger={<Button onClick={() => {
+          this.handleOpen();
+          this.insertCurrentData(editQuest && editQuest.variants ? editQuest.variants : undefined)
+        }}
+          className='sequenceTrigger'>Последовательность</Button>}
+          open={this.state.modalOpen}
+          centered={false}>
           <Modal.Header>{"Последовательность"}</Modal.Header>
           <Modal.Content image>
             <Image wrapped size='small' src='https://react.semantic-ui.com/images/avatar/large/rachel.png' />
@@ -362,33 +384,63 @@ class sequenceQuestion extends Component {
                       <textarea
                         name="question"
                         placeholder="Текст результата"
+                        defaultValue={editQuest ? editQuest.question : ""}
                       >
-                        {currentQuestion}
                       </textarea>
 
                       <div>
                         <label>Количество баллов за ответ</label>
-                        <input name="priceQuestion" defaultValue={currentPrice ? currentPrice : 1} disabled={this.state.notFullPriceState}></input>
+                        <input name="priceQuestion" defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1} disabled={this.state.notFullPriceState}></input>
                       </div>
                       <div>
                         <label>Неполный ответ</label>
-                        <input name="notFullPriceQuestion" defaultChecked={currentPriceState ? currentPriceState : false} type="checkBox" onClick={() => { this.setState({ notFullPriceState: !this.state.notFullPriceState }) }}></input>
+                        <input name="notFullPriceQuestion"
+                          defaultChecked={editQuest && editQuest.not_full_price_question ? editQuest.not_full_price_question : false}
+                          type="checkBox"
+                          onClick={() => { this.setState({ notFullPriceState: !this.state.notFullPriceState }) }}></input>
                       </div>
                       <input
                         name="questImg"
                         type="file"
                         onChange={this.FileSelectedHendler}
                       />
+
+                      {groupsState ? <div>
+                        <label>Номер/название группы</label>
+                        <input
+                          name="groupNumber"
+                          type="string"
+                          defaultValue={editQuest && editQuest.group_number ? editQuest.group_number : 0}
+                          onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject) }}
+                          onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject) }}></input>
+                      </div>
+                        : ""}
+                      {groupsTimerState ? <div>
+                        <label>Таймер группы</label>
+                        <input name="groupTimer"
+                          id="groupTimer"
+                          type="string"
+                          placeholder="10:22 = 10 минут 22 секунды"
+                          defaultValue={editQuest && editQuest.group_number ? this.props.groupsObject[editQuest.group_number] : "0:0"}></input>
+                      </div> : ""}
+
+                      <div>
+                        <label>Таймер для вопроса</label>
+                        <input name="timerQuestion"
+                          type="string"
+                          placeholder="10:22 = 10 минут 22 секунды"
+                          defaultValue={editQuest && editQuest.timer_question ? editQuest.timer_question : "0:0"}></input>
+                      </div>
+
                     </div>
                   </div>
                   <label>Варианты ответа</label>
                   <div className='answers'>
                     <FieldArray name="variants"
-                      currentVariantsArr={currentVariants}
                       component={renderAnswers}
-                      currentIndex={currentIndex}
-                      currentVariants={currentVariants}
-                      currentCount={currentCount}
+                      editIndex={editIndex}
+                      editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
+                      editCount={editQuest ? editQuest.number_answers : ""}
                       variantsImgArray={this.state.variantImg} />
 
                   </div>
@@ -401,7 +453,15 @@ class sequenceQuestion extends Component {
             <Button onClick={() => { this.handleClose(); reset(); }} color="primary">
               Отмена
             </Button>
-            <Button type="sumbit" onClick={() => { this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex,variantsCount); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
+            <Button type="sumbit" onClick={() => {
+              this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex, variantsCount);
+              this.props.setGroups(new FormData(document.forms.SequenceVariantForm), this.props.groupsObject, this.props.setGroupObject);
+              this.handleClose();
+              reset();
+              this.props.updateList();
+            }}
+              color="primary"
+              autoFocus>
               Готово
             </Button>
 

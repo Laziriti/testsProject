@@ -10,6 +10,8 @@ import SequenceQuestion from '../../containers/sequenceQuestionContainer'
 import WriteByYourselfQuestion from '../../containers/writeByYourselfQuestionContainer';
 import TestResults from '../../containers/testResultsContainer';
 import AddToList from '../../containers/addToListContainer';
+import { withRouter } from 'react-router-dom';
+import { Redirect } from 'react-router';
 import { Card } from 'semantic-ui-react';
 
 class createTestForm extends Component {
@@ -18,17 +20,20 @@ class createTestForm extends Component {
     this.state = {
       selectedFile: null,
       isOpen: false,
-      actualImg: null
+      actualImg: null,
+      groupsState: false,
+      groupsTimerState: false
     };
   }
-
+  componentWillMount() {
+    this.props.changeTestType(this.props.match.params.testType);
+    // if (!this.props.questions) {
+    //   this.props.setQuests({});
+    // }
+  }
   OpenHandler = () => this.setState({ isOpen: true })
 
   FileSelectedHendler = event => {
-
-    this.setState({
-      selectedFile: event.target.files[0]
-    })
 
     let files = event.target.files[0];
 
@@ -55,18 +60,20 @@ class createTestForm extends Component {
 
     var formData = new FormData(document.forms.createTestForm);
 
-
     formData.append("test_content", JSON.stringify(this.props.questions));
     formData.append("test_check_sum", JSON.stringify(this.props.results));
     formData.append("test_type", this.props.testType);
     formData.set("test_img", this.state.actualImg);
+    if (this.state.groupsTimerState) {
+      formData.append("groups_object", JSON.stringify(this.props.groupsObject));
+    }
 
     formData.forEach(function (value, key) {
       console.log(key)
       console.log(value)
       object[key] = value;
     })
-
+    formData.append("test_question_count", this.props.questions.length)
     console.log(JSON.stringify(object));
     console.log(object);
     axios.post('https://psychotestmodule.herokuapp.com/tests/', formData)
@@ -82,9 +89,32 @@ class createTestForm extends Component {
     console.log(this.props.questions)
   }
 
+  setGroups(form, groupsObject, setGroupObject) {
+    console.log(groupsObject)
+    var formData = form;
+    var propName = null;
+    var propValue = null;
+    let groupObj = groupsObject;
+    formData.forEach((value, key) => {
+      if (key === "groupNumber") {
+        propName = value;
+      }
+      if (key === "groupTimer") {
+        propValue = value;
+      }
+    })
+    groupObj[propName] = propValue;
+    setGroupObject(groupObj);
+  }
+  handleGroups(value, groupsObject) {
+    console.log(groupsObject)
+    if (groupsObject.hasOwnProperty(value)) {
+      document.querySelector('#groupTimer').value = groupsObject[value];
+    }
+  }
   render() {
 
-    const { handleSubmit, pristine, reset, submitting, questions, isReady, results, testType } = this.props
+    const { handleSubmit, pristine, reset, submitting, questions, isReady, results, testType, groupsObject } = this.props
     return (
       <div className='wrapper'>
         <div className='createTestBody'>
@@ -129,13 +159,24 @@ class createTestForm extends Component {
               </div>
             </div>
             <div className='inputField'>
-              <label>Количество вопросов</label>
+              <label>Включить группы</label>
               <div className='testInput'>
                 <Field
-                  name="test_question_count"
-                  component="textarea"
-                  type="number"
-                  placeholder="Количество вопросов"
+                  onClick={() => this.setState({ groupsState: !this.state.groupsState })}
+                  name="switch_groups"
+                  component="input"
+                  type="checkBox"
+                />
+              </div>
+            </div>
+            <div className='inputField'>
+              <label>Включить групповые таймеры</label>
+              <div className='testInput'>
+                <Field
+                  onClick={() => this.setState({ groupsTimerState: !this.state.groupsTimerState })}
+                  name="switch_groups_timers"
+                  component="input"
+                  type="checkBox"
                 />
               </div>
             </div>
@@ -151,33 +192,70 @@ class createTestForm extends Component {
 
           <div className="triggerDiv">
             <div className="triggerDivItem">
-              <OneVariantQuestion updateList={this.OpenHandler} />
+              <OneVariantQuestion
+                groupsState={this.state.groupsState}
+                groupsTimerState={this.state.groupsTimerState}
+                setGroups={this.setGroups}
+                handleGroups={this.handleGroups}
+                updateList={this.OpenHandler} />
             </div>
 
             {testType === 'third' ? "" :
               <div className="triggerDivItem">
-                <ManyVariantQuestion updateList={this.OpenHandler} />
+                <ManyVariantQuestion
+                  groupsState={this.state.groupsState}
+                  groupsTimerState={this.state.groupsTimerState}
+                  setGroups={this.setGroups}
+                  handleGroups={this.handleGroups}
+                  updateList={this.OpenHandler} />
               </div>}
             {
               testType === 'second' || testType === 'third' ?
                 ""
-                : <div className="triggerDivItem"><SequenceQuestion updateList={this.OpenHandler} /></div>
+                : <div className="triggerDivItem">
+                  <SequenceQuestion
+                    groupsState={this.state.groupsState}
+                    groupsTimerState={this.state.groupsTimerState}
+                    setGroups={this.setGroups}
+                    handleGroups={this.handleGroups}
+                    updateList={this.OpenHandler} />
+                </div>
             }
             {
               testType === 'second' || testType === 'third' ?
                 ""
-                : <div className="triggerDivItem"><WriteByYourselfQuestion updateList={this.OpenHandler} /></div>
+                : <div className="triggerDivItem">
+                  <WriteByYourselfQuestion
+                    groupsState={this.state.groupsState}
+                    groupsTimerState={this.state.groupsTimerState}
+                    setGroups={this.setGroups}
+                    handleGroups={this.handleGroups}
+                    updateList={this.OpenHandler} />
+                </div>
             }
 
-            <div className="triggerDivItem"> <TestResults currentResults={results} /></div>
+            <div className="triggerDivItem">
+              <TestResults editResults={results} />
+            </div>
           </div>
         </div>
 
         <div className="questionCard">
           <Card.Group itemsPerRow={1}>
             {
-              !isReady ? "" :
-                questions.map((quest, index) => <AddToList key={index} updateList={this.OpenHandler} index={index} className="testi" {...quest} />)
+
+              !questions ? "" :
+                questions.map((quest, index) => <AddToList
+                  key={index}
+                  groupsState={this.state.groupsState}
+                  groupsTimerState={this.state.groupsTimerState}
+                  updateList={this.OpenHandler}
+                  setGroups={this.setGroups}
+                  handleGroups={this.handleGroups}
+                  index={index}
+                  className="testi"
+                  {...quest}
+                  editQuest={quest} />)
             }
           </Card.Group>
         </div>

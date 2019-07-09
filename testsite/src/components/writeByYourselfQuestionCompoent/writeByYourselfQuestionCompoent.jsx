@@ -1,10 +1,9 @@
 import React, { Component } from 'react'
-import { Field, FieldArray, reduxForm } from 'redux-form'
-import { Button, Header, Image, Modal } from 'semantic-ui-react'
-import validate from '../../validate';
+import { reduxForm } from 'redux-form'
+import { Button, Image, Modal } from 'semantic-ui-react'
+// import validate from '../../validate';
 import axios from 'axios';
 import { Container } from 'semantic-ui-react';
-import { func } from 'prop-types';
 
 class writeByYourselfQuest extends Component {
     state = {
@@ -53,24 +52,29 @@ class writeByYourselfQuest extends Component {
             if (key === "answersArr") {
                 console.log(value)
                 let answersString = value.toUpperCase();
-                let answersArray = answersString.split(',');
-                object['answers_arr'] = answersArray;
+                // let answersArray = answersString.split(',');
+                object['answers_arr'] = answersString;
             }
         }
         );
         return object;
     }
 
-    createQuestion(questions, setQuests, actualImg, variantImg, testType, currentIndex, currentVariants) {
+    createQuestion(questions, setQuests, actualImg, variantImg, testType, editIndex, editVariants) {
 
-        let arr = questions;
+        let arr;
+        if (questions !== undefined) {
+            arr = questions;
+        }
+        else arr = [];
+
         var object = {};
         var formData = new FormData(document.forms.oneVariantForm);
-        if (typeof currentIndex === "number") {
-            object["question_ID"] = currentIndex + 1;
+        if (typeof editIndex === "number") {
+            object["question_ID"] = editIndex + 1;
         }
         else {
-            object["question_ID"] = questions.length;
+            object["question_ID"] = arr.length;
         }
 
         object["type_question"] = "write_by_yourself_answer";
@@ -99,8 +103,8 @@ class writeByYourselfQuest extends Component {
         }
 
         object["number_answers"] = 1;
-        if (typeof currentIndex === "number") {
-            arr[currentIndex] = object;
+        if (typeof editIndex === "number") {
+            arr[editIndex] = object;
         }
         else {
             arr.push(object);
@@ -111,26 +115,34 @@ class writeByYourselfQuest extends Component {
         console.log(json);
     }
     setCurrentQuestionImg() {
-        this.setState({ actualImg: this.props.currentQuestImg })
-        console.log(this.props.currentQuestImg)
+        this.setState({ actualImg: this.props.editQuest && this.props.editQuest.questImg ? this.props.editQuest.questImg : "" })
+        console.log(this.props.editQuestImg)
     }
 
     render() {
         const { handleSubmit,
             questions,
             setQuests,
-            answers_arr,
             reset,
             testType,
-            currentVariants,
-            currentQuestion,
-            currentIndex,
-            currentPrice,
-            currentQuestImg } = this.props;
+            editVariants,
+            editIndex,
+            groupsObject,
+            groupsState,
+            groupsTimerState,
+            editQuest } = this.props;
 
         return (
             <Container>
-                <Modal trigger={<Button onClick={() => { this.setState({ checkArr: [] }); this.handleOpen(); this.setCurrentQuestionImg() }} className='oneVariantTrigger'>Самописный вопрос</Button>} open={this.state.modalOpen} centered={false}>
+                <Modal trigger={<Button onClick={() => {
+                    this.setState({ checkArr: [] });
+                    this.handleOpen();
+                    this.setCurrentQuestionImg()
+                }}
+                    className='oneVariantTrigger'>Самописный вопрос</Button>}
+                    open={this.state.modalOpen}
+                    centered={false}>
+
                     <Modal.Header>{"Одновариантный вопрос"}</Modal.Header>
                     <Modal.Content image>
                         <Image wrapped size='small' src='https://react.semantic-ui.com/images/avatar/large/rachel.png' />
@@ -143,22 +155,51 @@ class writeByYourselfQuest extends Component {
                                             <textarea
                                                 name="question"
                                                 placeholder="Текст результата"
+                                                defaultValue={editQuest ? editQuest.question : ""}
                                             >
-                                                {currentQuestion}
                                             </textarea>
                                             <div>
                                                 <label>Количество баллов за ответ</label>
-                                                <input name="priceQuestion" defaultValue={currentPrice ? currentPrice : 1}></input>
+                                                <input name="priceQuestion" defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}></input>
                                             </div>
                                             <input
                                                 name="questImg"
                                                 type="file"
                                                 onChange={this.FileSelectedHendler}
                                             />
+
+                                            {groupsState ? <div>
+                                                <label>Номер/название группы</label>
+                                                <input
+                                                    name="groupNumber"
+                                                    type="string"
+                                                    defaultValue={editQuest && editQuest.group_number ? editQuest.group_number : 0}
+                                                    onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject) }}
+                                                    onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject) }}></input>
+                                            </div>
+                                                : ""}
+                                            {groupsTimerState ? <div>
+                                                <label>Таймер группы</label>
+                                                <input name="groupTimer"
+                                                    id="groupTimer"
+                                                    type="string"
+                                                    placeholder="10:22 = 10 минут 22 секунды"
+                                                    defaultValue={editQuest && editQuest.group_number ? this.props.groupsObject[editQuest.group_number] : "0:0"}></input>
+                                            </div> : ""}
+
+                                            <div>
+                                                <label>Таймер для вопроса</label>
+                                                <input name="timerQuestion"
+                                                    type="string"
+                                                    placeholder="10:22 = 10 минут 22 секунды"
+                                                    defaultValue={editQuest && editQuest.timer_question ? editQuest.timer_question : "0:0"}></input>
+                                            </div>
+
                                         </div>
                                         <div className='quest'>
-                                            <textarea name="answersArr" placeholder="Возможные ответы через запятую, регистр значения не имеет">
-                                                {answers_arr ? answers_arr.join(',') : ""}
+                                            <textarea name="answersArr"
+                                                placeholder="Возможные ответы через запятую, регистр значения не имеет">
+                                                {editQuest && editQuest.answers_arr ? editQuest.answers_arr : ""}
                                             </textarea>
                                         </div>
                                     </div>
@@ -171,15 +212,18 @@ class writeByYourselfQuest extends Component {
                         <Button onClick={() => { this.handleClose(); reset(); }} color="primary">
                             Отмена
             </Button>
-                        {typeof currentIndex === "number" ?
-                            <Button type="sumbit" onClick={() => { this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex, currentVariants); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
-                                Готово
+
+                        <Button type="sumbit" onClick={() => {
+                            this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex, editVariants);
+                            this.props.setGroups(new FormData(document.forms.writeByYourselfForm), this.props.groupsObject, this.props.setGroupObject);
+                            this.handleClose(); reset(); this.props.updateList();
+                        }}
+                            color="primary"
+                            autoFocus>
+                            Готово
             </Button>
-                            :
-                            <Button type="sumbit" onClick={() => { console.log(this.state.variantImg); this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex, currentVariants); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
-                                Готово
-            </Button>
-                        }
+
+
                     </Modal.Actions>
                 </Modal>
             </Container>

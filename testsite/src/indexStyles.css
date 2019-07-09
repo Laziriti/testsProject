@@ -1,14 +1,6 @@
-@font-face {
-  font-family: Gilroy; /* Гарнитура шрифта */
-  src: url(./fonts/Gilroy-Light.otf); /* Путь к файлу со шрифтом */
- }
 
- @font-face {
-  font-family: Gilroy-bold; /* Гарнитура шрифта */
-  src: url(./fonts/Gilroy-ExtraBold.otf); /* Путь к файлу со шрифтом */
-
- }
-
+@import url(./fontawesome-free-5.9.0-web/css/all.css);
+@import url(./fonts/stylesheet.css);
 body {
   margin: 0;
   padding: 0;

@@ -25,9 +25,9 @@
     color: #ff8400;
     line-height: 174px;
     text-align: center;
-    font-family: "Gilroy-bold";
+    font-family: "Gilroy";
     font-size: 36px;
-    font-weight: 400;
+    font-weight: 700;
 }
 
 .user-block__info {
@@ -47,8 +47,9 @@
 
 .user-block__name {
     color: #202020;
-    font-family: "Gilroy-bold";
+    font-family: "Gilroy";
     font-size: 36px;
+    font-weight: 700;
     line-height: 90px;
 }
 
@@ -107,9 +108,9 @@
     line-height: 53px;
     color: #ffffff;
     text-align: center;
-    font-family: "Gilroy-bold";
+    font-family: "Gilroy";
     font-size: 18px;
-    font-weight: 400;
+    font-weight: 700;
     letter-spacing: 1px;
 }
 
@@ -161,9 +162,9 @@
     text-align: center;
     line-height: 53px;
     color: #ffffff;
-    font-family: "Gilroy-Bold";
+    font-family: "Gilroy";
     font-size: 18px;
-    font-weight: 400;
+    font-weight: 700;
     letter-spacing: 1px;
 }
 
@@ -192,10 +193,10 @@
     border-radius: 10px;
     background-color: #ff8400;
     cursor: pointer;
-    line-height: 53px;
+    line-height: 48px;
     color: #ffffff;
     text-align: center;
-    font-family: "Gilroy-bold";
+    font-family: "Gilroy";
     font-size: 18px;
     font-weight: 400;
     letter-spacing: 1px;

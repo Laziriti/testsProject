@@ -8,7 +8,6 @@ import oneVariantQuestion from '../components/oneVariantQuestionComponent/oneVar
 const mapStateToProps = ({ questions, tests, results, timer }) => ({
   activeState: questions.activeState,
   questions: questions.items,
-  isReady: questions.isReady,
   testType: tests.testType,
   variantsCount: tests.variantsCount,
   results: results.results,

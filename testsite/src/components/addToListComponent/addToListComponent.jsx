@@ -15,7 +15,22 @@ class mapQuest extends Component {
   }
   render() {
 
-    const { question, variants, setQuests, questions, index, answers_arr, updateList, number_answers, type_question, questImg, price_question, not_full_price_question } = this.props
+    const { question,
+      variants,
+      setQuests,
+      questions,
+      index,
+      group_number,
+      updateList,
+      type_question,
+      questImg,
+      setGroups,
+      handleGroups,
+      groupsState,
+      groupsTimerState,
+
+      editQuest
+    } = this.props
 
     return (
 
@@ -30,16 +45,54 @@ class mapQuest extends Component {
 
           <button onClick={() => { this.deleteHandler(index, questions, setQuests); this.props.updateList() }}>удалить</button>
           {type_question === "one_answer" ?
-            <OneVariantQuestion currentVariants={variants} currentQuestion={question} currentIndex={index} updateList={updateList} currentCount={number_answers} currentPrice={price_question} currentQuestImg={questImg} />
+            <OneVariantQuestion
+              groupsState={groupsState}
+              groupsTimerState={groupsTimerState}
+              setGroups={setGroups}
+              handleGroups={handleGroups}
+              currentGroup={group_number}
+              editQuest={editQuest}
+              editIndex={index}
+              updateList={updateList}
+            />
             : ""}
           {type_question === "many_answers" ?
-            <ManyVariantQuestion currentVariants={variants} currentQuestion={question} currentPriceState={not_full_price_question} currentIndex={index} updateList={updateList} currentCount={number_answers} currentPrice={price_question} currentQuestImg={questImg} />
+            <ManyVariantQuestion
+              editQuest={editQuest}
+
+              groupsState={groupsState}
+              groupsTimerState={groupsTimerState}
+              setGroups={setGroups}
+              handleGroups={handleGroups}
+              editIndex={index}
+              updateList={updateList}
+            />
             : ""}
           {type_question === "sequence_answer" ?
-            <SequenceQuestion currentVariants={variants} currentQuestion={question} currentPriceState={not_full_price_question} currentIndex={index} updateList={updateList} currentCount={number_answers} currentPrice={price_question} currentQuestImg={questImg} />
+            <SequenceQuestion
+              editQuest={editQuest}
+
+
+              groupsState={groupsState}
+              groupsTimerState={groupsTimerState}
+              setGroups={setGroups}
+              handleGroups={handleGroups}
+              editIndex={index}
+              updateList={updateList}
+            />
             : ""}
           {type_question === "write_by_yourself_answer" ?
-            <WriteByYourselfQuestion currentVariants={variants} answers_arr={answers_arr} currentQuestion={question} currentPriceState={not_full_price_question} currentIndex={index} updateList={updateList} currentCount={number_answers} currentPrice={price_question} currentQuestImg={questImg} />
+            <WriteByYourselfQuestion
+              editQuest={editQuest}
+
+
+              groupsState={groupsState}
+              groupsTimerState={groupsTimerState}
+              setGroups={setGroups}
+              handleGroups={handleGroups}
+              editIndex={index}
+              updateList={updateList}
+            />
             : ""}
         </Card.Content>
       </Card>

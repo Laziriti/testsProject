@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { Card, Image } from 'semantic-ui-react';
 import './style.css';
 class variantsInfo extends Component {
 

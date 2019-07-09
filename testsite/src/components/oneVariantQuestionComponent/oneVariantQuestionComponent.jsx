@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Field, FieldArray, reduxForm } from 'redux-form'
-import { Button, Header, Image, Modal } from 'semantic-ui-react'
-import validate from '../../validate';
+import { Button, Image, Modal } from 'semantic-ui-react'
+// import validate from '../../validate';
 import axios from 'axios';
 import { Container } from 'semantic-ui-react';
 
@@ -11,18 +11,11 @@ class oneVarQuest extends Component {
     actualImg: null,
     variantImg: [1],
     currentIndexVariantImg: null,
-    editState: false,
     imgArr: [],
     checkArr: [],
     questionsCount: 0
   }
 
-  handleEdit = () => {
-    this.setState({ editState: true });
-  }
-  handleEditClose = () => {
-    this.setState({ editState: false });
-  }
   handleOpen = () => this.setState({ modalOpen: true })
 
   handleClose = () => this.setState({ modalOpen: false })
@@ -31,16 +24,9 @@ class oneVarQuest extends Component {
 
 
   FileSelectedHendler = event => {
-    this.setState({
-      selectedFile: event.target.files[0]
-    })
 
     let files = event.target.files[0];
     let formData = new FormData();
-
-    // var blob = event.target.files[0].slice(0, event.target.files[0].size, 'image/jpeg');
-    // let newFile = new File([blob], 'imageforneuron.jpg', { type: 'image/jpeg' });
-
     formData.append("img_field", files);
 
     axios.post('https://psychotestmodule.herokuapp.com/api/img/', formData)
@@ -176,21 +162,25 @@ class oneVarQuest extends Component {
     return object;
   }
 
-  createQuestion(questions, setQuests, actualImg, variantImg, testType, currentIndex, currentVariants) {
+  createQuestion(questions, setQuests, actualImg, variantImg, testType, editIndex) {
 
-    let arr = questions;
+    let arr;
+    if (questions !== undefined) {
+      arr = questions;
+    }
+    else arr = [];
     var object = {};
     var formData = new FormData(document.forms.oneVariantForm);
-    if (typeof currentIndex === "number") {
-      object["question_ID"] = currentIndex + 1;
+    if (typeof editIndex === "number") {
+      object["question_ID"] = editIndex + 1;
     }
     else {
-      object["question_ID"] = questions.length;
+      object["question_ID"] = arr.length;
     }
 
     object["type_question"] = "one_answer";
 
-    object["groups_object"] = this.props.groupsObject;
+
     formData.forEach(function (value, key) {
       console.log(key);
 
@@ -225,8 +215,10 @@ class oneVarQuest extends Component {
       object = this.thirdTypeHandler(object, variantImg)
     }
     object["number_answers"] = this.props.variantsCount;
-    if (typeof currentIndex === "number") {
-      arr[currentIndex] = object;
+    console.log(editIndex);
+    if (typeof editIndex === "number") {
+      console.log("ВЫПАЛО")
+      arr[editIndex] = object;
     }
     else {
       arr.push(object);
@@ -240,14 +232,14 @@ class oneVarQuest extends Component {
     console.log(json);
   }
 
-  createSelectItems(results, currentVariants, index, currentCount) {
+  createSelectItems(results, editVariants, index, editCount) {
     let items = [];
 
     for (let i = 0; i < results.length; i++) {
       let item = <option key={i} value={i} >{results[i].result} </option>;
       console.log(this.state.checkArr[index])
 
-      if (this.state.checkArr[index] == i) {
+      if (this.state.checkArr[index] === i) {
         item = <option key={i} value={i} selected>{results[i].result} </option>;
       }
       items.push(item);
@@ -256,8 +248,8 @@ class oneVarQuest extends Component {
     console.log(this.state.checkArr)
     return items;
   }
-  insertCurrentData(currentVariants) {
-    if (typeof currentVariants !== "undefined") {
+  insertCurrentData(editVariants) {
+    if (typeof editVariants !== "undefined") {
       setTimeout(() => {
         document.getElementById("insertDataOneVariant").click();
       }, 0);
@@ -286,32 +278,8 @@ class oneVarQuest extends Component {
     this.setState({ checkArr: arr })
   }
 
-  setGroups() {
-    var formData = new FormData(document.forms.oneVariantForm);
-    var propName = null;
-    var propValue = null;
-    let groupObj = this.props.groupsObject;
-    formData.forEach((value, key) => {
-      if (key === "groupNumber") {
-        propName = value;
-      }
-      if (key === "groupTimer") {
-        propValue = value;
-      }
-    })
-    groupObj[propName] = propValue;
-    this.props.setGroupObject(groupObj);
-    console.log(this.props.groupsObject)
-  }
-  handleGroups(value) {
-    if (this.props.groupsObject.hasOwnProperty(value)) {
-      document.querySelector('#groupTimer').value = this.props.groupsObject[value];
-    }
-  }
-
   render() {
     const {
-      setGroupObject,
       groupsObject,
       handleSubmit,
       questions,
@@ -321,14 +289,12 @@ class oneVarQuest extends Component {
       results,
       variantsCount,
       setVariantsCount,
-      currentVariants,
-      currentQuestion,
-      currentIndex,
-      currentCount,
-      currentPrice,
-      currentQuestImg } = this.props;
+      editIndex,
+      groupsState,
+      groupsTimerState,
+      editQuest } = this.props;
 
-    const renderField = ({ input, label, type, currentVariants, index, meta: { touched, error } }) => (
+    const renderField = ({ input, label, type, editVariants, index, meta: { touched, error } }) => (
       <div>
 
         <label>{label}</label>
@@ -336,13 +302,16 @@ class oneVarQuest extends Component {
           <textarea {...input} type={type} ></textarea>
           {
             testType === 'first' ?
-              <input type="radio" name="answerState" onChange={() => this.saveData(index)} defaultChecked={this.state.checkArr[index] ? this.state.checkArr[index] : ""} />
+              <input type="radio"
+                name="answerState"
+                onChange={() => this.saveData(index)}
+                defaultChecked={this.state.checkArr[index] ? this.state.checkArr[index] : ""} />
               : ""
           }
           {
             testType === 'second' ?
               <select name="answerState" className="groupClass" onChange={(e) => this.saveDataSelect(index, e)}>
-                {this.createSelectItems(results, currentVariants, index, currentCount)}
+                {this.createSelectItems(results, editVariants, index, editQuest ? editQuest.number_answers : "")}
               </select>
               : ""
           }
@@ -351,15 +320,14 @@ class oneVarQuest extends Component {
       </div>
     )
 
-    const renderAnswers = ({ fields, currentVariantsArr, currentIndex, currentVariants, currentCount, variantsImgArray }) => (
+    const renderAnswers = ({ fields, editIndex, editVariants, editCount, variantsImgArray }) => (
       <div>
-        {typeof currentVariants !== "undefined" ?
+        {typeof editVariants !== "undefined" ?
           <button type="button" id="insertDataOneVariant" onClick={() => {
-            setVariantsCount(currentVariantsArr.length);
-            this.handleEdit();
-            this.setState({ actualImg: currentQuestImg })
-            if (fields.length <= currentVariantsArr.length) {
-              currentVariantsArr.forEach((elem, index) => {
+            setVariantsCount(editVariants.length);
+            this.setState({ actualImg: editQuest.questImg })
+            if (fields.length <= editVariants.length) {
+              editVariants.forEach((elem, index) => {
                 this.setState({ questionsCount: this.state.questionsCount + 2 });
                 fields.push(elem);
                 if (testType === "second") {
@@ -370,14 +338,14 @@ class oneVarQuest extends Component {
                 }
                 let imgVarArr = this.state.variantImg;
                 if (fields.length > 0) {
-                  imgVarArr[fields.length + index + 1] = currentVariants[elem.variant_Id].variant_img;
+                  imgVarArr[fields.length + index + 1] = editVariants[elem.variant_Id].variant_img;
                 }
                 else {
                   if (index === 0) {
-                    imgVarArr[fields.length] = currentVariants[elem.variant_Id].variant_img;
+                    imgVarArr[fields.length] = editVariants[elem.variant_Id].variant_img;
                   }
                   else {
-                    imgVarArr[fields.length + index] = currentVariants[elem.variant_Id].variant_img;
+                    imgVarArr[fields.length + index] = editVariants[elem.variant_Id].variant_img;
                   }
                 }
                 this.setState({ variantImg: imgVarArr });
@@ -389,7 +357,13 @@ class oneVarQuest extends Component {
           ""
         }
 
-        <button type="button" onClick={() => { fields.push({}); setVariantsCount(variantsCount + 1); this.setState({ questionsCount: this.state.questionsCount + 1 }); this.addToArr(false) }}>Добавить вариант ответа</button>
+        <button type="button"
+          onClick={() => {
+            fields.push({});
+            setVariantsCount(variantsCount + 1);
+            this.setState({ questionsCount: this.state.questionsCount + 1 });
+            this.addToArr(false)
+          }}>Добавить вариант ответа</button>
         <ul>
           {fields.map((answer, index) =>
             <div>
@@ -397,7 +371,12 @@ class oneVarQuest extends Component {
               <button
                 type="button"
                 title="Удалить вариант"
-                onClick={() => { this.handleEditClose(); fields.remove(index); setVariantsCount(variantsCount - 1); this.FileVariantsRemove(index); this.delFromArr(index) }}
+                onClick={() => {
+                  fields.remove(index);
+                  setVariantsCount(variantsCount - 1);
+                  this.FileVariantsRemove(index);
+                  this.delFromArr(index)
+                }}
               >Удалить</button>
               <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
               <input type="file" id={index} name={"variant_img" + index} onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target); }} />
@@ -405,8 +384,8 @@ class oneVarQuest extends Component {
                 <Field
                   className="answerVar"
                   name={answer + "variant"}
-                  currentVariants={currentVariants}
-                  currentCount={currentCount}
+                  editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
+                  editCount={editQuest ? editQuest.number_answers : ""}
                   type="text"
                   index={index}
                   component={renderField}
@@ -420,7 +399,14 @@ class oneVarQuest extends Component {
 
     return (
       <Container>
-        <Modal trigger={<Button onClick={() => { this.setState({ checkArr: [] }); this.handleOpen(); this.insertCurrentData(currentVariants); }} className='oneVariantTrigger'>Одновариантный вопрос</Button>} open={this.state.modalOpen} centered={false}>
+        <Modal trigger={<Button onClick={() => {
+          this.setState({ checkArr: [] });
+          this.handleOpen();
+          this.insertCurrentData(editQuest && editQuest.variants ? editQuest.variants : undefined);
+        }}
+          className='oneVariantTrigger'>Одновариантный вопрос</Button>}
+          open={this.state.modalOpen}
+          centered={false}>
           <Modal.Header>{"Одновариантный вопрос"}</Modal.Header>
           <Modal.Content image>
             <Image wrapped size='small' src='https://react.semantic-ui.com/images/avatar/large/rachel.png' />
@@ -433,13 +419,13 @@ class oneVarQuest extends Component {
                       <textarea
                         name="question"
                         placeholder="Текст результата"
-                        defaultValue={currentQuestion}
+                        defaultValue={editQuest ? editQuest.question : ""}
                       >
 
                       </textarea>
                       <div>
                         <label>Количество баллов за ответ</label>
-                        <input name="priceQuestion" defaultValue={currentPrice ? currentPrice : 1}></input>
+                        <input name="priceQuestion" defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}></input>
                       </div>
                       <input
                         name="questImg"
@@ -447,19 +433,31 @@ class oneVarQuest extends Component {
                         onChange={this.FileSelectedHendler}
                       />
 
-
-
-                      <div>
-                        <label>Номер/название группы (опционально)</label>
-                        <input name="groupNumber" type="string" defaultValue={0} onChange={(event) => { this.handleGroups(event.target.value) }}></input>
+                      {groupsState ? <div>
+                        <label>Номер/название группы</label>
+                        <input
+                          name="groupNumber"
+                          type="string"
+                          defaultValue={editQuest && editQuest.group_number ? editQuest.group_number : 0}
+                          onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject) }}
+                          onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject) }}></input>
                       </div>
-                      <div>
+                        : ""}
+                      {groupsTimerState ? <div>
                         <label>Таймер группы</label>
-                        <input name="groupTimer" id="groupTimer" type="string" placeholder="10:22 = 10 минут 22 секунды" defaultValue="0:0"></input>
-                      </div>
+                        <input name="groupTimer"
+                          id="groupTimer"
+                          type="string"
+                          placeholder="10:22 = 10 минут 22 секунды"
+                          defaultValue={editQuest && editQuest.group_number ? this.props.groupsObject[editQuest.group_number] : "0:0"}></input>
+                      </div> : ""}
+
                       <div>
                         <label>Таймер для вопроса</label>
-                        <input name="timerQuestion" type="string" placeholder="10:22 = 10 минут 22 секунды" defaultValue="0:0"></input>
+                        <input name="timerQuestion"
+                          type="string"
+                          placeholder="10:22 = 10 минут 22 секунды"
+                          defaultValue={editQuest && editQuest.timer_question ? editQuest.timer_question : "0:0"}></input>
                       </div>
 
                     </div>
@@ -467,11 +465,10 @@ class oneVarQuest extends Component {
                   <label>Варианты ответа</label>
                   <div className='answers'>
                     <FieldArray name="variants"
-                      currentVariantsArr={currentVariants}
                       component={renderAnswers}
-                      currentIndex={currentIndex}
-                      currentVariants={currentVariants}
-                      currentCount={currentCount}
+                      editIndex={editIndex}
+                      editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
+                      editCount={editQuest ? editQuest.number_answers : ""}
                       variantsImgArray={this.state.variantImg}
                     />
                   </div>
@@ -487,7 +484,13 @@ class oneVarQuest extends Component {
             {
               this.state.questionsCount > 1 ?
 
-                <Button type="sumbit" onClick={() => { this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, currentIndex, currentVariants); this.setGroups(); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
+                <Button type="sumbit" onClick={() => {
+                  this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex);
+                  this.props.setGroups(new FormData(document.forms.oneVariantForm), this.props.groupsObject, this.props.setGroupObject);
+                  this.handleClose();
+                  reset();
+                  this.props.updateList();
+                }} color="primary" autoFocus>
                   Готово
             </Button>
                 : ""
