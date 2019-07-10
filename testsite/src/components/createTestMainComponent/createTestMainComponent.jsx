@@ -4,12 +4,12 @@ import { Grid, GridColumn } from 'semantic-ui-react';
 import '../../indexStyles.css';
 import './style.css';
 import axios from 'axios';
-import OneVariantQuestion from '../../containers/oneVariantQuestionContainer';
-import ManyVariantQuestion from '../../containers/manyVariantsQuestionContainer';
-import SequenceQuestion from '../../containers/sequenceQuestionContainer'
-import WriteByYourselfQuestion from '../../containers/writeByYourselfQuestionContainer';
-import TestResults from '../../containers/testResultsContainer';
-import AddToList from '../../containers/addToListContainer';
+import OneVariantQuestion from '../oneVariantQuestionComponent/oneVariantQuestionContainer';
+import ManyVariantQuestion from '../manyVariantsQuestionComponent/manyVariantsQuestionContainer';
+import SequenceQuestion from '../sequenceQuestionComponent/sequenceQuestionContainer'
+import WriteByYourselfQuestion from '../writeByYourselfQuestionCompoent/writeByYourselfQuestionContainer';
+import TestResults from '../testResultsComponent/testResultsContainer';
+import AddToList from '../addToListComponent/addToListContainer';
 import { withRouter } from 'react-router-dom';
 import { Redirect } from 'react-router';
 import { Card } from 'semantic-ui-react';
@@ -22,7 +22,8 @@ class createTestForm extends Component {
       isOpen: false,
       actualImg: null,
       groupsState: false,
-      groupsTimerState: false
+      groupsTimerState: false,
+      groupResultsState:false
     };
   }
   componentWillMount() {
@@ -30,6 +31,10 @@ class createTestForm extends Component {
     // if (!this.props.questions) {
     //   this.props.setQuests({});
     // }
+  }
+  componentDidMount(){
+    document.getElementById('switchGroupsTimers').disabled=true;
+    document.getElementById('switchGroupResults').disabled=true;
   }
   OpenHandler = () => this.setState({ isOpen: true })
 
@@ -55,7 +60,9 @@ class createTestForm extends Component {
     setOneVariantState(true);
   }
   handleSubmit = () => {
-    console.log(this.state.tt);
+    console.log(this.state.groupsState);
+    console.log(this.state.groupsTimerState)
+  console.log(this.state.groupResultsState)
     var object = {};
 
     var formData = new FormData(document.forms.createTestForm);
@@ -112,6 +119,23 @@ class createTestForm extends Component {
       document.querySelector('#groupTimer').value = groupsObject[value];
     }
   }
+  switchGroupsHandler() {
+    this.setState({ groupsState: !this.state.groupsState })
+    
+    if (this.state.groupsState) {
+      this.setState({ groupsTimerState: false })
+      this.setState({ groupResultsState: false })
+      document.getElementById('switchGroupsTimers').checked = false;
+      document.getElementById('switchGroupsTimers').disabled=true;
+      document.getElementById('switchGroupResults').checked = false;
+      document.getElementById('switchGroupResults').disabled=true;
+    }
+    else{
+      document.getElementById('switchGroupsTimers').disabled=false;
+      document.getElementById('switchGroupResults').disabled=false;
+    }
+   
+  }
   render() {
 
     const { handleSubmit, pristine, reset, submitting, questions, isReady, results, testType, groupsObject } = this.props
@@ -162,7 +186,7 @@ class createTestForm extends Component {
               <label>Включить группы</label>
               <div className='testInput'>
                 <Field
-                  onClick={() => this.setState({ groupsState: !this.state.groupsState })}
+                  onClick={() => this.switchGroupsHandler()}
                   name="switch_groups"
                   component="input"
                   type="checkBox"
@@ -175,6 +199,20 @@ class createTestForm extends Component {
                 <Field
                   onClick={() => this.setState({ groupsTimerState: !this.state.groupsTimerState })}
                   name="switch_groups_timers"
+                  id="switchGroupsTimers"
+                  component="input"
+                  type="checkBox"
+
+                />
+              </div>
+            </div>
+            <div className='inputField'>
+              <label>Включить ответы по группам</label>
+              <div className='testInput'>
+                <Field
+                  onClick={() => this.setState({ groupResultsState: !this.state.groupResultsState })}
+                  name="switch_groups_timers"
+                  id="switchGroupResults"
                   component="input"
                   type="checkBox"
                 />
@@ -235,7 +273,7 @@ class createTestForm extends Component {
             }
 
             <div className="triggerDivItem">
-              <TestResults editResults={results} />
+              <TestResults editResults={results} groupResultsState={this.state.groupResultsState} />
             </div>
           </div>
         </div>

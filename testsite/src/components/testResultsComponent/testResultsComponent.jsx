@@ -49,6 +49,9 @@ class testResults extends Component {
     var resultObject = {};
     var check = 0;
     var index = 0;
+
+    resultObject["group"] = document.getElementById("group").value;
+
     formData.forEach(function (value, key) {
       console.log(key);
       check++;
@@ -141,18 +144,50 @@ class testResults extends Component {
     console.log(this.state.currentResults)
     // this.setState({ currentResults: resultsArr })
   }
+  createSelectItems(index, groupsObject) {
+    let items = [];
+    console.log(groupsObject)
+    // groupsObject.forEach((elem, index) => {
+    //   console.log(elem);
+    //   console.log(index)
+    // })
+    for (let objKey in groupsObject) {
 
+      console.log(objKey);
+      console.log(groupsObject[objKey])
+      let item = <option key={objKey} value={objKey} >{objKey} </option>;
+
+      if (this.state.currentResults[index] && groupsObject.hasOwnProperty(this.state.currentResults[index].group)) {
+        item = <option key={objKey} value={objKey} selected>{objKey} </option>;
+      }
+      items.push(item);
+    }
+
+    return items;
+  }
   render() {
-    const { results, setResults, questions, testType, editResults, reset } = this.props
+    const { results, setResults, questions, testType, editResults, reset, groupResultsState } = this.props
     const renderField = ({ input, label, type, globalField, textValue, index, meta: { touched, error } }) => (
       <div>
+
+        {this.state.currentResults[index] ? delete input.value : ""}
+
+
+        {groupResultsState
+          ? <div>
+            <label>Группа:</label>
+            <select id="group" >
+              {this.createSelectItems(index, this.props.groupsObject)}
+            </select>
+          </div> : ""}
+
         <label>{label}</label>
+
         <div>
-          {this.state.currentResults[index] ? delete input.value : ""}
           <textarea {...input} type={type} defaultValue={textValue} />
 
-          {touched && error && <span>{error}</span>}
         </div>
+        {touched && error && <span>{error}</span>}
       </div>
     )
 
@@ -181,7 +216,7 @@ class testResults extends Component {
         {typeof globalField !== "undefined" ?
           <button type="button" id="insertDataResult" onClick={() => {
             console.log(editResults)
-       
+
             if (fields.length <= editResults.length) {
               editResults.forEach((elem, index) => {
 

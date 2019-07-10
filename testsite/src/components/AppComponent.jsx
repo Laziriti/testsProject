@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Container } from 'semantic-ui-react';
 import { Route } from 'react-router-dom';
-import Show from '../containers/showAllTestsContainer';
-import CreateTestMain from '../containers/createTestMainContainer';
-import PassingTest from '../containers/passingTestContainer';
-import Filter from '../containers/UserContainer';
+import Show from './showAllTestsComponent/showAllTestsContainer';
+import CreateTestMain from '../components/createTestMainComponent/createTestMainContainer';
+import PassingTest from './passingTestComponent/passingTestContainer';
+import Filter from './userComponent/UserContainer';
 class App extends Component {
 
   constructor(props) {
@@ -23,7 +23,7 @@ class App extends Component {
         <Filter />
         <Route exact path='/' component={Show} />
         <Route exact path='/createTest/:testType' component={CreateTestMain} />
-        <Route exact path='/passingTest' component={PassingTest} />
+        <Route exact path='/passingTest/:testId' component={PassingTest} />
       </Container>
     )
 

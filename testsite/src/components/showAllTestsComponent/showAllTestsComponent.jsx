@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import Cards from '../../containers/testCardContainer';
+import Cards from '../testCardComponent/testCardContainer';
 import { Container } from 'semantic-ui-react';
 import { Card } from 'semantic-ui-react';
 import './style.css';

@@ -12,30 +12,10 @@ class testCard extends Component {
   }
 
   goPassTheTest() {
-    setTimeout(() => { this.props.history.push('/passingTest') }, 0)
+    setTimeout(() => { this.props.history.push('/passingTest/'+this.props.currentTest.id) }, 0)
 
   }
-  setTestToPass() {
-    let test = this.props.currentTest;
-    let content = eval(test.test_content);
-    eval(content).forEach(elem => {
-      if (elem.type_question !== "write_by_yourself_answer") {
-        elem.variants.forEach(variant => {
-          variant.answer_state = 0;
-        })
-
-      }
-      else {
-        elem.answers_arr = "";
-      }
-
-    });
-    test.test_content = content;
-    console.log(test);
-    this.props.setPassingTest(test)
-    console.log(this.props.currentTest)
-    return test;
-  }
+ 
 
   render() {
     const { test_name, test_author, test_img, } = this.props;
@@ -51,7 +31,7 @@ class testCard extends Component {
           <Card.Header>{test_name}</Card.Header>
           <Card.Meta>{test_author}</Card.Meta>
         </Card.Content>
-        <button className="card-button" onClick={() => { this.setTestToPass(); this.goPassTheTest() }} >Пройти тест</button>
+        <button className="card-button" onClick={() => {this.goPassTheTest() }} >Пройти тест</button>
         <div></div>
       </Card>
     )

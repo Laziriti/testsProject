@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 import { Card } from 'semantic-ui-react';
-import VariantsInfo from '../../containers/variantsInfoListContainer'
+import VariantsInfo from '../variantsInfoListComponent/variantsInfoListContainer'
 import './addToListStyle.css';
 
-import OneVariantQuestion from '../../containers/oneVariantQuestionContainer';
-import ManyVariantQuestion from '../../containers/manyVariantsQuestionContainer';
-import SequenceQuestion from '../../containers/sequenceQuestionContainer'
-import WriteByYourselfQuestion from '../../containers/writeByYourselfQuestionContainer';
+import OneVariantQuestion from '../oneVariantQuestionComponent/oneVariantQuestionContainer';
+import ManyVariantQuestion from '../manyVariantsQuestionComponent/manyVariantsQuestionContainer';
+import SequenceQuestion from '../sequenceQuestionComponent/sequenceQuestionContainer'
+import WriteByYourselfQuestion from '../writeByYourselfQuestionCompoent/writeByYourselfQuestionContainer';
 
 class mapQuest extends Component {
   deleteHandler(index, questions, setQuests) {

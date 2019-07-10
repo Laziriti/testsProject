@@ -1,0 +1,102 @@
+.passing-block__container {
+    border-radius: 10px;
+    background-color: #efecec;
+}
+
+.passing-block__pass {
+    position: relative;
+    padding: 5px;
+    background-color: #efecec;
+    border-radius: 10px;
+}
+
+.passing-block__form {
+    display: flex;
+}
+
+.passing-block__info-right {
+    padding-left: 10px;
+}
+
+/* asddddddddddddddddddddddddddddddddddddddddddd */
+
+.passing-block__variant-item_radio:checked, .passing-block__variant-item_radio:not(:checked) {
+    position: absolute;
+    left: -9999px;
+}
+
+.passing-block__variant-item_radio:checked+.passing-block__variant-text, .passing-block__variant-item_radio:not(:checked)+.passing-block__variant-text {
+    position: relative;
+    display: inline-block;
+    padding-left: 28px;
+    cursor: pointer;
+    line-height: 20px;
+}
+
+.passing-block__variant-item_radio:checked+.passing-block__variant-text:before, .passing-block__variant-item_radio:not(:checked)+.passing-block__variant-text:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 18px;
+    height: 18px;
+    border: 2px solid #842cc1;
+    border-radius: 50%;
+    background-color: #efecec;
+}
+
+.passing-block__variant-item_radio:checked+.passing-block__variant-text:before {
+    transition: 0.2s;
+    background-color: #842cc1;
+}
+
+/* asddddddddddddddddddddddddddddddd */
+
+.passing-block__variant-item_byYourself {
+    width: 261px;
+    height: 40px;
+    padding-left: 10px;
+    border-radius: 10px;
+    border: 1px solid #b7b7b7;
+    background-color: #ffffff;
+    color: #bab8b8;
+    font-family: "Gilroy";
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.passing-block__index {
+    width: 90px;
+    padding-top: 20px;
+    margin: 0;
+    color: #dcc1ef;
+    font-family: 'Gilroy';
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 24px;
+}
+
+.passing-block__question {
+    width: 960px;
+    /* width: 850px; */
+    padding-top: 8px;
+    /* margin-right: 0; */
+    color: #2d2d2d;
+    font-family: gilroy;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.passing-block__variant-text {
+    padding-left: 8px;
+    color: #2d2d2d;
+    font-family: Gilroy;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 26px;
+}
+
+img {
+    width: 200px;
+}
