@@ -15,6 +15,7 @@ const mapStateToProps = ({ questions, tests, results, timer }) => ({
   questReady: questions.indexReady,
   testType: tests.testType,
   passingTestResults: tests.passingTestResults,
+  groups_object:tests.groups_object,
   testContent: tests.passingTestContent,
   isReadyToPass: tests.isReadyToPass,
   questionMinutes: timer.questionMinutes,

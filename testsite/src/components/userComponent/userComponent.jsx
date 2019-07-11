@@ -11,21 +11,17 @@ class Filter extends Component {
 
   goCreateTest(testType) {
     let alert = true;
-    if (testType !== this.props.testType) {
+    if (testType !== this.props.testType && this.props.testType !== null) {
       alert = window.confirm("При переходе на создание теста другого типа, все созданыые вопросы будут удалены, перейти?");
       if (alert) {
         this.props.setQuests([]);
-        // this.props.setResults([])
         this.props.history.push('/createTest/' + testType)
       }
-
     }
-    else{
-        console.log(this.props.testType);
-        this.props.history.push('/createTest/' + testType)
+    else {
+      this.props.history.push('/createTest/' + testType)
     }
 
-   
   }
   goToTheTests() {
     this.props.history.push('/')

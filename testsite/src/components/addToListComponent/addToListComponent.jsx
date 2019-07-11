@@ -28,7 +28,8 @@ class mapQuest extends Component {
       handleGroups,
       groupsState,
       groupsTimerState,
-
+      firstTypeHandler,
+      secondTypeHandler,
       editQuest
     } = this.props
 
@@ -46,6 +47,8 @@ class mapQuest extends Component {
           <button onClick={() => { this.deleteHandler(index, questions, setQuests); this.props.updateList() }}>удалить</button>
           {type_question === "one_answer" ?
             <OneVariantQuestion
+              firstTypeHandler={firstTypeHandler}
+              secondTypeHandler={secondTypeHandler}
               groupsState={groupsState}
               groupsTimerState={groupsTimerState}
               setGroups={setGroups}
@@ -58,8 +61,9 @@ class mapQuest extends Component {
             : ""}
           {type_question === "many_answers" ?
             <ManyVariantQuestion
+              firstTypeHandler={firstTypeHandler}
+              secondTypeHandler={secondTypeHandler}
               editQuest={editQuest}
-
               groupsState={groupsState}
               groupsTimerState={groupsTimerState}
               setGroups={setGroups}
@@ -71,8 +75,6 @@ class mapQuest extends Component {
           {type_question === "sequence_answer" ?
             <SequenceQuestion
               editQuest={editQuest}
-
-
               groupsState={groupsState}
               groupsTimerState={groupsTimerState}
               setGroups={setGroups}
@@ -84,8 +86,6 @@ class mapQuest extends Component {
           {type_question === "write_by_yourself_answer" ?
             <WriteByYourselfQuestion
               editQuest={editQuest}
-
-
               groupsState={groupsState}
               groupsTimerState={groupsTimerState}
               setGroups={setGroups}

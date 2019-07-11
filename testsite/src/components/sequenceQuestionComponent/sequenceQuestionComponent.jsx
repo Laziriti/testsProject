@@ -28,7 +28,7 @@ class sequenceQuestion extends Component {
 
   handleClose = () => this.setState({ modalOpen: false })
 
-  setIndex = (index) => { this.setState({ currentIndexVariantImg: index }); console.log(index) }
+  setIndex = (index) => { this.setState({ currentIndexVariantImg: index }) }
 
   FileSelectedHendler = event => {
     this.setState({
@@ -38,11 +38,9 @@ class sequenceQuestion extends Component {
     let files = event.target.files[0];
     let formData = new FormData();
     formData.append("img_field", files);
-    console.log(formData);
 
     axios.post('https://psychotestmodule.herokuapp.com/api/img/', formData)
       .then((response) => {
-        console.log(response);
         this.setState({ actualImg: response.data.img_field })
       }).catch(e => {
         console.log(e)
@@ -55,17 +53,14 @@ class sequenceQuestion extends Component {
     let files = ee;
     let formData = new FormData();
     formData.append("img_field", files);
-    console.log(formData);
 
     axios.post('https://psychotestmodule.herokuapp.com/api/img/', formData)
       .then((response) => {
-        console.log(response);
         imgVarArr[this.state.currentIndexVariantImg] = response.data.img_field;
         this.setState({ variantImg: imgVarArr })
       }).catch(e => {
         console.log(e)
       })
-    console.log(this.state.variantImg)
   }
 
   FileVariantsRemove = index => {
@@ -93,7 +88,7 @@ class sequenceQuestion extends Component {
         }
       }
       if (key === "variants[" + index + "]priceVar") {
-        object1["priceVar"] = value;
+        object1["price_var"] = Number(value);
       }
       if (key === "variants[" + index + "]variant") {
         object1["variant"] = value;
@@ -101,7 +96,6 @@ class sequenceQuestion extends Component {
       }
 
       if (key === "variants[" + index + "]answerState") {
-        console.log(11)
         object1["answer_state"] = Number(value);
         allVariants[roll] = object1;
         index++;
@@ -119,23 +113,18 @@ class sequenceQuestion extends Component {
 
   createQuestion(questions, setQuests, actualImg, variantImg, testType, editIndex, variantsCount) {
 
-    let arr;
+    let questionsArray;
     if (questions !== undefined) {
-      arr = questions;
+      questionsArray = questions;
     }
-    else arr = [];
+    else questionsArray = [];
     var object = {};
     var formData = new FormData(document.forms.sequenceForm);
     var variantIndex = 0;
-
-    object["question_ID"] = arr.length;
+    object["question_ID"] = questionsArray.length;
     object["type_question"] = "sequence_answer";
 
-    // formData.forEach(function (value, key) {
-    //   console.log(key);
-    // })
     formData.forEach(function (value, key) {
-      console.log(key);
 
       if (variantIndex === variantsCount) {
         variantIndex = 0;
@@ -151,11 +140,12 @@ class sequenceQuestion extends Component {
         object["price_question"] = Number(value);
       }
       if (key === 'notFullPriceQuestion') {
-        object["not_full_price_question"] = value;
+        object["not_full_price_question"] = true;
       }
-
     });
-    console.log(testType)
+    if (!object.hasOwnProperty("not_full_price_question")) {
+      object["not_full_price_question"] = false;
+    }
     if (testType === 'first') {
       object = this.firstTypeHandler(object, variantImg);
     }
@@ -163,17 +153,15 @@ class sequenceQuestion extends Component {
     object["number_answers"] = variantsCount;
 
     if (typeof editIndex === "number") {
-      arr[editIndex] = object;
+      questionsArray[editIndex] = object;
     }
     else {
-      arr.push(object);
+      questionsArray.push(object);
     }
 
-    setQuests(arr);
+    setQuests(questionsArray);
     variantsCount = 0;
-    var json = JSON.stringify(questions);
-    console.log(json);
-
+    console.log(JSON.stringify(object))
   }
   insertCurrentData(editVariants) {
     if (typeof editVariants !== "undefined") {
@@ -217,7 +205,6 @@ class sequenceQuestion extends Component {
     this.setState({ notFullPriceArr: arr })
   }
 
-
   render() {
 
     const { handleSubmit,
@@ -233,7 +220,7 @@ class sequenceQuestion extends Component {
       groupsTimerState,
       editQuest } = this.props
 
-    const renderField = ({ input, label, type, answer, editVariants, index, meta: { touched, error } }) => (
+    const renderField = ({ input, label, type, answer, index, meta: { touched, error } }) => (
       <div>
         <label>{label}</label>
         <div>
@@ -247,18 +234,16 @@ class sequenceQuestion extends Component {
         </div>
       </div>
     )
-    // пометка перепроверить условия
-    const renderFieldInput = ({ input, label, type,editCount, editVariants, index, meta: { touched, error } }) => (
+
+    const renderFieldInput = ({ input, label, type, editCount, editVariants, index, meta: { touched, error } }) => (
       <div>
         <label>{label}</label>
         <div>
-
           {
             this.state.editState && editCount > index ?
               delete input.value && <input {...input} type={type} placeholder={label} defaultValue={editVariants[index].answer_state} />
               : <input {...input} type={type} placeholder={label} />
           }
-          {console.log(document.getElementsByName(input.name))}
           {touched && error && <span>{error}</span>}
         </div>
       </div>
@@ -269,7 +254,7 @@ class sequenceQuestion extends Component {
         {typeof editVariants !== "undefined" ?
           <button type="button" id="insertDataSequenceVariant" onClick={() => {
             setVariantsCount(editVariants.length);
-            this.setState({ actualImg: editQuest.questImg  })
+            this.setState({ actualImg: editQuest.questImg })
             if (fields.length <= editVariants.length) {
               editVariants.forEach((elem, index) => {
 
@@ -293,10 +278,6 @@ class sequenceQuestion extends Component {
 
                 }
                 this.setState({ variantImg: imgVarArr })
-
-                console.log(this.state.variantImg)
-
-
               });
 
             };
@@ -314,7 +295,6 @@ class sequenceQuestion extends Component {
 
           {fields.map((answer, index, item) =>
             <li key={index}>
-              {console.log(item)}
               <h4>Answer #{index + 1}</h4>
               <button
                 type="button"
@@ -335,9 +315,7 @@ class sequenceQuestion extends Component {
 
                 <Field
                   className="answerVar"
-
                   name={answer + "variant"}
-                  editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
                   editCount={editQuest ? editQuest.number_answers : ""}
                   index={index}
                   answer={answer}
@@ -347,11 +325,9 @@ class sequenceQuestion extends Component {
                   className="answerVar"
                   type="number"
                   name={answer + "answerState"}
-                  editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
                   editCount={editQuest ? editQuest.number_answers : ""}
                   index={index}
                   component={renderFieldInput}
-
                 />
 
               </div>
@@ -450,13 +426,14 @@ class sequenceQuestion extends Component {
 
           </Modal.Content>
           <Modal.Actions>
-            <Button onClick={() => { this.handleClose(); reset(); }} color="primary">
+            <Button onClick={() => { this.handleClose(); reset();  this.setState({notFullPriceState:false}) }} color="primary">
               Отмена
             </Button>
             <Button type="sumbit" onClick={() => {
               this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex, variantsCount);
               this.props.setGroups(new FormData(document.forms.SequenceVariantForm), this.props.groupsObject, this.props.setGroupObject);
               this.handleClose();
+              this.setState({notFullPriceState:false});
               reset();
               this.props.updateList();
             }}
@@ -473,6 +450,6 @@ class sequenceQuestion extends Component {
 }
 
 export default reduxForm({
-  form: 'SequenceVariantForm',     // a unique identifier for this form
+  form: 'SequenceVariantForm'
 
 })(sequenceQuestion)

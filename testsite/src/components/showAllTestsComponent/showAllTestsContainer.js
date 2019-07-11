@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import * as testsActions from '../../actions/testsAction';
-import * as switchActions from '../../actions/switchAction';
 import orderBy from 'lodash/orderBy.js';
 import { bindActionCreators } from 'redux';
 import ShowAllTests from './showAllTestsComponent';
@@ -41,7 +40,6 @@ const mapStateToProps = ({ tests, filter }) => ({
 
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators(testsActions, dispatch),
-  ...bindActionCreators(switchActions, dispatch),
   ...bindActionCreators(setPassingTestAct, dispatch)
 })
 

@@ -4,11 +4,7 @@ import { Grid, GridColumn } from 'semantic-ui-react';
 import '../../indexStyles.css';
 import './style.css';
 import axios from 'axios';
-import OneVariantQuestion from '../oneVariantQuestionComponent/oneVariantQuestionContainer';
-import ManyVariantQuestion from '../manyVariantsQuestionComponent/manyVariantsQuestionContainer';
-import SequenceQuestion from '../sequenceQuestionComponent/sequenceQuestionContainer'
-import WriteByYourselfQuestion from '../writeByYourselfQuestionCompoent/writeByYourselfQuestionContainer';
-import TestResults from '../testResultsComponent/testResultsContainer';
+import CreateTestContent from "../createTestContentComponent/createTestContentContainer"
 import AddToList from '../addToListComponent/addToListContainer';
 import { withRouter } from 'react-router-dom';
 import { Redirect } from 'react-router';
@@ -23,18 +19,15 @@ class createTestForm extends Component {
       actualImg: null,
       groupsState: false,
       groupsTimerState: false,
-      groupResultsState:false
+      groupResultsState: false
     };
   }
   componentWillMount() {
     this.props.changeTestType(this.props.match.params.testType);
-    // if (!this.props.questions) {
-    //   this.props.setQuests({});
-    // }
   }
-  componentDidMount(){
-    document.getElementById('switchGroupsTimers').disabled=true;
-    document.getElementById('switchGroupResults').disabled=true;
+  componentDidMount() {
+    document.getElementById('switchGroupsTimers').disabled = true;
+    document.getElementById('switchGroupResults').disabled = true;
   }
   OpenHandler = () => this.setState({ isOpen: true })
 
@@ -44,11 +37,9 @@ class createTestForm extends Component {
 
     const formData = new FormData();
     formData.append("img_field", files);
-    console.log(formData);
 
     axios.post('https://psychotestmodule.herokuapp.com/api/img/', formData)
       .then((response) => {
-        console.log(response);
         this.setState({ actualImg: response.data.img_field })
       }).catch(e => {
         console.log(e)
@@ -56,13 +47,8 @@ class createTestForm extends Component {
 
   }
 
-  handleClose(setOneVariantState) {
-    setOneVariantState(true);
-  }
   handleSubmit = () => {
-    console.log(this.state.groupsState);
-    console.log(this.state.groupsTimerState)
-  console.log(this.state.groupResultsState)
+
     var object = {};
 
     var formData = new FormData(document.forms.createTestForm);
@@ -70,34 +56,120 @@ class createTestForm extends Component {
     formData.append("test_content", JSON.stringify(this.props.questions));
     formData.append("test_check_sum", JSON.stringify(this.props.results));
     formData.append("test_type", this.props.testType);
+    formData.append("test_group_results_state", this.state.groupResultsState)
     formData.set("test_img", this.state.actualImg);
     if (this.state.groupsTimerState) {
-      formData.append("groups_object", JSON.stringify(this.props.groupsObject));
+      formData.append("test_groups_object", JSON.stringify(this.props.groupsObject));
+    }
+    else {
+      formData.append("test_groups_object", null);
     }
 
     formData.forEach(function (value, key) {
-      console.log(key)
-      console.log(value)
       object[key] = value;
     })
     formData.append("test_question_count", this.props.questions.length)
-    console.log(JSON.stringify(object));
-    console.log(object);
     axios.post('https://psychotestmodule.herokuapp.com/tests/', formData)
       .then((response) => {
-        console.log(response);
       }).catch(e => {
         console.log(e)
       })
-    console.log(formData)
   }
+  firstTypeHandler(object, variantImg, variantsCount) {
+    let rightCount = 0;
+    var objectVariant = {};
+    var allVariants = [];
+    var roll = 0;
+    var index = 0;
+    var formData = new FormData(document.forms.oneVariantForm);
+    var variantIndex = 0;
 
-  check = () => {
-    console.log(this.props.questions)
+    formData.forEach(function (value, key) {
+
+      if (key !== 'questImg' && key !== 'question') {
+
+        if (key === "variant_img" + index) {
+          if (!objectVariant.hasOwnProperty("answer_state") && objectVariant.hasOwnProperty("variant_Id") && index !== variantsCount) {
+
+            objectVariant["answer_state"] = 0;
+            allVariants[roll] = objectVariant;
+            objectVariant = {};
+            roll++;
+          }
+          objectVariant["variant_Id"] = variantIndex;
+          variantIndex++;
+          objectVariant["variant_img"] = variantImg[index];
+          if (variantImg[index] == null) {
+            objectVariant["variant_img"] = "null"
+          }
+        }
+        if (key === "variants[" + index + "]priceVar") {
+          objectVariant["price_var"] = Number(value);
+        }
+        if (key === "variants[" + index + "]variant") {
+          objectVariant["variant"] = value;
+          index++;
+        }
+        if (key === "answerState") {
+          objectVariant["answer_state"] = 1;
+          rightCount++;
+          allVariants[roll] = objectVariant;
+          objectVariant = {};
+          roll++;
+        }
+        if (!objectVariant.hasOwnProperty("answer_state") && index === variantsCount && key === "variants[" + Number(index - 1) + "]variant") {
+          objectVariant["answer_state"] = 0;
+          allVariants[roll] = objectVariant;
+        }
+      }
+
+    }
+    );
+    object["variants"] = allVariants;
+    object["number_answers"] = rightCount;
+    return object;
   }
+  secondTypeHandler(object, variantImg, variantsCountProp) {
+    var objectVariant = {};
+    var allVariants = [];
+    var roll = 0;
+    let variantsCount = variantsCountProp;
+    var formData = new FormData(document.forms.oneVariantForm);
+    var variantIndex = 0;
+    var index = 0;
+    formData.forEach(function (value, key) {
 
+      if (key === "variant_img" + index) {
+        objectVariant["variant_Id"] = variantIndex;
+        variantIndex++;
+        objectVariant["variant_img"] = variantImg[index];
+        if (variantImg[index] == null) {
+          objectVariant["variant_img"] = "null"
+        }
+      }
+      if (key === "variants[" + index + "]priceVar") {
+        objectVariant["price_var"] = value;
+      }
+      if (key === "variants[" + index + "]variant") {
+        objectVariant["variant"] = value;
+        index++
+        variantsCount++;
+      }
+
+
+      if (key === 'groupState') {
+        objectVariant["answer_state"] = Number(value);
+        allVariants[roll] = objectVariant;
+        objectVariant = {};
+        roll++;
+      }
+    }
+    );
+    object["variants"] = allVariants;
+    object["number_answers"] = variantsCount;
+    return object;
+  }
   setGroups(form, groupsObject, setGroupObject) {
-    console.log(groupsObject)
     var formData = form;
     var propName = null;
     var propValue = null;
@@ -114,31 +186,30 @@ class createTestForm extends Component {
     setGroupObject(groupObj);
   }
   handleGroups(value, groupsObject) {
-    console.log(groupsObject)
     if (groupsObject.hasOwnProperty(value)) {
       document.querySelector('#groupTimer').value = groupsObject[value];
     }
   }
   switchGroupsHandler() {
     this.setState({ groupsState: !this.state.groupsState })
-    
+
     if (this.state.groupsState) {
       this.setState({ groupsTimerState: false })
       this.setState({ groupResultsState: false })
       document.getElementById('switchGroupsTimers').checked = false;
-      document.getElementById('switchGroupsTimers').disabled=true;
+      document.getElementById('switchGroupsTimers').disabled = true;
       document.getElementById('switchGroupResults').checked = false;
-      document.getElementById('switchGroupResults').disabled=true;
+      document.getElementById('switchGroupResults').disabled = true;
     }
-    else{
-      document.getElementById('switchGroupsTimers').disabled=false;
-      document.getElementById('switchGroupResults').disabled=false;
+    else {
+      document.getElementById('switchGroupsTimers').disabled = false;
+      document.getElementById('switchGroupResults').disabled = false;
     }
-   
+
   }
   render() {
 
-    const { handleSubmit, pristine, reset, submitting, questions, isReady, results, testType, groupsObject } = this.props
+    const { pristine, reset, submitting, questions } = this.props
     return (
       <div className='wrapper'>
         <div className='createTestBody'>
@@ -228,54 +299,15 @@ class createTestForm extends Component {
             </div>
           </form>
 
-          <div className="triggerDiv">
-            <div className="triggerDivItem">
-              <OneVariantQuestion
-                groupsState={this.state.groupsState}
-                groupsTimerState={this.state.groupsTimerState}
-                setGroups={this.setGroups}
-                handleGroups={this.handleGroups}
-                updateList={this.OpenHandler} />
-            </div>
-
-            {testType === 'third' ? "" :
-              <div className="triggerDivItem">
-                <ManyVariantQuestion
-                  groupsState={this.state.groupsState}
-                  groupsTimerState={this.state.groupsTimerState}
-                  setGroups={this.setGroups}
-                  handleGroups={this.handleGroups}
-                  updateList={this.OpenHandler} />
-              </div>}
-            {
-              testType === 'second' || testType === 'third' ?
-                ""
-                : <div className="triggerDivItem">
-                  <SequenceQuestion
-                    groupsState={this.state.groupsState}
-                    groupsTimerState={this.state.groupsTimerState}
-                    setGroups={this.setGroups}
-                    handleGroups={this.handleGroups}
-                    updateList={this.OpenHandler} />
-                </div>
-            }
-            {
-              testType === 'second' || testType === 'third' ?
-                ""
-                : <div className="triggerDivItem">
-                  <WriteByYourselfQuestion
-                    groupsState={this.state.groupsState}
-                    groupsTimerState={this.state.groupsTimerState}
-                    setGroups={this.setGroups}
-                    handleGroups={this.handleGroups}
-                    updateList={this.OpenHandler} />
-                </div>
-            }
-
-            <div className="triggerDivItem">
-              <TestResults editResults={results} groupResultsState={this.state.groupResultsState} />
-            </div>
-          </div>
+          <CreateTestContent
+            groupsState={this.state.groupsState}
+            groupsTimerState={this.state.groupsTimerState}
+            setGroups={this.setGroups}
+            handleGroups={this.handleGroups}
+            updateList={this.OpenHandler}
+            firstTypeHandler={this.firstTypeHandler}
+            secondTypeHandler={this.secondTypeHandler}
+          ></CreateTestContent>
         </div>
 
         <div className="questionCard">
@@ -291,6 +323,8 @@ class createTestForm extends Component {
                   setGroups={this.setGroups}
                   handleGroups={this.handleGroups}
                   index={index}
+                  firstTypeHandler={this.firstTypeHandler}
+                  secondTypeHandler={this.secondTypeHandler}
                   className="testi"
                   {...quest}
                   editQuest={quest} />)
@@ -305,5 +339,5 @@ class createTestForm extends Component {
 }
 
 export default reduxForm({
-  form: 'createTestForm' // a unique identifier for this form
+  form: 'createTestForm'
 })(createTestForm)

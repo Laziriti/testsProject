@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import * as switchActions from '../../actions/switchAction';
 import { bindActionCreators } from 'redux';
 import testCard from './testCardComponent'
 import * as setPassingTestAct from '../../actions/setPassingTestAction';
@@ -10,7 +9,6 @@ const mapStateToProps = ({ tests }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  ...bindActionCreators(switchActions, dispatch),
   ...bindActionCreators(setPassingTestAct, dispatch)
 })
 

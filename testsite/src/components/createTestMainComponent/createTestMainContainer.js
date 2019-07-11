@@ -1,6 +1,5 @@
 import { connect } from 'react-redux';
 import * as testActions from '../../actions/createTestAction';
-import * as switchActions from '../../actions/switchAction';
 import * as variantActions from '../../actions/createTestAction';
 import * as setGroupObjectAction from '../../actions/setGroupObjectAction';
 import * as testTypeActions from '../../actions/changeTestTypeAction';
@@ -18,7 +17,6 @@ const mapStateToProps = ({ tests, questions, results,timer }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  ...bindActionCreators(switchActions, dispatch),
   ...bindActionCreators(variantActions, dispatch),
   ...bindActionCreators(setGroupObjectAction, dispatch),
   ...bindActionCreators(testTypeActions, dispatch),

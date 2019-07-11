@@ -17,7 +17,7 @@ class testResults extends Component {
 
   handleClose = () => this.setState({ modalOpenResult: false })
 
-  setIndex = (index) => { this.setState({ currentIndexVariantImg: index }); console.log(index) }
+  setIndex = (index) => { this.setState({ currentIndexVariantImg: index })}
 
   FileSelectedHendlerVariants = img => {
 
@@ -25,17 +25,14 @@ class testResults extends Component {
     let files = img;
     let formData = new FormData();
     formData.append("img_field", files);
-    console.log(formData);
 
     axios.post('https://psychotestmodule.herokuapp.com/api/img/', formData)
       .then((response) => {
-        console.log(response);
         imgVarArr[this.state.currentIndexVariantImg] = response.data.img_field;
         this.setState({ variantImg: imgVarArr })
       }).catch(e => {
         console.log(e)
       })
-    console.log(this.state.variantImg)
   }
 
   FileVariantsRemove = index => {
@@ -49,11 +46,12 @@ class testResults extends Component {
     var resultObject = {};
     var check = 0;
     var index = 0;
+    if (document.getElementById("group")) {
+      resultObject["group"] = document.getElementById("group").value;
+    }
 
-    resultObject["group"] = document.getElementById("group").value;
 
     formData.forEach(function (value, key) {
-      console.log(key);
       check++;
       if (check === 1) {
         if (key === "result_img" + index) {
@@ -84,8 +82,10 @@ class testResults extends Component {
     var resultObject = {};
     var check = 0;
     var index = 0;
+    if (document.getElementById("group")) {
+      resultObject["group"] = document.getElementById("group").value;
+    }
     formData.forEach(function (value, key) {
-      console.log(key);
       check++;
       if (check === 1) {
         if (key === "result_img" + index) {
@@ -118,10 +118,7 @@ class testResults extends Component {
     if (testType === "second") {
       resultArr = this.secondTypeHandler(formData, variantImg)
     }
-
     setResults(resultArr);
-    var json = JSON.stringify(resultArr);
-    console.log(json);
   }
 
   insertCurrentData(currentVariants) {
@@ -137,24 +134,12 @@ class testResults extends Component {
 
     imgVarArr.splice(index, 1);
     this.setState({ variantImg: imgVarArr });
-
-
-    // let resultsArr = this.state.currentResults;
     this.state.currentResults.splice(index, 1);
-    console.log(this.state.currentResults)
-    // this.setState({ currentResults: resultsArr })
   }
   createSelectItems(index, groupsObject) {
     let items = [];
-    console.log(groupsObject)
-    // groupsObject.forEach((elem, index) => {
-    //   console.log(elem);
-    //   console.log(index)
-    // })
-    for (let objKey in groupsObject) {
 
-      console.log(objKey);
-      console.log(groupsObject[objKey])
+    for (let objKey in groupsObject) {
       let item = <option key={objKey} value={objKey} >{objKey} </option>;
 
       if (this.state.currentResults[index] && groupsObject.hasOwnProperty(this.state.currentResults[index].group)) {
@@ -172,7 +157,6 @@ class testResults extends Component {
 
         {this.state.currentResults[index] ? delete input.value : ""}
 
-
         {groupResultsState
           ? <div>
             <label>Группа:</label>
@@ -185,7 +169,6 @@ class testResults extends Component {
 
         <div>
           <textarea {...input} type={type} defaultValue={textValue} />
-
         </div>
         {touched && error && <span>{error}</span>}
       </div>
@@ -215,7 +198,6 @@ class testResults extends Component {
       <div>
         {typeof globalField !== "undefined" ?
           <button type="button" id="insertDataResult" onClick={() => {
-            console.log(editResults)
 
             if (fields.length <= editResults.length) {
               editResults.forEach((elem, index) => {
@@ -227,24 +209,11 @@ class testResults extends Component {
                 fields.push(elem);
 
                 let imgVarArr = this.state.variantImg;
-                // if (fields.length > 0) {
-                //   imgVarArr[fields.length + index + 1] = elem.result_img;
-                // }
-                // else {
-                //   if (index === 0) {
-                //     imgVarArr[fields.length] = elem.result_img;
-                //   }
-                //   else {
-                //     imgVarArr[fields.length + index] = elem.result_img;
-                //   }
-                // }
                 imgVarArr[index] = elem.result_img
                 this.setState({ variantImg: imgVarArr });
-                console.log(this.state.variantImg);
                 editResults = [];
               });
             };
-
 
           }}> Загрузить свои ответы </button> :
           ""
@@ -358,5 +327,5 @@ class testResults extends Component {
   }
 }
 export default reduxForm({
-  form: 'ResultForm',     // a unique identifier for this form
+  form: 'ResultForm'
 })(testResults)

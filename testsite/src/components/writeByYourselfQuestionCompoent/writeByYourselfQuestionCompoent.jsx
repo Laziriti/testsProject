@@ -36,7 +36,6 @@ class writeByYourselfQuest extends Component {
 
     axios.post('https://psychotestmodule.herokuapp.com/api/img/', formData)
       .then((response) => {
-        console.log(response);
         this.setState({ actualImg: response.data.img_field })
       }).catch(e => {
         console.log(e)
@@ -50,9 +49,7 @@ class writeByYourselfQuest extends Component {
     formData.forEach(function (value, key) {
 
       if (key === "answersArr") {
-        console.log(value)
         let answersString = value.toUpperCase();
-        // let answersArray = answersString.split(',');
         object['answers_arr'] = answersString;
       }
       if(key==="answers_count"){
@@ -65,11 +62,11 @@ class writeByYourselfQuest extends Component {
 
   createQuestion(questions, setQuests, actualImg, variantImg, testType, editIndex, editVariants) {
 
-    let arr;
+    let questionsArray;
     if (questions !== undefined) {
-      arr = questions;
+      questionsArray = questions;
     }
-    else arr = [];
+    else questionsArray = [];
 
     var object = {};
     var formData = new FormData(document.forms.oneVariantForm);
@@ -77,13 +74,12 @@ class writeByYourselfQuest extends Component {
       object["question_ID"] = editIndex + 1;
     }
     else {
-      object["question_ID"] = arr.length;
+      object["question_ID"] = questionsArray.length;
     }
 
     object["type_question"] = "write_by_yourself_answer";
 
     formData.forEach(function (value, key) {
-      console.log(key);
 
       if (key === 'questImg') {
         object[key] = actualImg;
@@ -97,29 +93,22 @@ class writeByYourselfQuest extends Component {
 
     });
 
-    // formData.forEach(function (value, key) {
-    //   console.log(key);
-    // })
-
     if (testType === 'first') {
       object = this.firstTypeHandler(object, variantImg)
     }
 
     object["number_answers"] = 1;
     if (typeof editIndex === "number") {
-      arr[editIndex] = object;
+      questionsArray[editIndex] = object;
     }
     else {
-      arr.push(object);
+      questionsArray.push(object);
     }
 
-    setQuests(arr);
-    var json = JSON.stringify(questions);
-    console.log(json);
+    setQuests(questionsArray);
   }
   setCurrentQuestionImg() {
     this.setState({ actualImg: this.props.editQuest && this.props.editQuest.questImg ? this.props.editQuest.questImg : "" })
-    console.log(this.props.editQuestImg)
   }
 
   render() {
@@ -239,6 +228,6 @@ class writeByYourselfQuest extends Component {
   }
 }
 export default reduxForm({
-  form: 'writeByYourselfForm',     // a unique identifier for this form
+  form: 'writeByYourselfForm'
 
 })(writeByYourselfQuest)

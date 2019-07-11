@@ -22,7 +22,7 @@ class oneVarQuest extends Component {
 
   handleClose = () => this.setState({ modalOpen: false })
 
-  setIndex = (index) => { this.setState({ currentIndexVariantImg: index }); console.log(index) }
+  setIndex = (index) => { this.setState({ currentIndexVariantImg: index }) }
 
   FileSelectedHendler = event => {
     this.setState({
@@ -32,11 +32,9 @@ class oneVarQuest extends Component {
     let files = event.target.files[0];
     let formData = new FormData();
     formData.append("img_field", files);
-    console.log(formData);
 
     axios.post('https://psychotestmodule.herokuapp.com/api/img/', formData)
       .then((response) => {
-        console.log(response);
         this.setState({ actualImg: response.data.img_field })
       }).catch(e => {
         console.log(e)
@@ -48,16 +46,13 @@ class oneVarQuest extends Component {
     let files = ee;
     let formData = new FormData();
     formData.append("img_field", files);
-    console.log(formData);
     axios.post('https://psychotestmodule.herokuapp.com/api/img/', formData)
       .then((response) => {
-        console.log(response);
         imgVarArr[this.state.currentIndexVariantImg] = response.data.img_field;
         this.setState({ variantImg: imgVarArr })
       }).catch(e => {
         console.log(e)
       })
-    console.log(this.state.variantImg)
   }
 
   FileVariantsRemove = index => {
@@ -66,112 +61,18 @@ class oneVarQuest extends Component {
     this.setState({ variantImg: imgVarArr });
   }
 
-  firstTypeHandler(object, variantImg, variantsCount) {
-    let rightCount = 0;
-    var objectVariant = {};
-    var allVariants = [];
-    var roll = 0;
-    var index = 0;
-    var formData = new FormData(document.forms.oneVariantForm);
-    var variantIndex = 0;
-
-    formData.forEach(function (value, key) {
-
-      if (key !== 'questImg' && key !== 'question') {
-
-        if (key === "variant_img" + index) {
-          if (!objectVariant.hasOwnProperty("answer_state") && objectVariant.hasOwnProperty("variant_Id") && index !== variantsCount) {
-
-            objectVariant["answer_state"] = 0;
-            allVariants[roll] = objectVariant;
-            objectVariant = {};
-            roll++;
-            console.log(key)
-          }
-          objectVariant["variant_Id"] = variantIndex;
-          variantIndex++;
-          objectVariant["variant_img"] = variantImg[index];
-          if (variantImg[index] == null) {
-            objectVariant["variant_img"] = "null"
-          }
-        }
-        if (key === "variants[" + index + "]priceVar") {
-          objectVariant["priceVar"] = value;
-        }
-        if (key === "variants[" + index + "]variant") {
-          objectVariant["variant"] = value;
-          index++;
-        }
-        if (key === "answerState") {
-          objectVariant["answer_state"] = 1;
-          rightCount++;
-          allVariants[roll] = objectVariant;
-          objectVariant = {};
-          roll++;
-        }
-        if (!objectVariant.hasOwnProperty("answer_state") && index === variantsCount && key === "variants[" + Number(index - 1) + "]variant") {
-          objectVariant["answer_state"] = 0;
-          allVariants[roll] = objectVariant;
-        }
-      }
-
-    }
-    );
-    object["variants"] = allVariants;
-    object["number_answers"] = rightCount;
-    console.log(object)
-    return object;
-  }
-
-  secondTypeHandler(object, variantImg, variantsCount) {
-    var object1 = {};
-    var allVariants = [];
-    var roll = 0;
-    var formData = new FormData(document.forms.oneVariantForm);
-    var variantIndex = 0;
-    formData.forEach(function (value, key) {
-      for (var i = 0; i < variantsCount; i++) {
-        if (key === "variant_img" + i) {
-          object1["variant_Id"] = variantIndex;
-          variantIndex++;
-          object1["variant_img"] = variantImg[i];
-          if (variantImg[i] == null) {
-            object1["variant_img"] = "null"
-          }
-        }
-        if (key === "variants[" + i + "]priceVar") {
-          object1["priceVar"] = value;
-        }
-        if (key === "variants[" + i + "]variant") {
-          object1["variant"] = value;
-          this.props.variantsCount++;
-        }
-      }
-
-      if (key === 'groupState') {
-        object1["answer_state"] = Number(value);
-        allVariants[roll] = object1;
-        object1 = {};
-        roll++;
-      }
-    }
-    );
-    object["variants"] = allVariants;
-    object["number_answers"] = variantsCount;
-    return object;
-  }
   createQuestion(questions, setQuests, actualImg, variantImg, testType, editIndex) {
-    let arr;
+    let questionsArray;
     if (questions !== undefined) {
-      arr = questions;
+      questionsArray = questions;
     }
-    else arr = [];
+    else questionsArray = [];
     var object = {};
     var formData = new FormData(document.forms.oneVariantForm);
-    object["question_ID"] = arr.length;
+    object["question_ID"] = questionsArray.length;
     object["type_question"] = "many_answers";
     formData.forEach(function (value, key) {
-      console.log(key);
+
       if (key === 'questImg') {
         object[key] = actualImg;
       }
@@ -182,30 +83,30 @@ class oneVarQuest extends Component {
         object["price_question"] = Number(value);
       }
       if (key === 'notFullPriceQuestion') {
-        object["not_full_price_question"] = value;
+        object["not_full_price_question"] = true;
       }
     });
-
+    if (!object.hasOwnProperty("not_full_price_question")) {
+      object["not_full_price_question"] = false;
+    }
     if (testType === 'first') {
-      console.log("asd")
-      object = this.firstTypeHandler(object, variantImg, this.props.variantsCount)
+      object = this.props.firstTypeHandler(object, variantImg, this.props.variantsCount)
     }
     else if (testType === 'second') {
-      object = this.secondTypeHandler(object, variantImg, this.props.variantsCount);
+      object = this.props.secondTypeHandler(object, variantImg, this.props.variantsCount);
     }
 
     if (typeof editIndex === "number") {
-      arr[editIndex] = object;
+      questionsArray[editIndex] = object;
     }
     else {
-      arr.push(object);
+      questionsArray.push(object);
     }
-    setQuests(arr);
+    setQuests(questionsArray);
     this.props.setVariantsCount(0);
-    var json = JSON.stringify(questions);
-    console.log(json);
+    console.log(JSON.stringify(object))
   }
-  //поправил == ===
+
   createSelectItems(results, editVariants, index, editCount) {
     let items = [];
     for (let i = 0; i < results.length; i++) {
@@ -215,13 +116,12 @@ class oneVarQuest extends Component {
       }
       items.push(item);
     }
-    console.log(this.state.checkBoxArr)
     return items;
   }
 
   saveDataSelect(index, value) {
     let arr = this.state.checkBoxArr;
-    arr[index] = value.target.value;
+    arr[index] = Number(value);
     this.setState({ checkBoxArr: arr })
   }
   insertCurrentData(editVariants) {
@@ -248,10 +148,12 @@ class oneVarQuest extends Component {
     this.setState({ checkBoxArr: arr })
   }
 
-  saveDataPriceArr(index, value) {
+  saveDataPriceArr(index, value, id) {
+    // document.getElementById(index).style.display="none";
     let arr = this.state.notFullPriceArr;
     arr[index] = value;
     this.setState({ notFullPriceArr: arr })
+
   }
   addToArrPriceArr(value) {
     let arr = this.state.notFullPriceArr;
@@ -263,9 +165,6 @@ class oneVarQuest extends Component {
     arr.splice(index, 1);
     this.setState({ notFullPriceArr: arr })
   }
-
-
-
 
   render() {
 
@@ -287,8 +186,8 @@ class oneVarQuest extends Component {
       <div>
         <label>{label}</label>
         <div>
-          <input type="number" name={answer + "priceVar"}
-            onChange={(e) => this.saveDataPriceArr(index, e.target.value)}
+          <input type="number" id={index} name={answer + "priceVar"}
+            onChange={(e) => this.saveDataPriceArr(index, e.target.value, e.target.id)}
             disabled={!this.state.notFullPriceState}
             defaultValue={this.state.notFullPriceArr[index] ? this.state.notFullPriceArr[index] : null}>
           </input>
@@ -311,7 +210,7 @@ class oneVarQuest extends Component {
           }
           {
             testType === 'second' ?
-              <select name="groupState" className="groupClass" onChange={(e) => this.saveDataSelect(index, e)}>
+              <select name="groupState" className="groupClass" onChange={(e) => this.saveDataSelect(index, e.target.value)}>
                 {this.createSelectItems(results, editVariants, index, editCount)}
               </select>
               : ""
@@ -321,12 +220,12 @@ class oneVarQuest extends Component {
       </div>
     )
 
-    const renderAnswers = ({ fields, editIndex, editVariants, editCount, variantsImgArray }) => (
+    const renderAnswers = ({ fields, editVariants, variantsImgArray }) => (
       <div>
         {typeof editVariants !== "undefined" ?
           <button type="button" id="insertDataManyVariant" onClick={() => {
             setVariantsCount(editVariants.length);
-            this.setState({ actualImg: editQuest.questImg  })
+            this.setState({ actualImg: editQuest.questImg })
 
             if (fields.length <= editVariants.length) {
               editVariants.forEach((elem, index) => {
@@ -354,8 +253,6 @@ class oneVarQuest extends Component {
                   }
                 }
                 this.setState({ variantImg: imgVarArr })
-                console.log(this.state.variantImg);
-
               });
             };
 
@@ -367,14 +264,13 @@ class oneVarQuest extends Component {
           fields.push({});
           setVariantsCount(variantsCount + 1);
           this.addToArr(false);
-          this.addToArrPriceArr(0)
+          this.addToArrPriceArr(0);
         }}>Добавить вариант ответа</button>
         <ul>
 
           {fields.map((answer, index) =>
 
             <li key={index}>
-
               <h4>Answer #{index + 1}</h4>
               <button
                 type="button"
@@ -414,6 +310,7 @@ class oneVarQuest extends Component {
                   type="text"
                   component={renderFieldCheck}
                 />
+
               </div>
             </li>
           )}
@@ -448,7 +345,7 @@ class oneVarQuest extends Component {
                       />
                       <div>
                         <label>Количество баллов за ответ</label>
-                        <input name="priceQuestion"
+                        <input name="priceQuestion" id="priceQuestion"
                           defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}
                           disabled={this.state.notFullPriceState}></input>
                       </div>
@@ -492,9 +389,6 @@ class oneVarQuest extends Component {
                           defaultValue={editQuest && editQuest.timer_question ? editQuest.timer_question : "0:0"}></input>
                       </div>
 
-
-
-
                     </div>
                   </div>
                   <label>Варианты ответа</label>
@@ -502,9 +396,7 @@ class oneVarQuest extends Component {
                     <FieldArray
                       name="variants"
                       component={renderAnswers}
-                      editIndex={editIndex}
                       editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
-                      editCount={editQuest ? editQuest.number_answers : ""}
                       variantsImgArray={this.state.variantImg}
                     />
                   </div>
@@ -514,10 +406,19 @@ class oneVarQuest extends Component {
 
           </Modal.Content>
           <Modal.Actions>
-            <Button onClick={() => { this.handleClose(); reset(); }} color="primary">
+            <Button onClick={() => { this.handleClose(); reset();  this.setState({notFullPriceState:false}) }} color="primary">
               Отмена
             </Button>
-            <Button type="sumbit" onClick={() => { this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex); this.props.setGroups(new FormData(document.forms.ManyVariantForm), this.props.groupsObject, this.props.setGroupObject); this.handleClose(); reset(); this.props.updateList(); }} color="primary" autoFocus>
+            <Button
+              type="sumbit"
+              onClick={() => {
+                this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex);
+                this.props.setGroups(new FormData(document.forms.ManyVariantForm), this.props.groupsObject, this.props.setGroupObject);
+                this.handleClose();
+                this.setState({notFullPriceState:false});
+                reset();
+                this.props.updateList();
+              }} color="primary" autoFocus>
               Готово
             </Button>
           </Modal.Actions>
@@ -528,5 +429,5 @@ class oneVarQuest extends Component {
   }
 }
 export default reduxForm({
-  form: 'ManyVariantForm',     // a unique identifier for this form
+  form: 'ManyVariantForm',
 })(oneVarQuest)

@@ -3,11 +3,12 @@ const initialState = {
     isReadyToPass: false,
     items: null,
     variantsCount: 0,
-    testType: 'first',
+    testType: null,
     activePage: 'showTests',
     passingTest: null,
     passingTestResults: null,
     passingTestContent: null,
+    groups_object: null,
 
 };
 export default (state = initialState, action) => {
@@ -17,12 +18,6 @@ export default (state = initialState, action) => {
                 ...state,
                 items: action.payload,
                 isReady: true,
-            };
-
-        case 'SET_PAGE':
-            return {
-                ...state,
-                activePage: action.payload,
             };
 
         case 'SET_IS_READY':
@@ -43,6 +38,7 @@ export default (state = initialState, action) => {
                 passingTest: action.payload,
                 passingTestResults: eval(action.payload.test_check_sum),
                 passingTestContent: (action.payload.test_content),
+                groups_object: JSON.parse(action.payload.test_groups_object),
                 isReadyToPass: true
             };
         case 'CLEAR_PASSING_TEST':
@@ -51,6 +47,7 @@ export default (state = initialState, action) => {
                 passingTest: null,
                 passingTestResults: null,
                 passingTestContent: null,
+                groups_object: null,
                 isReadyToPass: false
             };
         case 'SAVE_VARIANT_STATE':
