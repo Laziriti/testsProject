@@ -387,8 +387,8 @@ class sequenceQuestion extends Component {
                           name="groupNumber"
                           type="string"
                           defaultValue={editQuest && editQuest.group_number ? editQuest.group_number : 0}
-                          onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject) }}
-                          onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject) }}></input>
+                          onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}
+                          onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}></input>
                       </div>
                         : ""}
                       {groupsTimerState ? <div>
@@ -426,14 +426,14 @@ class sequenceQuestion extends Component {
 
           </Modal.Content>
           <Modal.Actions>
-            <Button onClick={() => { this.handleClose(); reset();  this.setState({notFullPriceState:false}) }} color="primary">
+            <Button onClick={() => { this.handleClose(); reset(); this.setState({ notFullPriceState: false }) }} color="primary">
               Отмена
             </Button>
             <Button type="sumbit" onClick={() => {
               this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex, variantsCount);
               this.props.setGroups(new FormData(document.forms.SequenceVariantForm), this.props.groupsObject, this.props.setGroupObject);
               this.handleClose();
-              this.setState({notFullPriceState:false});
+              this.setState({ notFullPriceState: false });
               reset();
               this.props.updateList();
             }}

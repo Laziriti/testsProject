@@ -330,8 +330,8 @@ class oneVarQuest extends Component {
                           name="groupNumber"
                           type="string"
                           defaultValue={editQuest && editQuest.group_number ? editQuest.group_number : 0}
-                          onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject) }}
-                          onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject) }}></input>
+                          onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}
+                          onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}></input>
                       </div>
                         : ""}
                       {groupsTimerState ? <div>

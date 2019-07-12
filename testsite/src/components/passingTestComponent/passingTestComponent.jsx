@@ -30,10 +30,9 @@ class passForm extends Component {
       testComplete: true
     };
   }
-  onUnload(event) { // the method that will be used for both add and remove event
-    console.log("hellooww")
-    event.returnValue = "Hellooww"
-}
+  onUnload(event) {
+    event.returnValue = "Информация будет стерта, уверены?"
+  }
 
   componentDidUpdate() {
     if (this.props.testContent) {
@@ -45,7 +44,7 @@ class passForm extends Component {
     window.addEventListener("beforeunload", this.onUnload)
   }
   componentWillMount() {
-   
+
     let url = 'https://psychotestmodule.herokuapp.com/tests/' + this.props.match.params.testId + '/';
     axios.get(url).then(response => {
       let test = response.data;
@@ -59,8 +58,13 @@ class passForm extends Component {
         else {
           elem.answers_arr = "";
         }
-
       });
+      if (test.test_group_results_state) {
+        content.sort(function (a, b) {
+          return a.group_number - b.group_number;
+        })
+      }
+      console.log(content)
       test.test_content = content;
       this.props.setPassingTest(test)
     })
@@ -106,7 +110,19 @@ class passForm extends Component {
         console.log(e)
       })
   }
+  resultChapterAxios() {
+    document.getElementById("passBlock").style.display = "none";
+    document.getElementById("questionMap").style.display = "none";
+    document.getElementById("chapterResult").style.display = "block";
+  }
 
+  changeChapter() {
+    this.setState({ currentGroup: this.props.testContent[this.props.questIndex+1].group_number })
+    console.log(this.state.currentGroup)
+    document.getElementById("passBlock").style.display = "block";
+    document.getElementById("questionMap").style.display = "block";
+    document.getElementById("chapterResult").style.display = "none";
+  }
   changeSuperObj() {
     let currentSuperObj = this.state.superObj;
     currentSuperObj[this.props.questIndex] = 1;
@@ -212,9 +228,7 @@ class passForm extends Component {
               clearInterval(this.state.groupTimerInterval);
               for (let i = this.props.questIndex; i < this.props.testContent.length; i++) {
                 if (i === this.props.testContent.length - 1) {
-
                   this.resultAxios(this.props.testContent);
-
                   break;
                 }
                 if (this.props.testContent[i].group_number !== this.state.currentGroup) {
@@ -233,7 +247,6 @@ class passForm extends Component {
             }
           }
           groupTimer[1]--;
-
         }, 1000)
       })
     }, 0)
@@ -296,10 +309,20 @@ class passForm extends Component {
   }
   createQuestionMap(testContnet) {
     let items = [];
+    //новое
+    if (!this.state.currentGroup) {
+      this.setState({ currentGroup: testContnet[this.props.questIndex].group_number })
+    }
     testContnet.forEach((elem, elemIndex) => {
-      items.push(<li className="passing-block__question-map-item"
+      console.log(elem.group_number)
+
+      items.push(<li
+        className={elem.group_number === this.state.currentGroup
+          ? "passing-block__question-map-item"
+          : "passing-block__question-map-item_disabled"}
         id={elemIndex}
-        onClick={() => { this.changeCurrentQuestion(elemIndex); }} >{elemIndex + 1}</li>)
+        onClick={() => { this.changeCurrentQuestion(elemIndex); }}
+      >{elemIndex + 1}</li>)
     })
     return items;
   }
@@ -310,6 +333,7 @@ class passForm extends Component {
     const { setIndexOfQuestion,
       passingTestResults,
       testContent,
+      passingTest
     } = this.props;
 
     return (
@@ -335,15 +359,23 @@ class passForm extends Component {
                   this.changeCurrentQuestion(this.props.questIndex - 1)
                 }}>Предыдущий</button>
               }
-              {this.props.questIndex < testContent.length - 1 ?
-                <button className="passing-block__button" onClick={() => {
-                  this.changeCurrentQuestion(this.props.questIndex + 1)
-                }}>Следующий</button>
-                : ""}
+              { this.props.questIndex < testContent.length - 1 &&
+                passingTest.test_group_results_state
+                 && testContent[this.props.questIndex + 1].group_number !== this.state.currentGroup ?
+                  <button className="passing-block__button"
+                    onClick={() => { this.resultChapterAxios(testContent); this.changeSuperObj(this.props.questIndex); }}>Завершить текущую часть теста</button>
+
+                  : this.props.questIndex < testContent.length - 1 ?
+                    <button className="passing-block__button" onClick={() => {
+                      this.changeCurrentQuestion(this.props.questIndex + 1)
+                    }}>Следующий</button>
+                    : ""}
               {this.props.questIndex === testContent.length - 1 ?
                 <button className="passing-block__button"
                   onClick={() => { this.resultAxios(testContent); this.changeSuperObj(this.props.questIndex); }}>Готово</button>
                 : ""}
+
+
 
               <img className="passing-block__decorate" src={require('../../img/questions.png')} alt="asdsadasdsad" />
             </div>
@@ -355,6 +387,15 @@ class passForm extends Component {
               {passingTestResults[this.state.resultIndex].result}
             </p>
             <Link to="/" onClick={() => { this.setState({ superObj: {} }); setIndexOfQuestion(0); }}>Завершить</Link>
+          </div>
+          <div className="passing-block__results" id="chapterResult">
+            <p>СРАБОТАЛО</p>
+            <button
+              className="passing-block__button"
+              onClick={() => {
+                this.changeChapter();
+                this.changeCurrentQuestion(this.props.questIndex + 1)
+              }}>Перейти к следующей части</button>
           </div>
         </Container >
 

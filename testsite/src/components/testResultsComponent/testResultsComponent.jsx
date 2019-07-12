@@ -17,7 +17,7 @@ class testResults extends Component {
 
   handleClose = () => this.setState({ modalOpenResult: false })
 
-  setIndex = (index) => { this.setState({ currentIndexVariantImg: index })}
+  setIndex = (index) => { this.setState({ currentIndexVariantImg: index }) }
 
   FileSelectedHendlerVariants = img => {
 
@@ -46,13 +46,11 @@ class testResults extends Component {
     var resultObject = {};
     var check = 0;
     var index = 0;
-    if (document.getElementById("group")) {
-      resultObject["group"] = document.getElementById("group").value;
-    }
 
 
     formData.forEach(function (value, key) {
       check++;
+      console.log(key)
       if (check === 1) {
         if (key === "result_img" + index) {
           resultObject["result_img"] = variantImg[index];
@@ -68,6 +66,9 @@ class testResults extends Component {
         resultObject["max"] = Number(value);
       }
       if (check === 4) {
+        resultObject["group"] = value;
+      }
+      if (check === 5) {
         resultObject["result"] = value;
         check = 0;
         resultArr.push(resultObject);
@@ -82,10 +83,9 @@ class testResults extends Component {
     var resultObject = {};
     var check = 0;
     var index = 0;
-    if (document.getElementById("group")) {
-      resultObject["group"] = document.getElementById("group").value;
-    }
+
     formData.forEach(function (value, key) {
+
       check++;
       if (check === 1) {
         if (key === "result_img" + index) {
@@ -97,9 +97,12 @@ class testResults extends Component {
         }
       }
       if (check === 2) {
-        resultObject["result"] = value;
+        resultObject["group"] = value;
       }
       if (check === 3) {
+        resultObject["result"] = value;
+      }
+      if (check === 4) {
         resultObject["description"] = value;
         check = 0;
         resultArr.push(resultObject);
@@ -119,6 +122,7 @@ class testResults extends Component {
       resultArr = this.secondTypeHandler(formData, variantImg)
     }
     setResults(resultArr);
+    console.log(resultArr)
   }
 
   insertCurrentData(currentVariants) {
@@ -160,7 +164,7 @@ class testResults extends Component {
         {groupResultsState
           ? <div>
             <label>Группа:</label>
-            <select id="group" >
+            <select id="group" name={index + "group"} >
               {this.createSelectItems(index, this.props.groupsObject)}
             </select>
           </div> : ""}

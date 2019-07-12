@@ -185,8 +185,8 @@ class createTestForm extends Component {
     groupObj[propName] = propValue;
     setGroupObject(groupObj);
   }
-  handleGroups(value, groupsObject) {
-    if (groupsObject.hasOwnProperty(value)) {
+  handleGroups(value, groupsObject, groupsTimerState) {
+    if (groupsObject.hasOwnProperty(value) && groupsTimerState) {
       document.querySelector('#groupTimer').value = groupsObject[value];
     }
   }
@@ -302,6 +302,7 @@ class createTestForm extends Component {
           <CreateTestContent
             groupsState={this.state.groupsState}
             groupsTimerState={this.state.groupsTimerState}
+            groupResultsState={this.state.groupResultsState}
             setGroups={this.setGroups}
             handleGroups={this.handleGroups}
             updateList={this.OpenHandler}

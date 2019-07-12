@@ -52,8 +52,8 @@ class writeByYourselfQuest extends Component {
         let answersString = value.toUpperCase();
         object['answers_arr'] = answersString;
       }
-      if(key==="answers_count"){
-        object['answers_count']=Number(value);
+      if (key === "answers_count") {
+        object['answers_count'] = Number(value);
       }
     }
     );
@@ -166,8 +166,8 @@ class writeByYourselfQuest extends Component {
                           name="groupNumber"
                           type="string"
                           defaultValue={editQuest && editQuest.group_number ? editQuest.group_number : 0}
-                          onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject) }}
-                          onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject) }}></input>
+                          onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}
+                          onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}></input>
                       </div>
                         : ""}
                       {groupsTimerState ? <div>
