@@ -99,9 +99,6 @@ class createTestForm extends Component {
           objectVariant["variant_Id"] = variantIndex;
           variantIndex++;
           objectVariant["variant_img"] = variantImg[index];
-          if (variantImg[index] == null) {
-            objectVariant["variant_img"] = "null"
-          }
         }
         if (key === "variants[" + index + "]priceVar") {
           objectVariant["price_var"] = Number(value);
@@ -143,9 +140,7 @@ class createTestForm extends Component {
         objectVariant["variant_Id"] = variantIndex;
         variantIndex++;
         objectVariant["variant_img"] = variantImg[index];
-        if (variantImg[index] == null) {
-          objectVariant["variant_img"] = "null"
-        }
+
       }
       if (key === "variants[" + index + "]priceVar") {
         objectVariant["price_var"] = value;

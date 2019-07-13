@@ -10,11 +10,12 @@ class writeByYourselfQuest extends Component {
     modalOpen: false,
     actualImg: null,
     actualImgVariant: null,
-    variantImg: [1],
+    variantImg: [],
     currentIndexVariantImg: null,
     editState: false,
     imgArr: [],
-    checkArr: []
+    checkArr: [],
+    everyWordPriceState: false
   }
 
   handleOpen = () => this.setState({ modalOpen: true })
@@ -28,9 +29,6 @@ class writeByYourselfQuest extends Component {
 
     let files = event.target.files[0];
     let formData = new FormData();
-
-    // var blob = event.target.files[0].slice(0, event.target.files[0].size, 'image/jpeg');
-    // let newFile = new File([blob], 'imageforneuron.jpg', { type: 'image/jpeg' });
 
     formData.append("img_field", files);
 
@@ -79,6 +77,7 @@ class writeByYourselfQuest extends Component {
 
     object["type_question"] = "write_by_yourself_answer";
     object["not_full_price_question"] = false;
+    object["every_word_price_state"] = this.state.everyWordPriceState
     formData.forEach(function (value, key) {
 
       if (key === 'questImg') {
@@ -89,6 +88,9 @@ class writeByYourselfQuest extends Component {
       }
       if (key === 'priceQuestion') {
         object["price_question"] = Number(value);
+      }
+      if (key === 'wordPrice') {
+        object['word_price'] = Number(value);
       }
       if (key === 'groupName') {
         object["group"] = value;
@@ -104,7 +106,7 @@ class writeByYourselfQuest extends Component {
           object["timer_question"] = stringTimer;
         }
       }
-      
+
 
     });
 
@@ -166,10 +168,18 @@ class writeByYourselfQuest extends Component {
                         defaultValue={editQuest ? editQuest.question : ""}
                       >
                       </textarea>
-                      <div>
-                        <label>Количество баллов за ответ</label>
-                        <input name="priceQuestion" defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}></input>
-                      </div>
+                      {
+                        this.state.everyWordPriceState ?
+                          <div>
+                            <label>Количество баллов за каждое слово</label>
+                            <input name="wordPrice" defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}></input>
+                          </div>
+                          : <div>
+                            <label>Количество баллов за ответ</label>
+                            <input name="priceQuestion" defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}></input>
+                          </div>
+                      }
+
                       <input
                         name="questImg"
                         type="file"
@@ -204,11 +214,15 @@ class writeByYourselfQuest extends Component {
                       </div>
 
                     </div>
+                    {
+                      !this.state.everyWordPriceState ?
+                        <div>
+                          <label>Количество ответов для ввода:</label>
+                          <input type="number" name="answers_count" defaultValue={editQuest && editQuest.answers_count ? editQuest.answers_count : ""}></input>
+                        </div>
+                        : ""
+                    }
 
-                    <div>
-                      <label>Количество ответов для ввода:</label>
-                      <input type="number" name="answers_count" defaultValue={editQuest && editQuest.answers_count ? editQuest.answers_count : ""}></input>
-                    </div>
                     <div className='quest'>
                       <textarea name="answersArr"
                         placeholder="Возможные ответы через запятую, регистр значения не имеет"

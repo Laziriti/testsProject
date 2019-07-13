@@ -60,7 +60,7 @@ class passQuest extends Component {
 
   saveFuncNumber(varIndex, value, testContent) {
     let currentContent = testContent;
-    currentContent[this.props.questIndex].variants[varIndex].answer_state = Number(document.getElementById(this.props.questIndex + "" + varIndex).value);
+    currentContent[this.props.questIndex].variants[varIndex].answer_state = Number(document.getElementById(this.props.questIndex + ":" + varIndex).value);
     this.props.saveVariantState(currentContent)
   }
 
@@ -91,15 +91,16 @@ class passQuest extends Component {
                   <p className="passing-block__question">{testContent[this.props.questIndex].question}</p>
 
                   {
-                    testContent[this.props.questIndex].questImg !== "null" ?
+                    testContent[this.props.questIndex].questImg ?
                       <img src={testContent[this.props.questIndex].questImg} alt=""></img>
                       : ""
                   }
                   <div>
                     {testContent[this.props.questIndex].type_question !== "write_by_yourself_answer" ?
                       testContent[this.props.questIndex].variants.map((item, index) =>
+                      
                         <div className="passing-block__variants">
-                          {item.variant_img !== null ?
+                          {item.variant_img ?
                             <div><img className="passing-block__variant-img" src={item.variant_img} alt="" /></div>
                             : ""}
                           {testContent[this.props.questIndex].type_question === "many_answers" ?
@@ -133,7 +134,6 @@ class passQuest extends Component {
                             }>
                             {item.variant}</label>
                         </div>
-
                       ) : <input
                         type="text"
                         id={this.props.questIndex + ":"}
@@ -142,6 +142,7 @@ class passQuest extends Component {
                         onChange={() => this.saveFuncString(this.value, testContent)} />
                     }
                   </div>
+                  
                 </div>
               </div>
             </form>

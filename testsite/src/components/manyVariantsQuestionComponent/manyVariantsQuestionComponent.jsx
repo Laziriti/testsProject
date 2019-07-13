@@ -215,10 +215,22 @@ class oneVarQuest extends Component {
         <div>
           {
             testType === "first" ?
-              <input type="checkbox"
-                name="answerState"
-                onChange={() => this.saveData(index)}
-                defaultChecked={this.state.checkBoxArr[index] ? this.state.checkBoxArr[index] : ""} />
+              this.state.notFullPriceState ?
+                <input type="checkbox"
+                  name="answerState"
+                  onChange={() => this.saveData(index)}
+                  checked={
+                    this.state.notFullPriceState ? true :
+                      this.state.checkBoxArr[index] ? this.state.checkBoxArr[index] : ""
+                  } />
+                :
+                <input type="checkbox"
+                  name="answerState"
+                  onChange={() => this.saveData(index)}
+                  defaultChecked={
+                    this.state.notFullPriceState ? true :
+                      this.state.checkBoxArr[index] ? this.state.checkBoxArr[index] : ""
+                  } />
               : ""
           }
           {

@@ -83,9 +83,6 @@ class sequenceQuestion extends Component {
         object1["variant_Id"] = variantIndex;
         variantIndex++;
         object1["variant_img"] = variantImg[index];
-        if (variantImg[index] == null) {
-          object1["variant_img"] = "null";
-        }
       }
       if (key === "variants[" + index + "]priceVar") {
         object1["price_var"] = Number(value);

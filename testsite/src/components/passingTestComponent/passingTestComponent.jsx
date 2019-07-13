@@ -133,14 +133,14 @@ class passForm extends Component {
     if (typeof question.answers_arr !== 'string') {
       for (let i = 0; i < question.variants.length; i++) {
         if ((question.variants[i].answer_state && question.variants[i].answer_state !== 0)) {
-          document.getElementById(this.props.questIndex).classList.add("passing-block__question-map-item_answered");
+          // document.getElementById(this.props.questIndex).classList.add("passing-block__question-map-item_answered");
           break;
         }
       }
     }
     else {
       if (question.answers_arr !== 0) {
-        document.getElementById(this.props.questIndex).classList.add("passing-block__question-map-item_answered");
+        // document.getElementById(this.props.questIndex).classList.add("passing-block__question-map-item_answered");
       }
     }
   }
@@ -317,6 +317,7 @@ class passForm extends Component {
       console.log(elem.group)
 
       items.push(<li
+        key={elemIndex}
         className={elem.group === this.state.currentGroup
           ? "passing-block__question-map-item"
           : "passing-block__question-map-item_disabled"}
@@ -346,7 +347,7 @@ class passForm extends Component {
           />
           <div className="passing-block__question-map-container" id="questionMapContainer">
             <ul className="passing-block__question-map" id="questionMap">
-              {this.createQuestionMap(testContent)}
+            
             </ul>
           </div>
           <div className="passing-block__container" id="passBlock">

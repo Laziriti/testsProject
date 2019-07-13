@@ -9,7 +9,7 @@ class oneVarQuest extends Component {
   state = {
     modalOpen: false,
     actualImg: null,
-    variantImg: [1],
+    variantImg: [],
     currentIndexVariantImg: null,
     imgArr: [],
     checkArr: [],
