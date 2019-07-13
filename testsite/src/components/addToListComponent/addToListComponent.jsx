@@ -13,6 +13,8 @@ class mapQuest extends Component {
     questions.splice(index, 1);
     setQuests(questions);
   }
+
+
   render() {
 
     const { question,
@@ -30,20 +32,27 @@ class mapQuest extends Component {
       groupsTimerState,
       firstTypeHandler,
       secondTypeHandler,
-      editQuest
+      editQuest,
+      groupsObject
     } = this.props
 
     return (
 
       <Card>
         <Card.Content >
-          <Card.Header>Вопрос {index + 1}: {question}</Card.Header>
+          <Card.Header>Вопрос {index + 1}: {question} {editQuest.group ? "Группа: " + editQuest.group : ""} </Card.Header>
+          <p>{editQuest.timer_question ? "Таймер для вопроса: " + editQuest.timer_question : ""}</p>
+          <p>{editQuest.group && groupsObject[editQuest.group] ? "Таймер для данной группы: " + groupsObject[editQuest.group] : ""}</p>
           <img className="questImg" src={questImg} alt="" />
+          <p>{!editQuest.not_full_price_question ? "Оценка за вопрос: " + editQuest.price_question : ""}</p>
           <p>Варианты ответа:</p>
           {
             variants ? variants.map((variant, index) => <VariantsInfo key={index} {...variant} index={index} />) : ""
           }
-
+          {editQuest.answers_arr ?
+            <textarea className="variant" disabled value={editQuest.answers_arr}></textarea>
+            : ""
+          }
           <button onClick={() => { this.deleteHandler(index, questions, setQuests); this.props.updateList() }}>удалить</button>
           {type_question === "one_answer" ?
             <OneVariantQuestion

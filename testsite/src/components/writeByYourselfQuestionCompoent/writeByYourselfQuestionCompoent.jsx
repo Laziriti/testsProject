@@ -78,7 +78,7 @@ class writeByYourselfQuest extends Component {
     }
 
     object["type_question"] = "write_by_yourself_answer";
-
+    object["not_full_price_question"] = false;
     formData.forEach(function (value, key) {
 
       if (key === 'questImg') {
@@ -90,6 +90,21 @@ class writeByYourselfQuest extends Component {
       if (key === 'priceQuestion') {
         object["price_question"] = Number(value);
       }
+      if (key === 'groupName') {
+        object["group"] = value;
+      }
+      if (key === 'timerQuestion') {
+        if (value !== "0:0") {
+          let timerArr = value.split(":");
+          if (timerArr[1] > 60) {
+            timerArr[0] = Math.floor(timerArr[1] / 60);
+            timerArr[1] = timerArr[1] % 60;
+          }
+          let stringTimer = timerArr.join(":");
+          object["timer_question"] = stringTimer;
+        }
+      }
+      
 
     });
 
@@ -106,6 +121,7 @@ class writeByYourselfQuest extends Component {
     }
 
     setQuests(questionsArray);
+    console.log(object)
   }
   setCurrentQuestionImg() {
     this.setState({ actualImg: this.props.editQuest && this.props.editQuest.questImg ? this.props.editQuest.questImg : "" })
@@ -163,9 +179,9 @@ class writeByYourselfQuest extends Component {
                       {groupsState ? <div>
                         <label>Номер/название группы</label>
                         <input
-                          name="groupNumber"
+                          name="groupName"
                           type="string"
-                          defaultValue={editQuest && editQuest.group_number ? editQuest.group_number : 0}
+                          defaultValue={editQuest && editQuest.group ? editQuest.group : 0}
                           onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}
                           onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}></input>
                       </div>
@@ -176,7 +192,7 @@ class writeByYourselfQuest extends Component {
                           id="groupTimer"
                           type="string"
                           placeholder="10:22 = 10 минут 22 секунды"
-                          defaultValue={editQuest && editQuest.group_number ? this.props.groupsObject[editQuest.group_number] : "0:0"}></input>
+                          defaultValue={editQuest && editQuest.group ? this.props.groupsObject[editQuest.group] : "0:0"}></input>
                       </div> : ""}
 
                       <div>

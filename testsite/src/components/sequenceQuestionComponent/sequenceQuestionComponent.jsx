@@ -92,7 +92,6 @@ class sequenceQuestion extends Component {
       }
       if (key === "variants[" + index + "]variant") {
         object1["variant"] = value;
-
       }
 
       if (key === "variants[" + index + "]answerState") {
@@ -141,6 +140,20 @@ class sequenceQuestion extends Component {
       }
       if (key === 'notFullPriceQuestion') {
         object["not_full_price_question"] = true;
+      }
+      if (key === 'timerQuestion') {
+        if (value !== "0:0") {
+          let timerArr = value.split(":");
+          if (timerArr[1] > 60) {
+            timerArr[0] = Math.floor(timerArr[1] / 60);
+            timerArr[1] = timerArr[1] % 60;
+          }
+          let stringTimer = timerArr.join(":");
+          object["timer_question"] = stringTimer;
+        }
+      }
+      if (key === 'groupName') {
+        object["group"] = value;
       }
     });
     if (!object.hasOwnProperty("not_full_price_question")) {
@@ -384,9 +397,9 @@ class sequenceQuestion extends Component {
                       {groupsState ? <div>
                         <label>Номер/название группы</label>
                         <input
-                          name="groupNumber"
+                          name="groupName"
                           type="string"
-                          defaultValue={editQuest && editQuest.group_number ? editQuest.group_number : 0}
+                          defaultValue={editQuest && editQuest.group ? editQuest.group : 0}
                           onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}
                           onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}></input>
                       </div>
@@ -397,7 +410,7 @@ class sequenceQuestion extends Component {
                           id="groupTimer"
                           type="string"
                           placeholder="10:22 = 10 минут 22 секунды"
-                          defaultValue={editQuest && editQuest.group_number ? this.props.groupsObject[editQuest.group_number] : "0:0"}></input>
+                          defaultValue={editQuest && editQuest.group ? this.props.groupsObject[editQuest.group] : "0:0"}></input>
                       </div> : ""}
 
                       <div>

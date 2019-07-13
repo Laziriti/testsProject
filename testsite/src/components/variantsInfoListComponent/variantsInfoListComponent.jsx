@@ -3,10 +3,10 @@ import './style.css';
 class variantsInfo extends Component {
 
 
-
   render() {
-    const { variant, answer_state, index, variant_img } = this.props
+    const { variant, answer_state, index, variant_img,answers_arr } = this.props
     return (
+    
       <div className="variantBlock">
         <div className="variantsLogo">
           <div className="variantNumber">
@@ -17,7 +17,7 @@ class variantsInfo extends Component {
           </div> : ""}
         </div>
         <div className="variantsContent">
-          <textarea className="variant" disabled value={ variant}></textarea>
+          <textarea className="variant" disabled value={answers_arr ? answers_arr : variant}></textarea>
           <div className="variantsState">
             {answer_state}
           </div>

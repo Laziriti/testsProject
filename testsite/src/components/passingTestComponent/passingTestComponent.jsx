@@ -61,7 +61,7 @@ class passForm extends Component {
       });
       if (test.test_group_results_state) {
         content.sort(function (a, b) {
-          return a.group_number - b.group_number;
+          return a.group - b.group;
         })
       }
       console.log(content)
@@ -96,7 +96,7 @@ class passForm extends Component {
       .then((response) => {
         this.setState({ testComplete: true })
         document.getElementById("passBlock").remove();
-        document.getElementById("questionMap").remove();
+        document.getElementById("questionMapContainer").remove();
         document.getElementById("resultBlock").style.display = "block";
         if (this.props.passingTest.test_type === "first") {
           this.setState({ resultIndex: response.data })
@@ -112,15 +112,15 @@ class passForm extends Component {
   }
   resultChapterAxios() {
     document.getElementById("passBlock").style.display = "none";
-    document.getElementById("questionMap").style.display = "none";
+    document.getElementById("questionMapContainer").style.display = "none";
     document.getElementById("chapterResult").style.display = "block";
   }
 
   changeChapter() {
-    this.setState({ currentGroup: this.props.testContent[this.props.questIndex+1].group_number })
+    this.setState({ currentGroup: this.props.testContent[this.props.questIndex + 1].group })
     console.log(this.state.currentGroup)
     document.getElementById("passBlock").style.display = "block";
-    document.getElementById("questionMap").style.display = "block";
+    document.getElementById("questionMapContainer").style.display = "inline-block";
     document.getElementById("chapterResult").style.display = "none";
   }
   changeSuperObj() {
@@ -231,7 +231,7 @@ class passForm extends Component {
                   this.resultAxios(this.props.testContent);
                   break;
                 }
-                if (this.props.testContent[i].group_number !== this.state.currentGroup) {
+                if (this.props.testContent[i].group !== this.state.currentGroup) {
                   this.changeCurrentQuestion(i);
                   break;
                 }
@@ -288,18 +288,18 @@ class passForm extends Component {
 
           if (this.props.groups_object) {
 
-            if (testContent[this.props.questIndex].group_number !== this.state.currentGroup) {
+            if (testContent[this.props.questIndex].group !== this.state.currentGroup) {
               testContent.forEach(elem => {
-                if (elem.group_number === this.state.currentGroup) {
+                if (elem.group === this.state.currentGroup) {
                   elem.timerState = false;
                 }
               })
               if (testContent[this.props.questIndex].timerState !== false) {
-                this.setState({ currentGroup: testContent[this.props.questIndex].group_number });
+                this.setState({ currentGroup: testContent[this.props.questIndex].group });
               }
 
               clearInterval(this.state.groupTimerInterval);
-              this.startGroupTimer(index, testContent[this.props.questIndex].group_number);
+              this.startGroupTimer(index, testContent[this.props.questIndex].group);
             }
           }
         }
@@ -307,17 +307,17 @@ class passForm extends Component {
     }
 
   }
-  createQuestionMap(testContnet) {
+  createQuestionMap(testContent) {
     let items = [];
     //новое
-    if (!this.state.currentGroup) {
-      this.setState({ currentGroup: testContnet[this.props.questIndex].group_number })
+    if (testContent && !this.state.currentGroup) {
+      this.setState({ currentGroup: testContent[this.props.questIndex].group })
     }
-    testContnet.forEach((elem, elemIndex) => {
-      console.log(elem.group_number)
+    testContent.forEach((elem, elemIndex) => {
+      console.log(elem.group)
 
       items.push(<li
-        className={elem.group_number === this.state.currentGroup
+        className={elem.group === this.state.currentGroup
           ? "passing-block__question-map-item"
           : "passing-block__question-map-item_disabled"}
         id={elemIndex}
@@ -344,10 +344,11 @@ class passForm extends Component {
             when={document.getElementById("passBlock")}
             message='Если вы уйдете со страницы теста, то весь прогресс будет утерян'
           />
-
-          <ul className="passing-block__question-map" id="questionMap">
-            {this.createQuestionMap(testContent)}
-          </ul>
+          <div className="passing-block__question-map-container" id="questionMapContainer">
+            <ul className="passing-block__question-map" id="questionMap">
+              {this.createQuestionMap(testContent)}
+            </ul>
+          </div>
           <div className="passing-block__container" id="passBlock">
 
             <PassingQuestion></PassingQuestion>
@@ -359,22 +360,21 @@ class passForm extends Component {
                   this.changeCurrentQuestion(this.props.questIndex - 1)
                 }}>Предыдущий</button>
               }
-              { this.props.questIndex < testContent.length - 1 &&
+              {this.props.questIndex < testContent.length - 1 &&
                 passingTest.test_group_results_state
-                 && testContent[this.props.questIndex + 1].group_number !== this.state.currentGroup ?
-                  <button className="passing-block__button"
-                    onClick={() => { this.resultChapterAxios(testContent); this.changeSuperObj(this.props.questIndex); }}>Завершить текущую часть теста</button>
+                && testContent[this.props.questIndex + 1].group !== this.state.currentGroup ?
+                <button className="passing-block__button"
+                  onClick={() => { this.resultChapterAxios(testContent); this.changeSuperObj(this.props.questIndex); }}>Завершить текущую часть теста</button>
 
-                  : this.props.questIndex < testContent.length - 1 ?
-                    <button className="passing-block__button" onClick={() => {
-                      this.changeCurrentQuestion(this.props.questIndex + 1)
-                    }}>Следующий</button>
-                    : ""}
+                : this.props.questIndex < testContent.length - 1 ?
+                  <button className="passing-block__button" onClick={() => {
+                    this.changeCurrentQuestion(this.props.questIndex + 1)
+                  }}>Следующий</button>
+                  : ""}
               {this.props.questIndex === testContent.length - 1 ?
                 <button className="passing-block__button"
                   onClick={() => { this.resultAxios(testContent); this.changeSuperObj(this.props.questIndex); }}>Готово</button>
                 : ""}
-
 
 
               <img className="passing-block__decorate" src={require('../../img/questions.png')} alt="asdsadasdsad" />

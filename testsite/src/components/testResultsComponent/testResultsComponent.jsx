@@ -44,33 +44,32 @@ class testResults extends Component {
   firstTypeHandler(formData, variantImg) {
     var resultArr = [];
     var resultObject = {};
-    var check = 0;
+
     var index = 0;
 
 
     formData.forEach(function (value, key) {
-      check++;
       console.log(key)
-      if (check === 1) {
-        if (key === "result_img" + index) {
-          resultObject["result_img"] = variantImg[index];
-        }
+
+      if (key === "result_img" + index) {
+        resultObject["result_img"] = variantImg[index];
         if (variantImg[index] == null) {
           resultObject["result_img"] = "null"
         }
       }
-      if (check === 2) {
+      if (key === index + "from") {
         resultObject["min"] = Number(value);
       }
-      if (check === 3) {
+
+      if (key === index + "to") {
         resultObject["max"] = Number(value);
       }
-      if (check === 4) {
+
+      if (key === index + "group") {
         resultObject["group"] = value;
       }
-      if (check === 5) {
+      if (key === index + "result") {
         resultObject["result"] = value;
-        check = 0;
         resultArr.push(resultObject);
         resultObject = {};
         index++;
@@ -135,7 +134,6 @@ class testResults extends Component {
   }
   deleteFromArr(index) {
     let imgVarArr = this.state.variantImg;
-
     imgVarArr.splice(index, 1);
     this.setState({ variantImg: imgVarArr });
     this.state.currentResults.splice(index, 1);
@@ -154,6 +152,15 @@ class testResults extends Component {
 
     return items;
   }
+  addToArr(index, prop, value) {
+    let array = this.state.currentResults;
+    if (array.length - 1 < index || array.length === 0) {
+      for (let i = 0; i <= index; i++) {
+        array.push({})
+      }
+    }
+    array[index][prop] = value;
+  }
   render() {
     const { results, setResults, questions, testType, editResults, reset, groupResultsState } = this.props
     const renderField = ({ input, label, type, globalField, textValue, index, meta: { touched, error } }) => (
@@ -170,26 +177,34 @@ class testResults extends Component {
           </div> : ""}
 
         <label>{label}</label>
-
+        {delete input.value}
         <div>
-          <textarea {...input} type={type} defaultValue={textValue} />
+          <textarea {...input}
+            type={type}
+            defaultValue={textValue}
+            onChange={(e) => { this.addToArr(index, "result", e.target.value) }} />
         </div>
         {touched && error && <span>{error}</span>}
       </div>
     )
 
-    const renderNumberField = ({ input, label, type, globalField, index, meta: { touched, error } }) => (
+    const renderNumberField = ({ input, label, name, type, globalField, index, meta: { touched, error } }) => (
       <div>
         {
           testType === "first" ?
             <div>
               <label>{label}</label>
               {this.state.currentResults[index] ? delete input.value : ""}
+              {delete input.value}
               {label === "Промежуток от:" ? <input
                 {...input}
                 type={type}
-                defaultValue={this.state.currentResults[index] ? this.state.currentResults[index].min : ""} />
-                : <input {...input} type={type} defaultValue={this.state.currentResults[index] ? this.state.currentResults[index].max : ""} />}
+                onChange={(e) => { this.addToArr(index, "min", e.target.value) }}
+                defaultValue={this.state.currentResults[index] ? this.state.currentResults[index].min : 0} />
+                : <input {...input}
+                  type={type}
+                  onChange={(e) => { this.addToArr(index, "max", e.target.value) }}
+                  defaultValue={this.state.currentResults[index] ? this.state.currentResults[index].max : 0} />}
 
 
             </div>
@@ -315,11 +330,11 @@ class testResults extends Component {
             </Modal.Description>
           </Modal.Content>
           <Modal.Actions>
-            <Button onClick={() => { this.handleClose(); reset(); }} color="primary">
+            <Button onClick={() => { this.handleClose(); reset(); this.setState({ currentResults: [] }) }} color="primary">
               Отмена
             </Button>
             <Button type="submit"
-              onClick={() => { this.createResults(results, setResults, questions, this.state.variantImg, testType); this.handleClose(); reset(); }}
+              onClick={() => { this.createResults(results, setResults, questions, this.state.variantImg, testType); this.handleClose(); this.setState({ currentResults: [] }); reset(); }}
               color="primary"
               autoFocus>
               Готово

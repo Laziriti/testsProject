@@ -175,7 +175,7 @@ class createTestForm extends Component {
     var propValue = null;
     let groupObj = groupsObject;
     formData.forEach((value, key) => {
-      if (key === "groupNumber") {
+      if (key === "groupName") {
         propName = value;
       }
       if (key === "groupTimer") {

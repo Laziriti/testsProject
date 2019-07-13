@@ -3,9 +3,10 @@ import * as variantActions from '../../actions/createTestAction';
 import { bindActionCreators } from 'redux';
 import addToList from './addToListComponent'
 
-const mapStateToProps = ({ questions }) => ({
+const mapStateToProps = ({ questions, timer }) => ({
   activeState: questions.activeState,
-  questions: questions.items
+  questions: questions.items,
+  groupsObject: timer.groupsObject
 });
 
 const mapDispatchToProps = dispatch => ({

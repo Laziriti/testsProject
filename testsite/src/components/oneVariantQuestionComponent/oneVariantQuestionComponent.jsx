@@ -78,7 +78,8 @@ class oneVarQuest extends Component {
     }
 
     object["type_question"] = "one_answer";
-
+    
+      object["not_full_price_question"] = false;
 
     formData.forEach(function (value, key) {
 
@@ -91,15 +92,19 @@ class oneVarQuest extends Component {
       if (key === 'priceQuestion') {
         object["price_question"] = Number(value);
       }
-      if (key === 'groupNumber') {
-
-        object["group_number"] = Number(value);
+      if (key === 'groupName') {
+        object["group"] = value;
       }
       if (key === 'timerQuestion') {
         if (value !== "0:0") {
-          object["timer_question"] = value;
+          let timerArr = value.split(":");
+          if (timerArr[1] > 60) {
+            timerArr[0] = Math.floor(timerArr[1] / 60);
+            timerArr[1] = timerArr[1] % 60;
+          }
+          let stringTimer = timerArr.join(":");
+          object["timer_question"] = stringTimer;
         }
-
       }
     });
 
@@ -145,7 +150,6 @@ class oneVarQuest extends Component {
     }
   }
   saveDataSelect(index, value) {
-
     let arr = this.state.checkArr;
     arr[index] = Number(value);
     this.setState({ checkArr: arr })
@@ -252,7 +256,7 @@ class oneVarQuest extends Component {
           }}>Добавить вариант ответа</button>
         <ul>
           {fields.map((answer, index) =>
-            <div>
+            <li key={index}>
               <h4>Answer #{index + 1}</h4>
               <button
                 type="button"
@@ -281,7 +285,7 @@ class oneVarQuest extends Component {
                   component={renderField}
                 />
               </div>
-            </div>
+            </li>
           )}
         </ul>
       </div>
@@ -327,9 +331,9 @@ class oneVarQuest extends Component {
                       {groupsState ? <div>
                         <label>Номер/название группы</label>
                         <input
-                          name="groupNumber"
+                          name="groupName"
                           type="string"
-                          defaultValue={editQuest && editQuest.group_number ? editQuest.group_number : 0}
+                          defaultValue={editQuest && editQuest.group ? editQuest.group : 0}
                           onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}
                           onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}></input>
                       </div>
@@ -340,7 +344,7 @@ class oneVarQuest extends Component {
                           id="groupTimer"
                           type="string"
                           placeholder="10:22 = 10 минут 22 секунды"
-                          defaultValue={editQuest && editQuest.group_number ? this.props.groupsObject[editQuest.group_number] : "0:0"}></input>
+                          defaultValue={editQuest && editQuest.group ? this.props.groupsObject[editQuest.group] : "0:0"}></input>
                       </div> : ""}
 
                       <div>
