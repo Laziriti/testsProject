@@ -40,20 +40,23 @@ class createTestForm extends Component {
     }
   }
   componentDidMount() {
-
+    // this.setState({ groupsTimerState: false })
+    // this.setState({ groupResultsState: false })
+    console.log(this.state.groupsState)
     if (this.props.editTest) {
       // this.switchGroupsHandler();
       if (this.props.editTest.test_groups_object !== "null" || this.props.editTest.test_group_results_state) {
-        // this.setState({ groupsState: !this.state.groupsState });
+        console.log(!JSON.parse(this.props.editTest.test_groups_object).hasOwnProperty("null"))
+        console.log(this.props.editTest.test_group_results_state)
         this.switchGroupsHandler();
         this.setState({ groupsTimerState: this.props.editTest.test_groups_object })
         this.setState({ groupResultsState: this.props.editTest.test_group_results_state })
       }
     }
-    else {
-      document.getElementById('switchGroupsTimers').disabled = true;
-      document.getElementById('switchGroupResults').disabled = true;
-    }
+
+    document.getElementById('switchGroupsTimers').disabled = true;
+    document.getElementById('switchGroupResults').disabled = true;
+
   }
   OpenHandler = () => this.setState({ isOpen: true })
 
@@ -84,8 +87,13 @@ class createTestForm extends Component {
     formData.append("test_type", this.props.testType);
     formData.append("test_group_results_state", this.state.groupResultsState)
     formData.set("test_img", this.state.actualImg);
+    if (this.props.groupsObject['null'] !== null) {
+      formData.append("test_groups_object", JSON.stringify(this.props.groupsObject));
+    }
+    else {
+      formData.append("test_groups_object", null);
+    }
 
-    formData.append("test_groups_object", JSON.stringify(this.props.groupsObject));
 
     // else {
     //   formData.append("test_groups_object", null);
@@ -220,10 +228,12 @@ class createTestForm extends Component {
     let groupObj = groupsObject;
     formData.forEach((value, key) => {
       if (key === "groupName") {
+        console.log(value)
         propName = value;
       }
       if (key === "groupTimer") {
         propValue = value;
+        console.log(value)
       }
     })
     groupObj[propName] = propValue;
@@ -304,7 +314,7 @@ class createTestForm extends Component {
                   onClick={() => this.switchGroupsHandler()}
                   name="switch_groups"
                   type="checkBox"
-                  defaultChecked={editTest && (editTest.test_groups_object !== "null" || editTest.test_group_results_state) ? true : false}
+                  defaultChecked={editTest && (this.props.editTest.test_groups_object !== "null" || this.props.editTest.test_group_results_state) ? true : false}
                 />
               </div>
             </div>
@@ -316,7 +326,7 @@ class createTestForm extends Component {
                   name="switch_groups_timers"
                   id="switchGroupsTimers"
                   type="checkBox"
-                  defaultChecked={editTest && editTest.test_groups_object !== "null" ? true : false}
+                  defaultChecked={editTest && this.props.editTest.test_groups_object !== "null" ? true : false}
                 />
               </div>
             </div>

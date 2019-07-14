@@ -88,7 +88,7 @@ class passForm extends Component {
     let url = null;
     console.log(this.props.passingTest)
     if (this.props.passingTest.test_type === "first") {
-      url = 'https://psychotestmodule.herokuapp.com/exam/single/';
+      url = 'https://psychotestmodule.herokuapp.com/oneway/';
     }
     else {
       url = 'https://psychotestmodule.herokuapp.com/exam/class/';
@@ -134,14 +134,14 @@ class passForm extends Component {
     if (typeof question.answers_arr !== 'string') {
       for (let i = 0; i < question.variants.length; i++) {
         if ((question.variants[i].answer_state && question.variants[i].answer_state !== 0)) {
-          // document.getElementById(this.props.questIndex).classList.add("passing-block__question-map-item_answered");
+          document.getElementById(this.props.questIndex).classList.add("passing-block__question-map-item_answered");
           break;
         }
       }
     }
     else {
       if (question.answers_arr !== 0) {
-        // document.getElementById(this.props.questIndex).classList.add("passing-block__question-map-item_answered");
+        document.getElementById(this.props.questIndex).classList.add("passing-block__question-map-item_answered");
       }
     }
   }
@@ -240,7 +240,6 @@ class passForm extends Component {
                   this.changeSuperObj(this.props.questIndex);
                 }
               }
-
             }
             else {
               groupTimer[0]--;
@@ -314,7 +313,7 @@ class passForm extends Component {
   createQuestionMap(testContent) {
     let items = [];
 
-    if (testContent && testContent[this.props.questIndex].group && !this.state.currentGroup) {
+    if (testContent && this.props.questIndex && testContent[this.props.questIndex].group && !this.state.currentGroup) {
       this.setState({ currentGroup: testContent[this.props.questIndex].group })
     }
     testContent.forEach((elem, elemIndex) => {

@@ -15,7 +15,7 @@ class writeByYourselfQuest extends Component {
     editState: false,
     imgArr: [],
     checkArr: [],
-    everyWordPriceState: false
+    everyWordPriceState: false || this.props.editQuest ? this.props.editQuest.every_word_price_state : false
   }
 
   handleOpen = () => this.setState({ modalOpen: true })
@@ -74,7 +74,7 @@ class writeByYourselfQuest extends Component {
     else {
       object["question_ID"] = questionsArray.length;
     }
-
+    object["price_question"] = 1;
     object["type_question"] = "write_by_yourself_answer";
     object["not_full_price_question"] = false;
     object["every_word_price_state"] = this.state.everyWordPriceState
@@ -172,7 +172,10 @@ class writeByYourselfQuest extends Component {
                         this.state.everyWordPriceState ?
                           <div>
                             <label>Количество баллов за каждое слово</label>
-                            <input name="wordPrice" defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}></input>
+                            <input
+                              disabled={!this.state.everyWordPriceState}
+                              name="wordPrice"
+                              defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}></input>
                           </div>
                           : <div>
                             <label>Количество баллов за ответ</label>
@@ -212,13 +215,20 @@ class writeByYourselfQuest extends Component {
                           placeholder="10:22 = 10 минут 22 секунды"
                           defaultValue={editQuest && editQuest.timer_question ? editQuest.timer_question : "0:0"}></input>
                       </div>
-
+                      <div>
+                        <label>Баллы за каждое правильное слово</label>
+                        <input type="checkbox"
+                          onClick={() => { this.setState({ everyWordPriceState: !this.state.everyWordPriceState }) }}
+                          defaultChecked={this.state.everyWordPriceState}></input>
+                      </div>
                     </div>
                     {
                       !this.state.everyWordPriceState ?
                         <div>
                           <label>Количество ответов для ввода:</label>
-                          <input type="number" name="answers_count" defaultValue={editQuest && editQuest.answers_count ? editQuest.answers_count : ""}></input>
+                          <input type="number"
+                            name="answers_count"
+                            defaultValue={editQuest && editQuest.answers_count ? editQuest.answers_count : ""}></input>
                         </div>
                         : ""
                     }

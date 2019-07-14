@@ -119,7 +119,7 @@ class sequenceQuestion extends Component {
     var variantIndex = 0;
     object["question_ID"] = questionsArray.length;
     object["type_question"] = "sequence_answer";
-
+    object["price_question"] = 1;
     formData.forEach(function (value, key) {
 
       if (variantIndex === variantsCount) {
