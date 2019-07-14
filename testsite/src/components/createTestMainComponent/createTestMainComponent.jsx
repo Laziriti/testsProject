@@ -24,10 +24,36 @@ class createTestForm extends Component {
   }
   componentWillMount() {
     this.props.changeTestType(this.props.match.params.testType);
+    if (this.props.editTest) {
+      this.props.changeTestType(this.props.editTest.test_type);
+      this.props.setQuests(this.props.editTestContent);
+      this.props.setResults(this.props.editTestResults);
+    }
+  }
+
+
+  componentWillUnmount() {
+    if (this.props.editTest) {
+      this.props.clearEditTest();
+      this.props.setQuests([]);
+      this.props.setResults([]);
+    }
   }
   componentDidMount() {
-    document.getElementById('switchGroupsTimers').disabled = true;
-    document.getElementById('switchGroupResults').disabled = true;
+
+    if (this.props.editTest) {
+      // this.switchGroupsHandler();
+      if (this.props.editTest.test_groups_object !== "null" || this.props.editTest.test_group_results_state) {
+        // this.setState({ groupsState: !this.state.groupsState });
+        this.switchGroupsHandler();
+        this.setState({ groupsTimerState: this.props.editTest.test_groups_object })
+        this.setState({ groupResultsState: this.props.editTest.test_group_results_state })
+      }
+    }
+    else {
+      document.getElementById('switchGroupsTimers').disabled = true;
+      document.getElementById('switchGroupResults').disabled = true;
+    }
   }
   OpenHandler = () => this.setState({ isOpen: true })
 
@@ -58,24 +84,35 @@ class createTestForm extends Component {
     formData.append("test_type", this.props.testType);
     formData.append("test_group_results_state", this.state.groupResultsState)
     formData.set("test_img", this.state.actualImg);
-    if (this.state.groupsTimerState) {
-      formData.append("test_groups_object", JSON.stringify(this.props.groupsObject));
-    }
-    else {
-      formData.append("test_groups_object", null);
-    }
+
+    formData.append("test_groups_object", JSON.stringify(this.props.groupsObject));
+
+    // else {
+    //   formData.append("test_groups_object", null);
+    // }
 
     formData.forEach(function (value, key) {
       object[key] = value;
     })
     formData.append("test_question_count", this.props.questions.length)
-    axios.post('https://psychotestmodule.herokuapp.com/tests/', formData)
-      .then((response) => {
-      }).catch(e => {
-        console.log(e)
-      })
+    if (this.props.editTest) {
+      axios.put('https://psychotestmodule.herokuapp.com/tests/' + this.props.editTest.id + "/", formData)
+        .then((response) => {
+          console.log("изменено")
+        }).catch(e => {
+          console.log(e)
+        })
+    }
+    else {
+      axios.post('https://psychotestmodule.herokuapp.com/tests/', formData)
+        .then((response) => {
+        }).catch(e => {
+          console.log(e)
+        })
+    }
+
   }
-  firstTypeHandler(object, variantImg, variantsCount) {
+  firstTypeHandler(object, variantImg, variantsCount, notFullPriceState) {
     let rightCount = 0;
     var objectVariant = {};
     var allVariants = [];
@@ -91,7 +128,12 @@ class createTestForm extends Component {
         if (key === "variant_img" + index) {
           if (!objectVariant.hasOwnProperty("answer_state") && objectVariant.hasOwnProperty("variant_Id") && index !== variantsCount) {
 
-            objectVariant["answer_state"] = 0;
+            if (notFullPriceState) {
+              objectVariant["answer_state"] = 1;
+            }
+            else {
+              objectVariant["answer_state"] = 0;
+            }
             allVariants[roll] = objectVariant;
             objectVariant = {};
             roll++;
@@ -115,7 +157,14 @@ class createTestForm extends Component {
           roll++;
         }
         if (!objectVariant.hasOwnProperty("answer_state") && index === variantsCount && key === "variants[" + Number(index - 1) + "]variant") {
-          objectVariant["answer_state"] = 0;
+          console.log(notFullPriceState)
+          if (notFullPriceState) {
+            objectVariant["answer_state"] = 1;
+          }
+          else {
+            objectVariant["answer_state"] = 0;
+          }
+
           allVariants[roll] = objectVariant;
         }
       }
@@ -204,7 +253,7 @@ class createTestForm extends Component {
   }
   render() {
 
-    const { pristine, reset, submitting, questions } = this.props
+    const { pristine, reset, submitting, questions, editTest, editTestResults, editTestContent } = this.props
     return (
       <div className='wrapper'>
         <div className='createTestBody'>
@@ -212,22 +261,22 @@ class createTestForm extends Component {
             <div className='inputField'>
               <label>Название теста</label>
               <div className='testInput'>
-                <Field
+                <textarea
                   name="test_name"
-                  component="textarea"
                   type="text"
                   placeholder="Название теста"
+                  defaultValue={editTest ? editTest.test_name : ""}
                 />
               </div>
             </div>
             <div className='inputField'>
               <label>Имя автора</label>
               <div className='testInput'>
-                <Field
+                <textarea
                   name="test_author"
-                  component="textarea"
                   type="text"
                   placeholder="Автор теста"
+                  defaultValue={editTest ? editTest.test_author : ""}
                 />
               </div>
             </div>
@@ -240,55 +289,54 @@ class createTestForm extends Component {
             <div className='inputField'>
               <label>Комментарий к тесту</label>
               <div className='testInput'>
-                <Field
+                <textarea
                   name="test_comment"
-                  component="textarea"
                   type="text"
                   placeholder="Комментарий"
+                  defaultValue={editTest ? editTest.test_comment : ""}
                 />
               </div>
             </div>
             <div className='inputField'>
               <label>Включить группы</label>
               <div className='testInput'>
-                <Field
+                <input
                   onClick={() => this.switchGroupsHandler()}
                   name="switch_groups"
-                  component="input"
                   type="checkBox"
+                  defaultChecked={editTest && (editTest.test_groups_object !== "null" || editTest.test_group_results_state) ? true : false}
                 />
               </div>
             </div>
             <div className='inputField'>
               <label>Включить групповые таймеры</label>
               <div className='testInput'>
-                <Field
+                <input
                   onClick={() => this.setState({ groupsTimerState: !this.state.groupsTimerState })}
                   name="switch_groups_timers"
                   id="switchGroupsTimers"
-                  component="input"
                   type="checkBox"
-
+                  defaultChecked={editTest && editTest.test_groups_object !== "null" ? true : false}
                 />
               </div>
             </div>
             <div className='inputField'>
               <label>Включить ответы по группам</label>
               <div className='testInput'>
-                <Field
+                <input
                   onClick={() => this.setState({ groupResultsState: !this.state.groupResultsState })}
-                  name="switch_groups_timers"
+                  name="switch_groups_chapter_state"
                   id="switchGroupResults"
-                  component="input"
                   type="checkBox"
+                  defaultChecked={editTest ? editTest.test_group_results_state : false}
                 />
               </div>
             </div>
             <div className="createFormTestMainBtn">
-              <button className="formButton" type="button" onClick={this.handleSubmit} disabled={pristine || submitting}>
+              <button className="formButton" type="button" onClick={this.handleSubmit}>
                 Submit
         </button>
-              <button className="formButton" type="button" disabled={pristine || submitting} onClick={reset}>
+              <button className="formButton" type="button" onClick={reset}>
                 Clear Values
         </button>
             </div>

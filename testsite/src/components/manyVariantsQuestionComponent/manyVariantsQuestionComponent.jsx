@@ -12,7 +12,6 @@ class oneVarQuest extends Component {
     actualImg: null,
     variantImg: [],
     currentIndexVariantImg: null,
-
     imgArr: [],
     checkBoxArr: [],
     notFullPriceArr: []
@@ -71,6 +70,7 @@ class oneVarQuest extends Component {
     var formData = new FormData(document.forms.oneVariantForm);
     object["question_ID"] = questionsArray.length;
     object["type_question"] = "many_answers";
+    object["price_question"] = 1;
     formData.forEach(function (value, key) {
 
       if (key === 'questImg') {
@@ -255,8 +255,8 @@ class oneVarQuest extends Component {
             if (fields.length <= editVariants.length) {
               editVariants.forEach((elem, index) => {
                 fields.push(elem);
-                if (elem.priceVar) {
-                  this.addToArrPriceArr(elem.priceVar)
+                if (elem.price_var) {
+                  this.addToArrPriceArr(elem.price_var)
                 }
                 if (testType === "second") {
                   this.addToArr(elem.answer_state)

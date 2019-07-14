@@ -9,6 +9,10 @@ const initialState = {
     passingTestResults: null,
     passingTestContent: null,
     groups_object: null,
+    editTest: null,
+    editTestResults: null,
+    editTestContent: null,
+    editTestState: false
 
 };
 export default (state = initialState, action) => {
@@ -49,6 +53,25 @@ export default (state = initialState, action) => {
                 passingTestContent: null,
                 groups_object: null,
                 isReadyToPass: false
+            };
+
+        case 'SET_EDIT_TEST':
+            return {
+                ...state,
+                editTest: action.payload,
+                editTestResults: eval(action.payload.test_check_sum),
+                editTestContent: eval(action.payload.test_content),
+                groups_object: JSON.parse(action.payload.test_groups_object),
+                editTestState: true
+            };
+        case 'CLEAR_EDIT_TEST':
+            return {
+                ...state,
+                editTest: null,
+                editTestResults: null,
+                editgTestContent: null,
+                groups_object: null,
+                editTestState: false
             };
         case 'SAVE_VARIANT_STATE':
             return {

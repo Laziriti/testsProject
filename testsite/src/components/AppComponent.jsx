@@ -23,6 +23,7 @@ class App extends Component {
         <Filter />
         <Route exact path='/' component={Show} />
         <Route exact path='/createTest/:testType' component={CreateTestMain} />
+        <Route exact path='/editTest' component={CreateTestMain} />
         <Route exact path='/passingTest/:testId' component={PassingTest} />
       </Container>
     )

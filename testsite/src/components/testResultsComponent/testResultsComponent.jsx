@@ -80,30 +80,33 @@ class testResults extends Component {
   secondTypeHandler(formData, variantImg) {
     var resultArr = [];
     var resultObject = {};
-    var check = 0;
     var index = 0;
 
     formData.forEach(function (value, key) {
 
-      check++;
-      if (check === 1) {
-        if (key === "result_img" + index) {
-          resultObject["index"] = index;
-          resultObject["result_img"] = variantImg[index];
-        }
+
+      if (key === "result_img" + index) {
+        resultObject["result_img"] = variantImg[index];
         if (variantImg[index] == null) {
           resultObject["result_img"] = "null"
         }
       }
-      if (check === 2) {
+      if (key === index + "from") {
+        resultObject["min"] = Number(value);
+      }
+
+      if (key === index + "to") {
+        resultObject["max"] = Number(value);
+      }
+
+      if (key === index + "group") {
         resultObject["group"] = value;
       }
-      if (check === 3) {
+      if (key === index + "result") {
         resultObject["result"] = value;
       }
-      if (check === 4) {
+      if (key === index + "description") {
         resultObject["description"] = value;
-        check = 0;
         resultArr.push(resultObject);
         resultObject = {};
         index++;

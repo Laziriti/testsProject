@@ -13,7 +13,9 @@ class oneVarQuest extends Component {
     currentIndexVariantImg: null,
     imgArr: [],
     checkArr: [],
-    questionsCount: 0
+    questionsCount: 0,
+    notFullPriceArr: [],
+    notFullPriceState: false || (this.props.editQuest && this.props.editQuest.not_full_price_question ? this.props.editQuest.not_full_price_question : false)
   }
 
   handleOpen = () => this.setState({ modalOpen: true })
@@ -76,13 +78,11 @@ class oneVarQuest extends Component {
     else {
       object["question_ID"] = questionsArray.length;
     }
-
+    object["price_question"] = 1;
     object["type_question"] = "one_answer";
-    
-      object["not_full_price_question"] = false;
 
     formData.forEach(function (value, key) {
-
+      console.log(key)
       if (key === 'questImg') {
         object[key] = actualImg;
       }
@@ -94,6 +94,9 @@ class oneVarQuest extends Component {
       }
       if (key === 'groupName') {
         object["group"] = value;
+      }
+      if (key === 'notFullPriceQuestion') {
+        object["not_full_price_question"] = true;
       }
       if (key === 'timerQuestion') {
         if (value !== "0:0") {
@@ -108,11 +111,15 @@ class oneVarQuest extends Component {
       }
     });
 
+    if (!object.hasOwnProperty("not_full_price_question")) {
+      object["not_full_price_question"] = false;
+    }
+
     if (testType === 'first') {
-      object = this.props.firstTypeHandler(object, variantImg, this.props.variantsCount)
+      object = this.props.firstTypeHandler(object, variantImg, this.props.variantsCount, this.state.notFullPriceState)
     }
     else if (testType === 'second') {
-      object = this.props.secondTypeHandler(object, variantImg);
+      object = this.props.secondTypeHandler(object, variantImg, this.state.notFullPriceState);
     }
 
     object["number_answers"] = this.props.variantsCount;
@@ -126,6 +133,7 @@ class oneVarQuest extends Component {
 
     setQuests(questionsArray);
     this.props.setVariantsCount(0);
+    console.log(object)
   }
 
   createSelectItems(results, editVariants, index, editCount) {
@@ -169,6 +177,22 @@ class oneVarQuest extends Component {
     arr.splice(index, 1);
     this.setState({ checkArr: arr })
   }
+  saveDataPriceArr(index, value, id) {
+    let arr = this.state.notFullPriceArr;
+    arr[index] = Number(value);
+    this.setState({ notFullPriceArr: arr })
+
+  }
+  addToArrPriceArr(value) {
+    let arr = this.state.notFullPriceArr;
+    arr.push(value);
+    this.setState({ notFullPriceArr: arr })
+  }
+  delFromArrPriceArr(index) {
+    let arr = this.state.notFullPriceArr;
+    arr.splice(index, 1);
+    this.setState({ notFullPriceArr: arr })
+  }
 
   render() {
     const {
@@ -186,17 +210,24 @@ class oneVarQuest extends Component {
       groupsTimerState,
       editQuest } = this.props;
 
-    const renderField = ({ input, label, type, editVariants, index, meta: { touched, error } }) => (
+    const renderField = ({ input, answer, label, type, editVariants, index, meta: { touched, error } }) => (
       <div>
 
         <label>{label}</label>
+        {console.log(this.state.notFullPriceArr)}
         <div>
+          <input type="number" id={index} name={answer + "priceVar"}
+            onChange={(e) => this.saveDataPriceArr(index, e.target.value, e.target.id)}
+            disabled={!this.state.notFullPriceState}
+            defaultValue={this.state.notFullPriceArr[index] ? this.state.notFullPriceArr[index] : null}>
+          </input>
           <textarea {...input} type={type} ></textarea>
           {
             testType === 'first' ?
               <input type="radio"
                 name="answerState"
                 onChange={() => this.saveData(index)}
+                disabled={this.state.notFullPriceState}
                 defaultChecked={this.state.checkArr[index] ? this.state.checkArr[index] : ""} />
               : ""
           }
@@ -220,8 +251,13 @@ class oneVarQuest extends Component {
             this.setState({ actualImg: editQuest.questImg })
             if (fields.length <= editVariants.length) {
               editVariants.forEach((elem, index) => {
+                //загатовка для ограничения по минимуму вариантов
                 this.setState({ questionsCount: this.state.questionsCount + 2 });
+                if (elem.price_var) {
+                  this.addToArrPriceArr(elem.price_var)
+                }
                 fields.push(elem);
+               
                 if (testType === "second") {
                   this.addToArr(elem.answer_state)
                 }
@@ -252,7 +288,8 @@ class oneVarQuest extends Component {
             fields.push({});
             setVariantsCount(variantsCount + 1);
             this.setState({ questionsCount: this.state.questionsCount + 1 });
-            this.addToArr(false)
+            this.addToArr(false);
+            this.addToArrPriceArr(0);
           }}>Добавить вариант ответа</button>
         <ul>
           {fields.map((answer, index) =>
@@ -265,7 +302,8 @@ class oneVarQuest extends Component {
                   fields.remove(index);
                   setVariantsCount(variantsCount - 1);
                   this.FileVariantsRemove(index);
-                  this.delFromArr(index)
+                  this.delFromArr(index);
+                  this.delFromArrPriceArr(index);
                 }}
               >Удалить</button>
               <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
@@ -283,6 +321,7 @@ class oneVarQuest extends Component {
                   type="text"
                   index={index}
                   component={renderField}
+                  answer={answer}
                 />
               </div>
             </li>
@@ -296,6 +335,7 @@ class oneVarQuest extends Component {
         <Modal trigger={<Button onClick={() => {
           this.setState({ checkArr: [] });
           this.handleOpen();
+          this.setState({ notFullPriceArr: [] });
           this.insertCurrentData(editQuest && editQuest.variants ? editQuest.variants : undefined);
         }}
           className='oneVariantTrigger'>Одновариантный вопрос</Button>}
@@ -315,12 +355,19 @@ class oneVarQuest extends Component {
                         placeholder="Текст результата"
                         defaultValue={editQuest ? editQuest.question : ""}
                       >
-
                       </textarea>
                       <div>
                         <label>Количество баллов за ответ</label>
-                        <input name="priceQuestion"
-                          defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}></input>
+                        <input name="priceQuestion" id="priceQuestion"
+                          defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}
+                          disabled={this.state.notFullPriceState}></input>
+                      </div>
+                      <div>
+                        <label>Неполный ответ</label>
+                        <input name="notFullPriceQuestion"
+                          defaultChecked={editQuest && editQuest.not_full_price_question ? editQuest.not_full_price_question : false}
+                          type="checkBox"
+                          onClick={() => { this.setState({ notFullPriceState: !this.state.notFullPriceState }) }}></input>
                       </div>
                       <input
                         name="questImg"
@@ -370,24 +417,23 @@ class oneVarQuest extends Component {
             </Modal.Description>
           </Modal.Content>
           <Modal.Actions>
-            <Button onClick={() => { this.handleClose(); reset(); }} color="primary">
+            <Button onClick={() => { this.handleClose(); reset(); this.setState({ notFullPriceState: false }) }} color="primary">
               Отмена
             </Button>
 
             {
               this.state.questionsCount > 1 ?
-
                 <Button type="sumbit" onClick={() => {
                   this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex);
                   this.props.setGroups(new FormData(document.forms.oneVariantForm), this.props.groupsObject, this.props.setGroupObject);
                   this.handleClose();
                   reset();
                   this.props.updateList();
+                  this.setState({ notFullPriceState: false });
                 }} color="primary" autoFocus>
                   Готово
             </Button>
                 : ""
-
             }
           </Modal.Actions>
         </Modal>

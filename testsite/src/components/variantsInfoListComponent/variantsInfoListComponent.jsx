@@ -4,9 +4,9 @@ class variantsInfo extends Component {
 
 
   render() {
-    const { variant, answer_state, index, variant_img,answers_arr } = this.props
+    const { variant, answer_state, index, variant_img, answers_arr, results } = this.props
     return (
-    
+
       <div className="variantBlock">
         <div className="variantsLogo">
           <div className="variantNumber">
@@ -19,7 +19,7 @@ class variantsInfo extends Component {
         <div className="variantsContent">
           <textarea className="variant" disabled value={answers_arr ? answers_arr : variant}></textarea>
           <div className="variantsState">
-            {answer_state}
+            {results[answer_state] && results[answer_state].description ? results[answer_state].description : answer_state}
           </div>
         </div>
       </div>

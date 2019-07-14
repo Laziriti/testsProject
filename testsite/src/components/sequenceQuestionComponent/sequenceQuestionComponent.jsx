@@ -7,7 +7,7 @@ import { Container } from 'semantic-ui-react';
 
 class sequenceQuestion extends Component {
   state = {
-    notFullPriceState: false || this.props.editPriceState,
+    notFullPriceState: false || (this.props.editQuest && this.props.editQuest.not_full_price_question ? this.props.editQuest.not_full_price_question : false),
     modalOpen: false,
     actualImg: null,
     variantImg: [],
@@ -250,7 +250,7 @@ class sequenceQuestion extends Component {
         <label>{label}</label>
         <div>
           {
-            this.state.editState && editCount > index ?
+             this.state.editState && editCount > index ?
               delete input.value && <input {...input} type={type} placeholder={label} defaultValue={editVariants[index].answer_state} />
               : <input {...input} type={type} placeholder={label} />
           }
@@ -269,8 +269,8 @@ class sequenceQuestion extends Component {
               editVariants.forEach((elem, index) => {
 
                 this.setState({ currentVarIndex: index })
-                if (elem.priceVar) {
-                  this.addToArrPriceArr(elem.priceVar)
+                if (elem.price_var) {
+                  this.addToArrPriceArr(elem.price_var)
                 }
                 this.handleEdit();
                 fields.push(elem);
@@ -330,6 +330,7 @@ class sequenceQuestion extends Component {
                   index={index}
                   answer={answer}
                   component={renderField}
+                  editVariants={editVariants}
                 />
                 <Field
                   className="answerVar"
@@ -338,6 +339,7 @@ class sequenceQuestion extends Component {
                   editCount={editQuest ? editQuest.number_answers : ""}
                   index={index}
                   component={renderFieldInput}
+                  editVariants={editVariants}
                 />
 
               </div>

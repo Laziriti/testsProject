@@ -3,8 +3,8 @@ import * as variantActions from '../../actions/createTestAction';
 import { bindActionCreators } from 'redux';
 import variantsInfo from './variantsInfoListComponent'
 
-const mapStateToProps = () => ({
-
+const mapStateToProps = ({ results }) => ({
+  results: results.results,
 });
 
 const mapDispatchToProps = dispatch => ({

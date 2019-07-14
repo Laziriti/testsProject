@@ -30,6 +30,7 @@ class passForm extends Component {
       testComplete: true
     };
   }
+
   onUnload(event) {
     event.returnValue = "Информация будет стерта, уверены?"
   }
@@ -85,7 +86,7 @@ class passForm extends Component {
   resultAxios(testContent) {
     this.props.passingTest.test_content = JSON.stringify(testContent);
     let url = null;
-
+    console.log(this.props.passingTest)
     if (this.props.passingTest.test_type === "first") {
       url = 'https://psychotestmodule.herokuapp.com/exam/single/';
     }
@@ -299,7 +300,10 @@ class passForm extends Component {
               }
 
               clearInterval(this.state.groupTimerInterval);
-              this.startGroupTimer(index, testContent[this.props.questIndex].group);
+              if (this.props.groups_object[testContent[this.props.questIndex].group]) {
+                this.startGroupTimer(index, testContent[this.props.questIndex].group);
+              }
+
             }
           }
         }
@@ -309,21 +313,31 @@ class passForm extends Component {
   }
   createQuestionMap(testContent) {
     let items = [];
-    //новое
-    if (testContent && !this.state.currentGroup) {
+
+    if (testContent && testContent[this.props.questIndex].group && !this.state.currentGroup) {
       this.setState({ currentGroup: testContent[this.props.questIndex].group })
     }
     testContent.forEach((elem, elemIndex) => {
       console.log(elem.group)
-
-      items.push(<li
+      let item = <li
         key={elemIndex}
-        className={elem.group === this.state.currentGroup
-          ? "passing-block__question-map-item"
-          : "passing-block__question-map-item_disabled"}
+        className="passing-block__question-map-item"
         id={elemIndex}
         onClick={() => { this.changeCurrentQuestion(elemIndex); }}
-      >{elemIndex + 1}</li>)
+      >{elemIndex + 1}</li>;
+
+      if (elem.group) {
+        item = <li
+          key={elemIndex}
+          className={elem.group === this.state.currentGroup
+            ? "passing-block__question-map-item"
+            : "passing-block__question-map-item_disabled"}
+          id={elemIndex}
+          onClick={() => { this.changeCurrentQuestion(elemIndex); }}
+        >{elemIndex + 1}</li>
+      }
+
+      items.push(item);
     })
     return items;
   }
@@ -347,7 +361,7 @@ class passForm extends Component {
           />
           <div className="passing-block__question-map-container" id="questionMapContainer">
             <ul className="passing-block__question-map" id="questionMap">
-            
+              {this.createQuestionMap(testContent)}
             </ul>
           </div>
           <div className="passing-block__container" id="passBlock">

@@ -32,10 +32,12 @@
 }
 
 .passing-block__question-map {
+    height: 120px;
     margin: 10px 0;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
+    overflow-y: scroll;
     list-style: none;
 }
 
