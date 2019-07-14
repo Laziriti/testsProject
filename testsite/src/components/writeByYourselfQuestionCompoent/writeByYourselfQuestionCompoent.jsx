@@ -76,7 +76,6 @@ class writeByYourselfQuest extends Component {
     }
     object["price_question"] = 1;
     object["type_question"] = "write_by_yourself_answer";
-    object["not_full_price_question"] = false;
     object["every_word_price_state"] = this.state.everyWordPriceState
     formData.forEach(function (value, key) {
 
