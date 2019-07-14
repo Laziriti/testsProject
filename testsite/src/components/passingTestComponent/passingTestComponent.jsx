@@ -27,7 +27,8 @@ class passForm extends Component {
       previuoseGroups: {},
       activeInputsArr: [],
       prevQuestIndex: null,
-      testComplete: true
+      testComplete: true,
+      groupTimersStates: {}
     };
   }
 
@@ -196,7 +197,6 @@ class passForm extends Component {
             if (questionTimer[0] === 0) {
               clearInterval(this.state.timerInterval);
               if (this.props.questIndex < this.props.testContent.length - 1) {
-
                 this.props.testContent[this.props.questIndex].timerState = false;
                 this.changeCurrentQuestion(this.props.questIndex + 1);
               }
@@ -228,16 +228,14 @@ class passForm extends Component {
             if (groupTimer[0] === 0) {
               clearInterval(this.state.groupTimerInterval);
               for (let i = this.props.questIndex; i < this.props.testContent.length; i++) {
+                this.changeSuperObj(i);
                 if (i === this.props.testContent.length - 1) {
                   this.resultAxios(this.props.testContent);
                   break;
                 }
-                if (this.props.testContent[i].group !== this.state.currentGroup) {
+                if (this.props.testContent[i].group !== this.state.currentGroup && this.props.testContent[i].timerState !== false) {
                   this.changeCurrentQuestion(i);
                   break;
-                }
-                else {
-                  this.changeSuperObj(this.props.questIndex);
                 }
               }
             }
@@ -275,7 +273,6 @@ class passForm extends Component {
 
       });
 
-
       if (!this.state.superObj.hasOwnProperty(this.props.questIndex)) {
 
         this.changeSuperObj(this.props.questIndex);
@@ -288,18 +285,26 @@ class passForm extends Component {
 
           if (this.props.groups_object) {
 
-            if (testContent[this.props.questIndex].group !== this.state.currentGroup) {
+            if (testContent[this.props.questIndex].group !== this.state.currentGroup
+              && !this.state.groupTimersStates.hasOwnProperty(testContent[this.props.questIndex].group)) {
               testContent.forEach(elem => {
                 if (elem.group === this.state.currentGroup) {
                   elem.timerState = false;
                 }
               })
-              if (testContent[this.props.questIndex].timerState !== false) {
+              // if (!this.state.groupTimersStates.hasOwnProperty(testContent[this.props.questIndex].group)) {
+                // раньше тут был блок снизу
+              // }
                 this.setState({ currentGroup: testContent[this.props.questIndex].group });
-              }
+
+                let timersStates = this.state.groupTimersStates;
+                timersStates[testContent[this.props.questIndex].group] = "activated";
+                this.setState({ groupTimersStates: timersStates })
+              //asdasdasd
 
               clearInterval(this.state.groupTimerInterval);
-              if (this.props.groups_object[testContent[this.props.questIndex].group]) {
+              if (this.props.groups_object[testContent[this.props.questIndex].group]
+              ) {
                 this.startGroupTimer(index, testContent[this.props.questIndex].group);
               }
 
@@ -325,7 +330,7 @@ class passForm extends Component {
         onClick={() => { this.changeCurrentQuestion(elemIndex); }}
       >{elemIndex + 1}</li>;
 
-      if (elem.group) {
+      if (testContent && this.props.passingTest.test_group_results_state) {
         item = <li
           key={elemIndex}
           className={elem.group === this.state.currentGroup

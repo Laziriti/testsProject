@@ -88,7 +88,7 @@ class passQuest extends Component {
                   </p>
                 </div>
                 <div className="passing-block__info-right">
-                  <p className="passing-block__question">{testContent[this.props.questIndex].question}</p>
+                  <p className="passing-block__question">{testContent ? testContent[this.props.questIndex].question : ""}</p>
 
                   {
                     testContent[this.props.questIndex].questImg ?
@@ -98,7 +98,7 @@ class passQuest extends Component {
                   <div>
                     {testContent[this.props.questIndex].type_question !== "write_by_yourself_answer" ?
                       testContent[this.props.questIndex].variants.map((item, index) =>
-                      
+
                         <div className="passing-block__variants">
                           {item.variant_img ?
                             <div><img className="passing-block__variant-img" src={item.variant_img} alt="" /></div>
@@ -142,7 +142,7 @@ class passQuest extends Component {
                         onChange={() => this.saveFuncString(this.value, testContent)} />
                     }
                   </div>
-                  
+
                 </div>
               </div>
             </form>
