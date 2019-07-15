@@ -146,9 +146,13 @@ class testResults extends Component {
 
     for (let objKey in groupsObject) {
       let item = <option key={objKey} value={objKey} >{objKey} </option>;
-
-      if (this.state.currentResults[index] && groupsObject.hasOwnProperty(this.state.currentResults[index].group)) {
+      // console.log(this.state.currentResults)
+      // console.log(groupsObject)
+      // console.log(this.state.currentResults[index].group)
+      // console.log(groupsObject.hasOwnProperty(Number(this.state.currentResults[index].group)))
+      if (this.state.currentResults[index] && objKey===this.state.currentResults[index].group) {
         item = <option key={objKey} value={objKey} selected>{objKey} </option>;
+        console.log(objKey)
       }
       items.push(item);
     }

@@ -28,6 +28,7 @@ class createTestForm extends Component {
       this.props.changeTestType(this.props.editTest.test_type);
       this.props.setQuests(this.props.editTestContent);
       this.props.setResults(this.props.editTestResults);
+      this.props.setGroupObject(JSON.parse(this.props.editTest.test_groups_object))
     }
   }
 
@@ -42,20 +43,21 @@ class createTestForm extends Component {
   componentDidMount() {
     // this.setState({ groupsTimerState: false })
     // this.setState({ groupResultsState: false })
+    document.getElementById('switchGroupsTimers').disabled = true;
+    document.getElementById('switchGroupResults').disabled = true;
     console.log(this.state.groupsState)
     if (this.props.editTest) {
       // this.switchGroupsHandler();
-      if (this.props.editTest.test_groups_object !== "null" || this.props.editTest.test_group_results_state) {
+      if (this.props.editTest.test_group_timers_state || this.props.editTest.test_group_results_state) {
         console.log(!JSON.parse(this.props.editTest.test_groups_object).hasOwnProperty("null"))
         console.log(this.props.editTest.test_group_results_state)
         this.switchGroupsHandler();
-        this.setState({ groupsTimerState: this.props.editTest.test_groups_object })
+        this.setState({ groupsTimerState: this.props.editTest.test_group_timers_state })
         this.setState({ groupResultsState: this.props.editTest.test_group_results_state })
       }
     }
 
-    document.getElementById('switchGroupsTimers').disabled = true;
-    document.getElementById('switchGroupResults').disabled = true;
+
 
   }
   OpenHandler = () => this.setState({ isOpen: true })
@@ -85,7 +87,8 @@ class createTestForm extends Component {
     formData.append("test_content", JSON.stringify(this.props.questions));
     formData.append("test_check_sum", JSON.stringify(this.props.results));
     formData.append("test_type", this.props.testType);
-    formData.append("test_group_results_state", this.state.groupResultsState)
+    formData.append("test_group_results_state", this.state.groupResultsState);
+    formData.append("test_group_timers_state", this.state.groupsTimerState);
     formData.set("test_img", this.state.actualImg);
     if (this.props.groupsObject['null'] !== null) {
       formData.append("test_groups_object", JSON.stringify(this.props.groupsObject));
@@ -93,11 +96,6 @@ class createTestForm extends Component {
     else {
       formData.append("test_groups_object", null);
     }
-
-
-    // else {
-    //   formData.append("test_groups_object", null);
-    // }
 
     formData.forEach(function (value, key) {
       object[key] = value;
@@ -326,7 +324,7 @@ class createTestForm extends Component {
                   name="switch_groups_timers"
                   id="switchGroupsTimers"
                   type="checkBox"
-                  defaultChecked={editTest && this.props.editTest.test_groups_object !== "null" ? true : false}
+                  defaultChecked={editTest ? editTest.test_group_timers_state : false}
                 />
               </div>
             </div>

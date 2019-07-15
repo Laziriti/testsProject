@@ -8,6 +8,7 @@ import * as saveVariantState from '../../actions/saveVariantState';
 import * as clearPassingTest from '../../actions/clearPassingTest';
 import * as setQuestionTimer from '../../actions/setQuestionTimer';
 import * as setGroupTimer from '../../actions/setGroupTimer';
+import * as setGroupObjectAction from '../../actions/setGroupObjectAction';
 
 const mapStateToProps = ({ questions, tests, results, timer }) => ({
   passingTest: tests.passingTest,
