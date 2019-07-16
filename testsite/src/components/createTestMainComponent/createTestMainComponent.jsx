@@ -90,7 +90,7 @@ class createTestForm extends Component {
     formData.append("test_group_results_state", this.state.groupResultsState);
     formData.append("test_group_timers_state", this.state.groupsTimerState);
     formData.set("test_img", this.state.actualImg);
-    if (this.props.groupsObject['null'] !== null) {
+    if (this.props.groupsObject && this.props.groupsObject['null'] !== null) {
       formData.append("test_groups_object", JSON.stringify(this.props.groupsObject));
     }
     else {
@@ -234,7 +234,10 @@ class createTestForm extends Component {
         console.log(value)
       }
     })
-    groupObj[propName] = propValue;
+    if (propName) {
+      groupObj[propName] = propValue;
+    }
+
     setGroupObject(groupObj);
   }
   handleGroups(value, groupsObject, groupsTimerState) {

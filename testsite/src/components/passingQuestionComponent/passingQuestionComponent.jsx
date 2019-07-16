@@ -88,7 +88,8 @@ class passQuest extends Component {
                   </p>
                 </div>
                 <div className="passing-block__info-right">
-                  <p className="passing-block__question">{this.props.questIndex ? testContent[this.props.questIndex].question : ""}</p>
+                  {console.log(this.props.questIndex)}
+                  <p className="passing-block__question">{this.props.questIndex >= 0 ? testContent[this.props.questIndex].question : ""}</p>
 
                   {
                     testContent[this.props.questIndex].questImg ?

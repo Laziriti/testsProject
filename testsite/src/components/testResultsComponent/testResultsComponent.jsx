@@ -84,8 +84,8 @@ class testResults extends Component {
 
     formData.forEach(function (value, key) {
 
-
       if (key === "result_img" + index) {
+        resultObject["index"] = index;
         resultObject["result_img"] = variantImg[index];
         if (variantImg[index] == null) {
           resultObject["result_img"] = "null"
@@ -150,7 +150,7 @@ class testResults extends Component {
       // console.log(groupsObject)
       // console.log(this.state.currentResults[index].group)
       // console.log(groupsObject.hasOwnProperty(Number(this.state.currentResults[index].group)))
-      if (this.state.currentResults[index] && objKey===this.state.currentResults[index].group) {
+      if (this.state.currentResults[index] && objKey === this.state.currentResults[index].group) {
         item = <option key={objKey} value={objKey} selected>{objKey} </option>;
         console.log(objKey)
       }

@@ -112,6 +112,8 @@ class passForm extends Component {
     }
     else {
       this.props.passingTest.test_content = JSON.stringify(testContent);
+      console.log(JSON.stringify(testContent))
+      console.log(this.props.passingTest.test_check_sum)
       let url = null;
       console.log(this.props.passingTest)
       if (this.props.passingTest.test_type === "first") {
@@ -140,7 +142,7 @@ class passForm extends Component {
 
   }
   resultChapterAxios(testContent) {
-    
+
     clearInterval(this.state.timerInterval);
     clearInterval(this.state.groupTimerInterval);
     this.props.setGroupTimer([0, 0]);
@@ -355,7 +357,7 @@ class passForm extends Component {
             this.startQuestionTimer(index)
           }
 
-          if (this.props.groups_object) {
+          if (this.props.groups_object && this.props.passingTest.test_group_timers_state) {
 
             if (testContent[this.props.questIndex].group !== this.state.currentGroup
               && !this.state.groupTimersStates.hasOwnProperty(testContent[this.props.questIndex].group)) {
@@ -482,8 +484,12 @@ class passForm extends Component {
             {!this.state.chaptersResultState ?
               <div> <img src={passingTestResults[this.state.resultIndex].result_img} alt='' />
                 <p>
-                  {passingTestResults[this.state.resultIndex].result}
-                </p></div>
+                  {this.props.passingTest.test_type === "first" ?
+                    passingTestResults[this.state.resultIndex].result :
+                    passingTestResults[this.state.resultIndex].description
+                  }
+                </p>
+              </div>
               : this.createChaptersResult()}
             <Link to="/" onClick={() => { this.setState({ superObj: {} }); setIndexOfQuestion(0); }}>Завершить</Link>
           </div>
