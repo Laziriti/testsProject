@@ -236,3 +236,7 @@ select {
 #insertDataSequenceVariant {
     display: none;
 }
+
+.testInput_hidden {
+    visibility: hidden;
+}

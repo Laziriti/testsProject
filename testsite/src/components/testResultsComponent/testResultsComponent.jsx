@@ -175,7 +175,7 @@ class testResults extends Component {
 
         {this.state.currentResults[index] ? delete input.value : ""}
 
-        {groupResultsState
+        {groupResultsState && testType === "first"
           ? <div>
             <label>Группа:</label>
             <select id="group" name={index + "group"} >

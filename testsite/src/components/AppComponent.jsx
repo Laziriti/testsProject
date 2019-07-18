@@ -16,7 +16,6 @@ class App extends Component {
 
   render() {
 
-
     return (
       <Container>
         
@@ -27,7 +26,6 @@ class App extends Component {
         <Route exact path='/passingTest/:testId' component={PassingTest} />
       </Container>
     )
-
 
   }
 }

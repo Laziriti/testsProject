@@ -3,7 +3,9 @@
     height: 100%;
     object-fit: cover;
 }
-
+.ui.card {
+    height: 100%;
+}
 .button-container {
     height: 52%;
 }
@@ -14,6 +16,8 @@
 }
 
 .ui.cards>.card, .ui.cards>.card>.content {
+    /* height: 100%; */
+    /* height: 600px; */
     background-color: #efecec;
 }
 
@@ -55,12 +59,12 @@
 }
 
 .opacity-div {
-    z-index: 0;
+    /* z-index: 0;
     position: absolute;
     opacity: 0.8;
     width: 100%;
     height: 52%;
-    background-color: rgb(22, 10, 10);
+    background-color: rgb(22, 10, 10); */
 }
 
 .btn-div {
@@ -77,7 +81,9 @@
 .button-container:hover .btn-div {
     z-index: 20;
 }
-
+.test-card{
+    height: 100%;
+}
 .test-card__button {
     display: block;
     margin: 30px auto;

@@ -45,7 +45,9 @@ class passForm extends Component {
     }
   }
   componentDidMount() {
-    this.initializeQuestion(this.props.testContent);
+    if (this.props.testContent) {
+      this.initializeQuestion(this.props.testContent);
+    }
     window.addEventListener("beforeunload", this.onUnload)
   }
   componentWillMount() {
@@ -155,6 +157,7 @@ class passForm extends Component {
     this.props.passingTest.test_content = JSON.stringify(testContent);
     let passTest = this.props.passingTest;
     passTest.current_group = this.state.currentGroup.toString();
+    console.log(passTest)
     axios.post(url, passTest)
       .then((response) => {
         console.log(response)
@@ -326,6 +329,7 @@ class passForm extends Component {
 
   initializeQuestion(testContent, index) {
 
+
     document.querySelectorAll(".passing-block__question-map-item").forEach(elem => {
       elem.classList.remove("passing-block__question-map-item_active");
     })
@@ -335,7 +339,10 @@ class passForm extends Component {
     }
 
     if (testContent) {
-
+      console.log(testContent)
+      // console.log(testContent[this.props.questIndex].group)
+      // console.log(testContent[this.props.questIndex+1].group)
+      // console.log(testContent[this.props.questIndex].group===testContent[this.props.questIndex+1].group)
       let inputsArr = document.querySelectorAll(".passing-block__container input");
       inputsArr.forEach(element => {
         if (testContent[this.props.questIndex].timerState === false) {
@@ -396,7 +403,7 @@ class passForm extends Component {
   createQuestionMap(testContent) {
     let items = [];
 
-    if (testContent && this.props.questIndex && testContent[this.props.questIndex].group && !this.state.currentGroup) {
+    if (testContent && testContent[this.props.questIndex].group && !this.state.currentGroup) {
       this.setState({ currentGroup: testContent[this.props.questIndex].group })
     }
     testContent.forEach((elem, elemIndex) => {
@@ -461,7 +468,7 @@ class passForm extends Component {
                 passingTest.test_group_results_state &&
                   this.state.chapterBtnState &&
                   (this.props.questIndex === testContent.length - 1
-                    || testContent[this.props.questIndex + 1].group !== this.state.currentGroup) ?
+                    || testContent[this.props.questIndex + 1].group !== testContent[this.props.questIndex].group) ?
                   <button className="passing-block__button"
                     onClick={() => { this.resultChapterAxios(testContent); this.changeSuperObj(this.props.questIndex); }}>Завершить текущую часть теста</button>
 

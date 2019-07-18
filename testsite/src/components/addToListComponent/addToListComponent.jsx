@@ -40,9 +40,13 @@ class mapQuest extends Component {
 
       <Card>
         <Card.Content >
-          <Card.Header>Вопрос {index + 1}: {question} {editQuest.group ? "Группа: " + editQuest.group : ""} </Card.Header>
+          <Card.Header>Вопрос {index + 1}: {question} {groupsState && editQuest.group ? "Группа: " + editQuest.group : ""} </Card.Header>
           <p>{editQuest.timer_question ? "Таймер для вопроса: " + editQuest.timer_question : ""}</p>
-          <p>{editQuest.group && groupsObject[editQuest.group] ? "Таймер для данной группы: " + groupsObject[editQuest.group] : ""}</p>
+          <p>{groupsState &&
+            editQuest.group &&
+            groupsTimerState &&
+            groupsObject &&
+            groupsObject[editQuest.group] ? "Таймер для данной группы: " + groupsObject[editQuest.group] : ""}</p>
           <img className="questImg" src={questImg} alt="" />
           <p>{!editQuest.not_full_price_question ? "Оценка за вопрос: " + editQuest.price_question : ""}</p>
           <p>Варианты ответа:</p>

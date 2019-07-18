@@ -48,7 +48,7 @@ class createTestForm extends Component {
     console.log(this.state.groupsState)
     if (this.props.editTest) {
       // this.switchGroupsHandler();
-      if (this.props.editTest.test_group_timers_state || this.props.editTest.test_group_results_state) {
+      if (this.props.editTest.test_group_timers_state || this.props.editTest.test_group_results_state || this.props.editTest.test_groups_object !== "null") {
         console.log(!JSON.parse(this.props.editTest.test_groups_object).hasOwnProperty("null"))
         console.log(this.props.editTest.test_group_results_state)
         this.switchGroupsHandler();
@@ -90,7 +90,8 @@ class createTestForm extends Component {
     formData.append("test_group_results_state", this.state.groupResultsState);
     formData.append("test_group_timers_state", this.state.groupsTimerState);
     formData.set("test_img", this.state.actualImg);
-    if (this.props.groupsObject && this.props.groupsObject['null'] !== null) {
+    console.log(this.props.groupsObject)
+    if (this.props.groupsObject && this.props.groupsObject['null'] !== null && this.state.groupsState) {
       formData.append("test_groups_object", JSON.stringify(this.props.groupsObject));
     }
     else {
@@ -235,6 +236,9 @@ class createTestForm extends Component {
       }
     })
     if (propName) {
+      if (groupObj === null) {
+        groupObj = {};
+      }
       groupObj[propName] = propValue;
     }
 
@@ -262,6 +266,27 @@ class createTestForm extends Component {
     }
 
   }
+  sortQuestions() {
+    let questArr = this.props.questions;
+  
+    if(questArr.length>0){
+      questArr.sort(this.objCompare)
+      this.props.setQuests(questArr);
+      this.OpenHandler();
+    }
+
+  }
+
+  objCompare(a, b) {
+    if (a.group < b.group) {
+      return -1;
+    }
+    if (a.group > b.group) {
+      return 1;
+    }
+    return 0;
+  }
+
   render() {
 
     const { pristine, reset, submitting, questions, editTest, editTestResults, editTestContent } = this.props
@@ -333,7 +358,7 @@ class createTestForm extends Component {
             </div>
             <div className='inputField'>
               <label>Включить ответы по группам</label>
-              <div className='testInput'>
+              <div className={this.props.testType === "first" ? "testInput" : "testInput testInput_hidden"}>
                 <input
                   onClick={() => this.setState({ groupResultsState: !this.state.groupResultsState })}
                   name="switch_groups_chapter_state"
@@ -343,6 +368,7 @@ class createTestForm extends Component {
                 />
               </div>
             </div>
+
             <div className="createFormTestMainBtn">
               <button className="formButton" type="button" onClick={this.handleSubmit}>
                 Submit
@@ -366,6 +392,7 @@ class createTestForm extends Component {
         </div>
 
         <div className="questionCard">
+          {this.state.groupsState ? <button onClick={() => this.sortQuestions()}>Сортировать по группам</button> : ""}
           <Card.Group itemsPerRow={1}>
             {
 
