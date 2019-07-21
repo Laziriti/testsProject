@@ -15,7 +15,8 @@ class sequenceQuestion extends Component {
     editState: false,
     editStateArray: [],
     currentVarIndex: null,
-    notFullPriceArr: []
+    notFullPriceArr: [],
+    checkArr: [],
 
   }
   handleEdit = () => {
@@ -196,23 +197,46 @@ class sequenceQuestion extends Component {
     this.setState({ editStateArray: editIndexArr })
     return value;
   }
+  saveData(index, value) {
+    let arr = this.state.checkArr;
+    this.state.checkArr[index] = value;
+    // arr[index] = value;
+    // this.setState({ checkArr: arr })
+  }
+
+  addToArr(value) {
+    let arr = this.state.checkArr;
+    this.state.checkArr.push(value);
+    // arr.push(value);
+    // this.setState({ checkArr: arr })
+  }
+
+  delFromArr(index) {
+    let arr = this.state.checkArr;
+    this.state.checkArr.splice(index, 1)
+    // arr.splice(index, 1);
+    // this.setState({ checkArr: arr })
+  }
 
   saveDataPriceArr(index, value) {
     let arr = this.state.notFullPriceArr;
-    arr[index] = value;
-    this.setState({ notFullPriceArr: arr })
+    this.state.notFullPriceArr[index] = value;
+    // arr[index] = value;
+    // this.setState({ notFullPriceArr: arr })
   }
 
   addToArrPriceArr(value) {
     let arr = this.state.notFullPriceArr;
-    arr.push(value);
-    this.setState({ notFullPriceArr: arr })
+    this.state.notFullPriceArr.push(value);
+    // arr.push(value);
+    // this.setState({ notFullPriceArr: arr })
   }
 
   delFromArrPriceArr(index) {
     let arr = this.state.notFullPriceArr;
-    arr.splice(index, 1);
-    this.setState({ notFullPriceArr: arr })
+    this.state.notFullPriceArr.splice(index, 1);
+    // arr.splice(index, 1);
+    // this.setState({ notFullPriceArr: arr })
   }
 
   render() {
@@ -229,15 +253,16 @@ class sequenceQuestion extends Component {
       groupsState,
       groupsTimerState,
       editQuest } = this.props
-
+    console.log(this.state.notFullPriceState)
     const renderField = ({ input, label, type, answer, index, meta: { touched, error } }) => (
       <div>
+        {console.log(this.state.notFullPriceArr)}
         <label>{label}</label>
         <div>
           <input type="number" name={answer + "priceVar"}
             onChange={(e) => this.saveDataPriceArr(index, e.target.value)}
             disabled={!this.state.notFullPriceState}
-            defaultValue={this.state.notFullPriceArr[index] ? this.state.notFullPriceArr[index] : null}>
+            defaultValue={this.state.notFullPriceArr[index] || this.state.notFullPriceArr[index] === 0 ? this.state.notFullPriceArr[index] : 0}>
           </input>
           <textarea {...input} type={type} placeholder={label} />
           {touched && error && <span>{error}</span>}
@@ -250,8 +275,12 @@ class sequenceQuestion extends Component {
         <label>{label}</label>
         <div>
           {
-             this.state.editState && editCount > index ?
-              delete input.value && <input {...input} type={type} placeholder={label} defaultValue={editVariants[index].answer_state} />
+            editCount > index ?
+              delete input.value
+              && <input {...input}
+
+                type={type} placeholder={label}
+                defaultValue={this.state.checkArr[index] ? this.state.checkArr[index] : 0} />
               : <input {...input} type={type} placeholder={label} />
           }
           {touched && error && <span>{error}</span>}
@@ -269,9 +298,10 @@ class sequenceQuestion extends Component {
               editVariants.forEach((elem, index) => {
 
                 this.setState({ currentVarIndex: index })
-                if (elem.price_var) {
+                if (elem.price_var || elem.price_var === 0) {
                   this.addToArrPriceArr(elem.price_var)
                 }
+                this.addToArr(elem.answer_state);
                 this.handleEdit();
                 fields.push(elem);
                 let imgVarArr = this.state.variantImg;
@@ -300,6 +330,7 @@ class sequenceQuestion extends Component {
           fields.push({});
           setVariantsCount(variantsCount + 1);
           this.addToArrPriceArr(0)
+          this.addToArr(0)
         }}>Добавить вариант ответа</button>
         <ul>
 
@@ -316,6 +347,7 @@ class sequenceQuestion extends Component {
                   this.FileVariantsRemove(index);
                   this.deleteFromEditArr(index);
                   this.delFromArrPriceArr(index)
+                  this.delFromArr(index);
                 }}>Удалить</button>
               <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
               <input type="file"
@@ -355,7 +387,8 @@ class sequenceQuestion extends Component {
 
         <Modal trigger={<Button onClick={() => {
           this.handleOpen();
-          this.insertCurrentData(editQuest && editQuest.variants ? editQuest.variants : undefined)
+          this.insertCurrentData(editQuest && editQuest.variants ? editQuest.variants : undefined);
+
         }}
           className='sequenceTrigger'>Последовательность</Button>}
           open={this.state.modalOpen}
@@ -378,12 +411,13 @@ class sequenceQuestion extends Component {
 
                       <div>
                         <label>Количество баллов за ответ</label>
-                        <input name="priceQuestion" defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1} disabled={this.state.notFullPriceState}></input>
+                        <input name="priceQuestion"
+                          defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1} disabled={this.state.notFullPriceState}></input>
                       </div>
                       <div>
                         <label>Неполный ответ</label>
                         <input name="notFullPriceQuestion"
-                          defaultChecked={editQuest && editQuest.not_full_price_question ? editQuest.not_full_price_question : false}
+                          defaultChecked={this.state.notFullPriceState}
                           type="checkBox"
                           onClick={() => { this.setState({ notFullPriceState: !this.state.notFullPriceState }) }}></input>
                       </div>
@@ -438,16 +472,16 @@ class sequenceQuestion extends Component {
 
           </Modal.Content>
           <Modal.Actions>
-            <Button onClick={() => { this.handleClose(); reset(); this.setState({ notFullPriceState: false }) }} color="primary">
+            <Button onClick={() => { this.handleClose(); reset(); this.setState({ notFullPriceArr: [] }); }} color="primary">
               Отмена
             </Button>
             <Button type="sumbit" onClick={() => {
               this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex, variantsCount);
               this.props.setGroups(new FormData(document.forms.SequenceVariantForm), this.props.groupsObject, this.props.setGroupObject);
               this.handleClose();
-              this.setState({ notFullPriceState: false });
               reset();
               this.props.updateList();
+              this.setState({ notFullPriceArr: [] });
             }}
               color="primary"
               autoFocus>

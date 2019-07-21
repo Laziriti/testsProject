@@ -30,14 +30,16 @@
 .passing-block__results {
     display: none;
 }
-
+.passing-block__question-map-container{
+    width: 100%;
+    overflow-y: auto;
+}
 .passing-block__question-map {
     height: 120px;
     margin: 10px 0;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
-    overflow-y: scroll;
     list-style: none;
 }
 

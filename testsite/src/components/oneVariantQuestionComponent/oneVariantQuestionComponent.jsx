@@ -177,21 +177,26 @@ class oneVarQuest extends Component {
     arr.splice(index, 1);
     this.setState({ checkArr: arr })
   }
-  saveDataPriceArr(index, value, id) {
-    let arr = this.state.notFullPriceArr;
-    arr[index] = Number(value);
-    this.setState({ notFullPriceArr: arr })
 
+  saveDataPriceArr(index, value) {
+    let arr = this.state.notFullPriceArr;
+    this.state.notFullPriceArr[index]=value;
+    // arr[index] = value;
+    // this.setState({ notFullPriceArr: arr })
   }
+
   addToArrPriceArr(value) {
     let arr = this.state.notFullPriceArr;
-    arr.push(value);
-    this.setState({ notFullPriceArr: arr })
+    this.state.notFullPriceArr.push(value);
+    // arr.push(value);
+    // this.setState({ notFullPriceArr: arr })
   }
+
   delFromArrPriceArr(index) {
     let arr = this.state.notFullPriceArr;
-    arr.splice(index, 1);
-    this.setState({ notFullPriceArr: arr })
+    this.state.notFullPriceArr.splice(index,1);
+    // arr.splice(index, 1);
+    // this.setState({ notFullPriceArr: arr })
   }
 
   render() {
@@ -219,7 +224,7 @@ class oneVarQuest extends Component {
           <input type="number" id={index} name={answer + "priceVar"}
             onChange={(e) => this.saveDataPriceArr(index, e.target.value, e.target.id)}
             disabled={!this.state.notFullPriceState}
-            defaultValue={this.state.notFullPriceArr[index] ? this.state.notFullPriceArr[index] : null}>
+            defaultValue={this.state.notFullPriceArr[index] ? Number(this.state.notFullPriceArr[index]) : 0}>
           </input>
           <textarea {...input} type={type} ></textarea>
           {
@@ -253,7 +258,7 @@ class oneVarQuest extends Component {
               editVariants.forEach((elem, index) => {
                 //загатовка для ограничения по минимуму вариантов
                 this.setState({ questionsCount: this.state.questionsCount + 2 });
-                if (elem.price_var) {
+                if (elem.price_var || elem.price_var === 0) {
                   this.addToArrPriceArr(elem.price_var)
                 }
                 fields.push(elem);
@@ -365,7 +370,7 @@ class oneVarQuest extends Component {
                       <div>
                         <label>Неполный ответ</label>
                         <input name="notFullPriceQuestion"
-                          defaultChecked={editQuest && editQuest.not_full_price_question ? editQuest.not_full_price_question : false}
+                        defaultChecked={this.state.notFullPriceState}
                           type="checkBox"
                           onClick={() => { this.setState({ notFullPriceState: !this.state.notFullPriceState }) }}></input>
                       </div>
@@ -417,7 +422,7 @@ class oneVarQuest extends Component {
             </Modal.Description>
           </Modal.Content>
           <Modal.Actions>
-            <Button onClick={() => { this.handleClose(); reset(); this.setState({ notFullPriceState: false }) }} color="primary">
+            <Button onClick={() => { this.handleClose(); reset();   this.setState({notFullPriceArr:[]}); }} color="primary">
               Отмена
             </Button>
 
@@ -427,9 +432,10 @@ class oneVarQuest extends Component {
                   this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex);
                   this.props.setGroups(new FormData(document.forms.oneVariantForm), this.props.groupsObject, this.props.setGroupObject);
                   this.handleClose();
+                  this.setState({notFullPriceArr:[]});
                   reset();
                   this.props.updateList();
-                  this.setState({ notFullPriceState: false });
+
                 }} color="primary" autoFocus>
                   Готово
             </Button>

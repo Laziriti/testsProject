@@ -18,6 +18,13 @@ class deleteTest extends Component {
 
         axios.delete('https://psychotestmodule.herokuapp.com/tests/' + id + "/")
             .then((response) => {
+                let testArray = this.props.tests;
+                testArray.forEach((element,index) => {
+                    if(element.id===id){
+                        testArray.splice(index,1);
+                    }    
+                });
+                this.props.setTests(testArray);
                 console.log("удалено")
             }).catch(e => {
                 console.log(e)
@@ -25,7 +32,7 @@ class deleteTest extends Component {
     }
     render() {
 
-        const { testId } = this.props;
+        const { testId,tests } = this.props;
 
 
         return (

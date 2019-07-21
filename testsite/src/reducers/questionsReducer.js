@@ -5,7 +5,8 @@ const initialState = {
     isReady: false,
     questionId: 0,
     indexReady: false,
-    index: 0
+    index: 0,
+    notFullPriceArr: []
 };
 export default (state = initialState, action) => {
     switch (action.type) {
@@ -18,6 +19,10 @@ export default (state = initialState, action) => {
             return {
                 items: action.payload,
                 isReady: true,
+            };
+        case 'SET_NOT_FULL_PRICE_ARR':
+            return {
+                notFullPriceArr: action.payload
             };
 
         case 'SET_QUESTION_ID':
