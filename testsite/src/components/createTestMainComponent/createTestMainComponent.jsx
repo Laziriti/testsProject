@@ -224,8 +224,10 @@ class createTestForm extends Component {
     var formData = form;
     var propName = null;
     var propValue = null;
+    console.log(form)
     let groupObj = groupsObject;
     formData.forEach((value, key) => {
+      console.log(key)
       if (key === "groupName") {
         console.log(value)
         propName = value;
@@ -241,7 +243,7 @@ class createTestForm extends Component {
       }
       groupObj[propName] = propValue;
     }
-
+    console.log(groupObj)
     setGroupObject(groupObj);
   }
   handleGroups(value, groupsObject, groupsTimerState) {

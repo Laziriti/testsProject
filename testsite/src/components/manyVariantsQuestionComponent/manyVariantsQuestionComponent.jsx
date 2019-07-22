@@ -5,7 +5,7 @@ import { Button, Image, Modal } from 'semantic-ui-react'
 import axios from 'axios';
 import { Container } from 'semantic-ui-react';
 
-class oneVarQuest extends Component {
+class manyVarQuest extends Component {
   state = {
     notFullPriceState: false || (this.props.editQuest && this.props.editQuest.not_full_price_question ? this.props.editQuest.not_full_price_question : false),
     modalOpen: false,
@@ -67,7 +67,7 @@ class oneVarQuest extends Component {
     }
     else questionsArray = [];
     var object = {};
-    var formData = new FormData(document.forms.oneVariantForm);
+    var formData = new FormData(document.forms.ManyVariantForm);
     object["question_ID"] = questionsArray.length;
     object["type_question"] = "many_answers";
     object["price_question"] = 1;
@@ -360,7 +360,7 @@ class oneVarQuest extends Component {
             <Image wrapped size='small' src='https://react.semantic-ui.com/images/avatar/large/rachel.png' />
             <Modal.Description>
               <div>
-                <form onSubmit={handleSubmit} name='oneVariantForm'>
+                <form onSubmit={handleSubmit} name='ManyVariantForm'>
                   <div className='inputQuest'>
                     <label>Введите вопрос:</label>
                     <div className='quest'>
@@ -455,5 +455,5 @@ class oneVarQuest extends Component {
   }
 }
 export default reduxForm({
-  form: 'ManyVariantForm',
-})(oneVarQuest)
+  form: 'ManyVariantForm'
+})(manyVarQuest)

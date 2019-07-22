@@ -42,7 +42,7 @@ class writeByYourselfQuest extends Component {
 
   firstTypeHandler(object, variantImg) {
 
-    var formData = new FormData(document.forms.oneVariantForm);
+    var formData = new FormData(document.forms.writeByYourselfForm);
 
     formData.forEach(function (value, key) {
 
@@ -67,7 +67,7 @@ class writeByYourselfQuest extends Component {
     else questionsArray = [];
 
     var object = {};
-    var formData = new FormData(document.forms.oneVariantForm);
+    var formData = new FormData(document.forms.writeByYourselfForm);
     if (typeof editIndex === "number") {
       object["question_ID"] = editIndex + 1;
     }
@@ -157,7 +157,7 @@ class writeByYourselfQuest extends Component {
             <Image wrapped size='small' src='https://react.semantic-ui.com/images/avatar/large/rachel.png' />
             <Modal.Description>
               <div>
-                <form onSubmit={handleSubmit} name='oneVariantForm'>
+                <form onSubmit={handleSubmit} name='writeByYourselfForm'>
                   <div className='inputQuest'>
                     <label>Введите вопрос:</label>
                     <div className='quest'>

@@ -135,6 +135,19 @@ class testResults extends Component {
 
     }
   }
+  addToArr(index, prop, value) {
+    let array = this.state.currentResults;
+    if (array.length - 1 < index || array.length === 0) {
+      for (let i = 0; i <= index; i++) {
+        array.push({ min: 0, max: 0 })
+      }
+    }
+
+      array[index][prop] = value;
+
+    this.state.currentResults = array;
+    // this.setState({ currentResults: array })
+  }
   deleteFromArr(index) {
     let imgVarArr = this.state.variantImg;
     imgVarArr.splice(index, 1);
@@ -143,31 +156,20 @@ class testResults extends Component {
   }
   createSelectItems(index, groupsObject) {
     let items = [];
-
     for (let objKey in groupsObject) {
-      let item = <option key={objKey} value={objKey} >{objKey} </option>;
-      // console.log(this.state.currentResults)
-      // console.log(groupsObject)
-      // console.log(this.state.currentResults[index].group)
-      // console.log(groupsObject.hasOwnProperty(Number(this.state.currentResults[index].group)))
+      let item = <option
+        key={objKey} value={objKey} >{objKey} </option>;
+
       if (this.state.currentResults[index] && objKey === this.state.currentResults[index].group) {
-        item = <option key={objKey} value={objKey} selected>{objKey} </option>;
-        console.log(objKey)
+        item = <option
+          key={objKey} value={objKey} selected>{objKey} </option>;
       }
       items.push(item);
     }
 
     return items;
   }
-  addToArr(index, prop, value) {
-    let array = this.state.currentResults;
-    if (array.length - 1 < index || array.length === 0) {
-      for (let i = 0; i <= index; i++) {
-        array.push({})
-      }
-    }
-    array[index][prop] = value;
-  }
+
   render() {
     const { results, setResults, questions, testType, editResults, reset, groupResultsState } = this.props
     const renderField = ({ input, label, type, globalField, textValue, index, meta: { touched, error } }) => (
@@ -178,7 +180,7 @@ class testResults extends Component {
         {groupResultsState && testType === "first"
           ? <div>
             <label>Группа:</label>
-            <select id="group" name={index + "group"} >
+            <select id="group" name={index + "group"} onChange={(e) => { this.addToArr(index, "group", e.target.value) }}>
               {this.createSelectItems(index, this.props.groupsObject)}
             </select>
           </div> : ""}

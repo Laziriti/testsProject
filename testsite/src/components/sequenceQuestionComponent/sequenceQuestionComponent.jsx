@@ -74,7 +74,7 @@ class sequenceQuestion extends Component {
     var allVariants = [];
     var roll = 0;
     var index = 0;
-    var formData = new FormData(document.forms.sequenceForm);
+    var formData = new FormData(document.forms.SequenceVariantForm);
     var variantIndex = 0;
 
     formData.forEach(function (value, key) {
@@ -116,7 +116,7 @@ class sequenceQuestion extends Component {
     }
     else questionsArray = [];
     var object = {};
-    var formData = new FormData(document.forms.sequenceForm);
+    var formData = new FormData(document.forms.SequenceVariantForm);
     var variantIndex = 0;
     object["question_ID"] = questionsArray.length;
     object["type_question"] = "sequence_answer";
@@ -398,7 +398,7 @@ class sequenceQuestion extends Component {
             <Image wrapped size='small' src='https://react.semantic-ui.com/images/avatar/large/rachel.png' />
             <Modal.Description>
               <div>
-                <form onSubmit={handleSubmit} name='sequenceForm'>
+                <form onSubmit={handleSubmit} name='SequenceVariantForm'>
                   <div className='inputQuest'>
                     <label>Введите вопрос:</label>
                     <div className='quest'>
