@@ -51,7 +51,10 @@ class passForm extends Component {
     window.addEventListener("beforeunload", this.onUnload)
   }
   componentWillMount() {
-
+    console.log("сработало")
+    if (!this.props.questIndex) {
+      this.props.setIndexOfQuestion(0);
+    }
     let url = 'https://psychotestmodule.herokuapp.com/tests/' + this.props.match.params.testId + '/';
     axios.get(url).then(response => {
       let test = response.data;
@@ -230,13 +233,13 @@ class passForm extends Component {
 
   }
 
-  startQuestionTimer(index) {
+  startQuestionTimer() {
     let questionTimerArr = this.props.testContent[this.props.questIndex].timer_question.split(":");
     this.props.setQuestionTimer([Number(questionTimerArr[0]), Number(questionTimerArr[1])]);
 
     this.tickQuestionTimer();
   }
-  startGroupTimer(index, group) {
+  startGroupTimer(group) {
     let groupTimerArr = this.props.groups_object[group].split(":");
     this.props.setGroupTimer([Number(groupTimerArr[0]), Number(groupTimerArr[1])]);
     this.tickGroupTimer()
@@ -339,7 +342,7 @@ class passForm extends Component {
     }
 
     if (testContent) {
-      console.log(testContent)
+
       // console.log(testContent[this.props.questIndex].group)
       // console.log(testContent[this.props.questIndex+1].group)
       // console.log(testContent[this.props.questIndex].group===testContent[this.props.questIndex+1].group)
@@ -361,7 +364,7 @@ class passForm extends Component {
         if (testContent) {
 
           if (testContent[this.props.questIndex].timer_question) {
-            this.startQuestionTimer(index)
+            this.startQuestionTimer()
           }
 
           if (this.props.groups_object && this.props.passingTest.test_group_timers_state) {
@@ -390,7 +393,8 @@ class passForm extends Component {
               clearInterval(this.state.groupTimerInterval);
               if (this.props.groups_object[testContent[this.props.questIndex].group]
               ) {
-                this.startGroupTimer(index, testContent[this.props.questIndex].group);
+                console.log("Запуск таймера")
+                this.startGroupTimer(testContent[this.props.questIndex].group);
               }
 
             }
@@ -402,7 +406,7 @@ class passForm extends Component {
   }
   createQuestionMap(testContent) {
     let items = [];
-
+ 
     if (testContent && testContent[this.props.questIndex].group && !this.state.currentGroup) {
       this.setState({ currentGroup: testContent[this.props.questIndex].group })
     }
@@ -431,7 +435,14 @@ class passForm extends Component {
     return items;
   }
 
+  activateGroupTimer() {
+    if (this.props.groups_object[this.props.testContent[this.props.questIndex].group]
+    ) {
+      console.log("Запуск таймера")
+      this.startGroupTimer(this.props.testContent[this.props.questIndex].group);
+    }
 
+  }
   render() {
 
     const { setIndexOfQuestion,
@@ -510,7 +521,8 @@ class passForm extends Component {
               className="passing-block__button"
               onClick={() => {
                 this.changeChapter();
-                this.changeCurrentQuestion(this.props.questIndex + 1)
+                this.changeCurrentQuestion(this.props.questIndex + 1);
+                this.activateGroupTimer();
               }}>Перейти к следующей части</button>
               : <button className="passing-block__button"
                 onClick={() => { this.resultAxios(testContent); this.changeSuperObj(this.props.questIndex); }}>Готово</button>}

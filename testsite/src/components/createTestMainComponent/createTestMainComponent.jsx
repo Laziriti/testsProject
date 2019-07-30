@@ -270,25 +270,40 @@ class createTestForm extends Component {
   }
   sortQuestions() {
     let questArr = this.props.questions;
-  
-    if(questArr.length>0){
-      questArr.sort(this.objCompare)
-      this.props.setQuests(questArr);
+    let numGroupsArr = [];
+    let stringGroupsArr = [];
+    let resultArr = [];
+    if (questArr.length > 0) {
+      questArr.forEach(
+        elem => {
+          if (Number(elem.group)) {
+            console.log(elem)
+            numGroupsArr.push(elem);
+          }
+          else {
+            console.log(elem)
+            stringGroupsArr.push(elem);
+          }
+        }
+      )
+      numGroupsArr.sort(this.sortNumber);
+      stringGroupsArr.sort(this.sortStrings)
+      console.log(numGroupsArr)
+      resultArr = [...numGroupsArr, ...stringGroupsArr]
+      this.props.setQuests(resultArr);
       this.OpenHandler();
     }
 
   }
 
-  objCompare(a, b) {
-    if (a.group < b.group) {
-      return -1;
-    }
-    if (a.group > b.group) {
-      return 1;
-    }
-    return 0;
+  sortNumber(a, b) {
+    return a.group - b.group;
   }
-
+  sortStrings(a, b) {
+    if (a.group < b.group) return -1;  // any negative number works
+    if (a.group > b.group) return 1;   // any positive number works
+    return 0; // equal values MUST yield zero
+  }
   render() {
 
     const { pristine, reset, submitting, questions, editTest, editTestResults, editTestContent } = this.props
