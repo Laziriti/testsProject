@@ -1,3 +1,4 @@
+import actionTypes from '../actions/constants';
 const initialState = {
     searchQuery: '',
     filterBy: 'All',
@@ -7,13 +8,13 @@ export default (state = initialState, action) => {
 
     switch (action.type) {
 
-        case 'SET_QUERY':
+        case actionTypes.SET_QUERY:
         return {
             ...state,
             searchQuery: action.payload,
         };
     
-        case 'SET_FILTER':
+        case actionTypes.SET_FILTER:
             return {
                 ...state,
                 filterBy: action.payload,

@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import * as testsActions from './actions/testsAction';
+import * as testsActions from './redux/actions/testsAction';
 import { bindActionCreators } from 'redux';
 import App from './components/AppComponent';
 import {withRouter} from 'react-router-dom'

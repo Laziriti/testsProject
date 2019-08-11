@@ -1,9 +1,10 @@
 import { connect } from 'react-redux';
-import * as testsActions from '../../actions/testsAction';
+import * as testsActions from '../../redux/actions/testsAction';
 import orderBy from 'lodash/orderBy.js';
 import { bindActionCreators } from 'redux';
 import ShowAllTests from './showAllTestsComponent';
-import * as setPassingTestAct from '../../actions/setPassingTestAction';
+import * as setPassingTestAct from '../../redux/actions/setPassingTestAction';
+
 
 const sortBy = (tests, filterBy) => {
   switch (filterBy) {

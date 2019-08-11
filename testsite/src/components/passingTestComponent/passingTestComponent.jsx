@@ -52,6 +52,7 @@ class passForm extends Component {
   }
   componentWillMount() {
     console.log("сработало")
+    //поправил баг, тестируется
     if (!this.props.questIndex) {
       this.props.setIndexOfQuestion(0);
     }

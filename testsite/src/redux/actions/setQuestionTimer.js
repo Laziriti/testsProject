@@ -1,5 +1,6 @@
+import actionTypes from './constants';
 export const setQuestionTimer = (timer) => ({
-    type: 'SET_TIMER',
+    type: actionTypes.SET_TIMER,
     payload: timer,
     
 });

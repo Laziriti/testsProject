@@ -1,3 +1,4 @@
+import actionTypes from '../actions/constants';
 const initialState = {
     activeState: false,
     items: [],
@@ -10,27 +11,18 @@ const initialState = {
 };
 export default (state = initialState, action) => {
     switch (action.type) {
-        case 'SET_ONE_VARIANT_STATE':
-            return {
-                isReady: action.payload,
-            };
 
-        case 'SET_QUESTIONS':
+        case actionTypes.SET_QUESTIONS:
             return {
                 items: action.payload,
                 isReady: true,
             };
-        case 'SET_NOT_FULL_PRICE_ARR':
+        case actionTypes.SET_NOT_FULL_PRICE_ARR:
             return {
                 notFullPriceArr: action.payload
             };
 
-        case 'SET_QUESTION_ID':
-            return {
-                questionId: action.payload
-            };
-
-        case 'SET_QUESTION_INDEX':
+        case actionTypes.SET_QUESTION_INDEX:
 
             return {
                 indexReady: false,

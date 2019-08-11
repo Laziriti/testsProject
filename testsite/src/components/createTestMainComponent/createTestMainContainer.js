@@ -1,12 +1,12 @@
 import { connect } from 'react-redux';
-import * as testActions from '../../actions/createTestAction';
-import * as variantActions from '../../actions/createTestAction';
-import * as setGroupObjectAction from '../../actions/setGroupObjectAction';
-import * as testTypeActions from '../../actions/changeTestTypeAction';
-import * as clearEditTest from '../../actions/clearEditTestAction';
-import * as setEditTest from '../../actions/setEditTestAction';
-import * as setQuests from '../../actions/createTestAction';
-import * as resultsAction from '../../actions/resultsAction';
+import * as testActions from '../../redux/actions/createTestAction';
+import * as variantActions from '../../redux/actions/createTestAction';
+import * as setGroupObjectAction from '../../redux/actions/setGroupObjectAction';
+import * as testTypeActions from '../../redux/actions/changeTestTypeAction';
+import * as clearEditTest from '../../redux/actions/clearEditTestAction';
+import * as setEditTest from '../../redux/actions/setEditTestAction';
+import * as setQuests from '../../redux/actions/createTestAction';
+import * as resultsAction from '../../redux/actions/resultsAction';
 import { bindActionCreators } from 'redux';
 import CreateTestMain from './createTestMainComponent'
 

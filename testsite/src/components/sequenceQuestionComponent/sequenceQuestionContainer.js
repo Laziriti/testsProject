@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
-import * as testActions from '../../actions/createTestAction';
-import * as variantActions from '../../actions/setVariantsCountAction';
-import * as setGroupObjectAction from '../../actions/setGroupObjectAction';
-import * as setNotFullPriceArrAction from '../../actions/setNotFullPriceArrAction';
+import * as testActions from '../../redux/actions/createTestAction';
+import * as variantActions from '../../redux/actions/setVariantsCountAction';
+import * as setGroupObjectAction from '../../redux/actions/setGroupObjectAction';
+import * as setNotFullPriceArrAction from '../../redux/actions/setNotFullPriceArrAction';
 import { bindActionCreators } from 'redux';
 import sequenceQuestion from './sequenceQuestionComponent'
 

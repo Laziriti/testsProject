@@ -1,9 +1,10 @@
+import actionTypes from './constants';
 export const setFilter = filter => ({
-    type: 'SET_FILTER',
+    type: actionTypes.SET_FILTER,
     payload: filter
 });
 
 export const setSearchQuery = query => ({
-    type: 'SET_QUERY',
+    type: actionTypes.SET_QUERY,
     payload: query
 });

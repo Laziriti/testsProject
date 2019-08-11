@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import * as variantActions from '../../actions/createTestAction';
+import * as variantActions from '../../redux/actions/createTestAction';
 import { bindActionCreators } from 'redux';
 import variantsInfo from './variantsInfoListComponent'
 

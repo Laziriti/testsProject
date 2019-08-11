@@ -1,14 +1,14 @@
 import { connect } from 'react-redux';
-import * as variantActions from '../../actions/setPassingTestAction';
-import * as setIndexActions from '../../actions/nextIndexOfQuestion';
+import * as variantActions from '../../redux/actions/setPassingTestAction';
+import * as setIndexActions from '../../redux/actions/nextIndexOfQuestion';
 import { bindActionCreators } from 'redux';
 import passingTest from './passingTestComponent'
-import * as setPassingTestAct from '../../actions/setPassingTestAction';
-import * as saveVariantState from '../../actions/saveVariantState';
-import * as clearPassingTest from '../../actions/clearPassingTest';
-import * as setQuestionTimer from '../../actions/setQuestionTimer';
-import * as setGroupTimer from '../../actions/setGroupTimer';
-import * as setGroupObjectAction from '../../actions/setGroupObjectAction';
+import * as setPassingTestAct from '../../redux/actions/setPassingTestAction';
+import * as saveVariantState from '../../redux/actions/saveVariantState';
+import * as clearPassingTest from '../../redux/actions/clearPassingTest';
+import * as setQuestionTimer from '../../redux/actions/setQuestionTimer';
+import * as setGroupTimer from '../../redux/actions/setGroupTimer';
+import * as setGroupObjectAction from '../../redux/actions/setGroupObjectAction';
 
 const mapStateToProps = ({ questions, tests, results, timer }) => ({
   passingTest: tests.passingTest,

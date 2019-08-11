@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import * as variantActions from '../../actions/createTestAction';
-import * as setGroupObjectAction from '../../actions/setGroupObjectAction';
+import * as variantActions from '../../redux/actions/createTestAction';
+import * as setGroupObjectAction from '../../redux/actions/setGroupObjectAction';
 import { bindActionCreators } from 'redux';
 import writeByYourselfQuest from './writeByYourselfQuestionCompoent'
 

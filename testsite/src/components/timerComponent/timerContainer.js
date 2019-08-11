@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
-import * as variantActions from '../../actions/createTestAction';
-import * as lolAct from '../../actions/resultsAction';
+import * as variantActions from '../../redux/actions/createTestAction';
+import * as lolAct from '../../redux/actions/resultsAction';
 
 import { bindActionCreators } from 'redux';
 import timerComponent from './timerComponent'

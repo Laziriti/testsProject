@@ -1,10 +1,11 @@
+import actionTypes from '../actions/constants';
 const initialState = {
     results: [],
 };
 export default (state = initialState, action) => {
     switch (action.type) {
 
-        case 'SET_RESULTS':
+        case actionTypes.SET_RESULTS:
             return {
                 results: action.payload,
             };
