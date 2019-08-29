@@ -1,6 +1,21 @@
-.questionCard{
+.questionCard {
     margin-top: 30px;
 }
-.questImg{
+
+.questImg {
     width: 200px;
+}
+
+.variantsArray {
+    width: 80%;
+    word-wrap: break-word;
+}
+
+.variantsArrayItem {
+    display: inline-block;
+    margin: 4px 3px;
+    padding: 3px;
+    border: solid black 1px;
+    border-radius: 3px;
+    background-color: rgb(182, 174, 174);
 }

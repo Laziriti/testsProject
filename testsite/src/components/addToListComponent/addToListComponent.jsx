@@ -53,10 +53,12 @@ class mapQuest extends Component {
           {
             variants ? variants.map((variant, index) => <VariantsInfo key={index} {...variant} index={index} />) : ""
           }
-          {editQuest.answers_arr ?
-            <textarea className="variant" disabled value={editQuest.answers_arr}></textarea>
-            : ""
-          }
+          <div>
+            {editQuest.answers_arr ?
+              <div className="variantsArray">{editQuest.answers_arr.split(",").map(item => <div className="variantsArrayItem">{item}</div>)}</div>
+              : ""
+            }
+          </div>
           <button onClick={() => { this.deleteHandler(index, questions, setQuests); this.props.updateList() }}>удалить</button>
           {type_question === "one_answer" ?
             <OneVariantQuestion

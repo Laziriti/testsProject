@@ -25,11 +25,14 @@
 .variantsContent {
     position: relative;
     display: flex;
+
 }
 
 .variantsState {
     position: absolute;
     right: 0;
+    bottom:100%;
+    width: 20%;
 }
 
 .variantImg {
@@ -37,8 +40,6 @@
     margin-left: 5px;
     margin-bottom: 4px;
 }
-
-.variant {
-    height: 54px;
-    width: 90%;
+.variantsText{
+    width: 80%;
 }
