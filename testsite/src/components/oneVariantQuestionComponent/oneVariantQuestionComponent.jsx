@@ -249,7 +249,7 @@ class oneVarQuest extends Component {
     )
 
     const renderAnswers = ({ fields, editVariants, variantsImgArray }) => (
-      <div>
+      <div className="quest-block__add-answer">
         {typeof editVariants !== "undefined" ?
           <button type="button" id="insertDataOneVariant" onClick={() => {
             setVariantsCount(editVariants.length);
@@ -288,14 +288,7 @@ class oneVarQuest extends Component {
           ""
         }
 
-        <button type="button"
-          onClick={() => {
-            fields.push({});
-            setVariantsCount(variantsCount + 1);
-            this.setState({ questionsCount: this.state.questionsCount + 1 });
-            this.addToArr(false);
-            this.addToArrPriceArr(0);
-          }}>Добавить вариант ответа</button>
+       
         <ul>
           {fields.map((answer, index) =>
             <li key={index}>
@@ -333,110 +326,121 @@ class oneVarQuest extends Component {
             </li>
           )}
         </ul>
+        <button 
+        className="quest-block__btn"
+        type="button"
+        onClick={() => {
+          fields.push({});
+          setVariantsCount(variantsCount + 1);
+          this.setState({ questionsCount: this.state.questionsCount + 1 });
+          this.addToArr(false);
+          this.addToArrPriceArr(0);
+        }}>Добавить вариант ответа</button>
       </div>
     )
 
     return (
       <div className="quest-block">
-        <Container className="quest-block__container">
-          <Modal trigger={<Button onClick={() => {
-            this.setState({ checkArr: [] });
-            this.handleOpen();
-            this.setState({ notFullPriceArr: [] });
-            this.insertCurrentData(editQuest && editQuest.variants ? editQuest.variants : undefined);
-          }}
-            className='quest-block__trigger' >Одновариантный вопрос</Button>}
+        <Container className="quest-block__container" id="zxc">
+          <Modal
+            trigger={<Button onClick={() => {
+              this.setState({ checkArr: [] });
+              this.handleOpen();
+              this.setState({ notFullPriceArr: [] });
+              this.insertCurrentData(editQuest && editQuest.variants ? editQuest.variants : undefined);
+            }}
+              className='quest-block__trigger' >Одновариантный вопрос</Button>}
             open={this.state.modalOpen}
             centered={false}>
             <Modal.Header>{"Одновариантный вопрос"}</Modal.Header>
             <Modal.Content image>
               <Image wrapped size='small' src={this.state.actualImg ? this.state.actualImg : 'https://react.semantic-ui.com/images/avatar/large/rachel.png'} />
               <Modal.Description>
-                
-                  <form className="quest-block__form" onSubmit={handleSubmit} name='oneVariantForm'>
-                  
-                        <div className="quest-block__div">
-                          <label className="quest-block__label">Введите вопрос:</label>
-                          <textarea
-                            className="quset-block__quest-text"
-                            name="question"
-                            placeholder="Текст результата"
-                            defaultValue={editQuest ? editQuest.question : ""}
-                          >
-                          </textarea>
-                        </div>
-                        <div className="quest-block__div">
-                          <label className="quest-block__label">Количество баллов за ответ</label>
-                          <input
-                            className="quest-block__input"
-                            name="priceQuestion"
-                            id="priceQuestion"
-                            defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}
-                            disabled={this.state.notFullPriceState}></input>
-                        </div>
-                        <div className="quest-block__div">
 
-                          <input
-                            id="nf-answer"
-                            className="quest-block__check"
-                            name="notFullPriceQuestion"
-                            defaultChecked={this.state.notFullPriceState}
-                            type="checkBox"
-                            onClick={() => { this.setState({ notFullPriceState: !this.state.notFullPriceState }) }}></input>
-                          <label className="quest-block__label" for="nf-answer">Неполный ответ</label>
-                        </div>
-                        <div className="quest-block__div">
-                          <label className="quest-block__label">Изображение</label>
-                          <input
-                            name="questImg"
-                            type="file"
-                            onChange={this.FileSelectedHendler}
-                          />
-                        </div>
+                <form className="quest-block__form" onSubmit={handleSubmit} name='oneVariantForm'>
 
-                        {groupsState ? <div className="quest-block__div">
-                          <label className="quest-block__label">Номер/название группы</label>
-                          <input
-                            className="quest-block__input"
-                            name="groupName"
-                            type="string"
-                            defaultValue={editQuest && editQuest.group ? editQuest.group : 0}
-                            onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}
-                            onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}></input>
-                        </div>
-                          : ""}
-                        {groupsTimerState ? <div className="quest-block__div">
-                          <label className="quest-block__label">Таймер группы</label>
-                          <input
-                            className="quest-block__input"
-                            name="groupTimer"
-                            id="groupTimer"
-                            type="string"
-                            placeholder="10:22 = 10 минут 22 секунды"
-                            defaultValue={editQuest && editQuest.group ? this.props.groupsObject[editQuest.group] : "0:0"}></input>
-                        </div> : ""}
+                  <div className="quest-block__div">
+                    <label className="quest-block__label quest-block__label_position">Введите вопрос</label>
+                    <textarea
+                      className="quset-block__quest-text"
+                      name="question"
+                      placeholder="Текст результата"
+                      defaultValue={editQuest ? editQuest.question : ""}
+                    >
+                    </textarea>
+                  </div>
+                  <div className="quest-block__div">
+                    <label className="quest-block__label">Количество баллов за ответ</label>
+                    <input
+                      className="quest-block__input"
+                      name="priceQuestion"
+                      id="priceQuestion"
+                      defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}
+                      disabled={this.state.notFullPriceState}></input>
+                  </div>
+                  <div className="quest-block__div">
 
-                        <div className="quest-block__div">
-                          <label className="quest-block__label">Таймер для вопроса</label>
-                          <input
-                            className="quest-block__input"
-                            name="timerQuestion"
-                            type="string"
-                            placeholder="10:22 = 10 минут 22 секунды"
-                            defaultValue={editQuest && editQuest.timer_question ? editQuest.timer_question : "0:0"}></input>
-                        </div>
+                    <input
+                      id="nf-answer"
+                      className="quest-block__check"
+                      name="notFullPriceQuestion"
+                      defaultChecked={this.state.notFullPriceState}
+                      type="checkBox"
+                      onClick={() => { this.setState({ notFullPriceState: !this.state.notFullPriceState }) }}></input>
+                    <label className="quest-block__label" for="nf-answer">Неполный ответ</label>
+                  </div>
+                  <div className="quest-block__div">
+                    <label className="quest-block__label">Изображение</label>
+                    <input
+                      name="questImg"
+                      type="file"
+                      onChange={this.FileSelectedHendler}
+                    />
+                  </div>
 
-                    
-                    <label className="quest-block__label">Варианты ответа</label>
-                    <div className='answers'>
-                      <FieldArray name="variants"
-                        component={renderAnswers}
-                        editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
-                        variantsImgArray={this.state.variantImg}
-                      />
-                    </div>
-                  </form>
-               
+                  {groupsState ? <div className="quest-block__div">
+                    <label className="quest-block__label">Номер/название группы</label>
+                    <input
+                      className="quest-block__input"
+                      name="groupName"
+                      type="string"
+                      defaultValue={editQuest && editQuest.group ? editQuest.group : 0}
+                      onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}
+                      onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}></input>
+                  </div>
+                    : ""}
+                  {groupsTimerState ? <div className="quest-block__div">
+                    <label className="quest-block__label">Таймер группы</label>
+                    <input
+                      className="quest-block__input"
+                      name="groupTimer"
+                      id="groupTimer"
+                      type="string"
+                      placeholder="10:22 = 10 минут 22 секунды"
+                      defaultValue={editQuest && editQuest.group ? this.props.groupsObject[editQuest.group] : "0:0"}></input>
+                  </div> : ""}
+
+                  <div className="quest-block__div">
+                    <label className="quest-block__label">Таймер для вопроса</label>
+                    <input
+                      className="quest-block__input"
+                      name="timerQuestion"
+                      type="string"
+                      placeholder="10:22 = 10 минут 22 секунды"
+                      defaultValue={editQuest && editQuest.timer_question ? editQuest.timer_question : "0:0"}></input>
+                  </div>
+
+
+                  <label className="quest-block__label quest-block__label_margin">Варианты ответа:</label>
+                  <div className='answers'>
+                    <FieldArray name="variants"
+                      component={renderAnswers}
+                      editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
+                      variantsImgArray={this.state.variantImg}
+                    />
+                  </div>
+                </form>
+
               </Modal.Description>
             </Modal.Content>
             <Modal.Actions>

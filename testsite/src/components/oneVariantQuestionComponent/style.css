@@ -1,3 +1,7 @@
+#quest-block__modal {
+    background-color: rgb(211, 58, 58) !important;
+}
+
 .quest-block__container .quest-block__trigger {
     width: 323px;
     height: 47px;
@@ -5,16 +9,18 @@
     border-radius: 10px;
     background-color: #efecec;
 }
+
 .quest-block__container .quest-block__trigger:hover {
-    color:white;
+    color: white;
     background-color: #8527c6;
 }
+
 .quest-block__container .quest-block__trigger:active {
     background-color: #8f32d1;
 }
 
 .quest-block__div {
-    margin-top: 30px;
+    margin-top: 40px;
 }
 
 .quest-block__div:first-child {
@@ -30,6 +36,13 @@
     font-weight: 700;
     line-height: 24px;
 }
+.quest-block__label_margin{
+    margin-top: 20px;
+}
+.quest-block__label_position {
+    vertical-align: top;
+    margin-top: 20px;
+}
 
 .quset-block__quest-text {
     padding-top: 8px;
@@ -40,9 +53,11 @@
     border: 1px solid #b7b7b7;
     background-color: #ffffff;
 }
-.quset-block__quest-text_width{
+
+.quset-block__quest-text_width {
     width: 100%;
 }
+
 .quset-block__quest-text:focus {
     outline: none;
     background-color: #faf2f2;
@@ -99,4 +114,26 @@
 
 .quest-block__check:disabled+label:after {
     background-color: #5e5d5f;
+}
+.quest-block__add-answer{
+    width: 100%;
+}
+.quest-block__btn {
+    display: block;
+    margin-left: 260px;
+    width: 258px;
+    height: 46px;
+    box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    border: none;
+    background-color: #ff8400;
+    color: #ffffff;
+    cursor: pointer;
+    font-family: "Gilroy";
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.quest-block__btn:hover {
+    background-color: #6b2a98;
 }

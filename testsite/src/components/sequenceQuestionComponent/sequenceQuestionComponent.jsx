@@ -326,12 +326,7 @@ class sequenceQuestion extends Component {
           ""
         }
 
-        <button type="button" onClick={() => {
-          fields.push({});
-          setVariantsCount(variantsCount + 1);
-          this.addToArrPriceArr(0)
-          this.addToArr(0)
-        }}>Добавить вариант ответа</button>
+
         <ul>
 
           {fields.map((answer, index, item) =>
@@ -379,6 +374,15 @@ class sequenceQuestion extends Component {
             </li>
           )}
         </ul>
+        <button
+          className="quest-block__btn"
+          type="button"
+          onClick={() => {
+            fields.push({});
+            setVariantsCount(variantsCount + 1);
+            this.addToArrPriceArr(0)
+            this.addToArr(0)
+          }}>Добавить вариант ответа</button>
       </div>
     )
 
@@ -402,7 +406,7 @@ class sequenceQuestion extends Component {
                 <form className="quest-block__form" onSubmit={handleSubmit} name='SequenceVariantForm'>
 
                   <div className="quest-block__div">
-                    <label className="quest-block__label">Введите вопрос:</label>
+                    <label className="quest-block__label">Введите вопрос</label>
                     <textarea
                       className="quset-block__quest-text"
                       name="question"
@@ -471,7 +475,7 @@ class sequenceQuestion extends Component {
                   </div>
 
 
-                  <label className="quest-block__label">Варианты ответа</label>
+                  <label className="quest-block__label">Варианты ответа:</label>
                   <div className='answers'>
                     <FieldArray name="variants"
                       component={renderAnswers}

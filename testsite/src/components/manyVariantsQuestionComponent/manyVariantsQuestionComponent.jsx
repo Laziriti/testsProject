@@ -286,12 +286,7 @@ class manyVarQuest extends Component {
           ""
         }
 
-        <button type="button" onClick={() => {
-          fields.push({});
-          setVariantsCount(variantsCount + 1);
-          this.addToArr(false);
-          this.addToArrPriceArr(0);
-        }}>Добавить вариант ответа</button>
+
         <ul>
 
           {fields.map((answer, index) =>
@@ -341,6 +336,15 @@ class manyVarQuest extends Component {
             </li>
           )}
         </ul>
+        <button
+          className="quest-block__btn"
+          type="button"
+          onClick={() => {
+            fields.push({});
+            setVariantsCount(variantsCount + 1);
+            this.addToArr(false);
+            this.addToArrPriceArr(0);
+          }}>Добавить вариант ответа</button>
       </div>
     )
 
@@ -364,7 +368,7 @@ class manyVarQuest extends Component {
                 <form className="quest-block__form" onSubmit={handleSubmit} name='ManyVariantForm'>
 
                   <div className="quest-block__div">
-                    <label className="quest-block__label">Введите вопрос:</label>
+                    <label className="quest-block__label">Введите вопрос</label>
                     <textarea
                       className="quset-block__quest-text"
                       name="question"
@@ -434,7 +438,7 @@ class manyVarQuest extends Component {
                   </div>
 
 
-                  <label className="quest-block__label">Варианты ответа</label>
+                  <label className="quest-block__label">Варианты ответа:</label>
                   <div className='answers'>
                     <FieldArray
                       name="variants"

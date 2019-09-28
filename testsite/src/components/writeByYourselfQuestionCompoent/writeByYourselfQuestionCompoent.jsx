@@ -161,7 +161,7 @@ class writeByYourselfQuest extends Component {
                   <form className="quest-block__form" onSubmit={handleSubmit} name='writeByYourselfForm'>
 
                         <div className="quest-block__div">
-                          <label className="quest-block__label">Введите вопрос:</label>
+                          <label className="quest-block__label">Введите вопрос</label>
                           <textarea
                             className="quset-block__quest-text"
                             name="question"
@@ -294,4 +294,3 @@ export default reduxForm({
   form: 'writeByYourselfForm'
 
 })(writeByYourselfQuest)
-// className='quest'
