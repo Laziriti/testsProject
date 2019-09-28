@@ -383,80 +383,95 @@ class sequenceQuestion extends Component {
     )
 
     return (
-      <Container>
+      <div className="quest-block">
+        <Container className="quest-block__container">
 
-        <Modal trigger={<Button onClick={() => {
-          this.handleOpen();
-          this.insertCurrentData(editQuest && editQuest.variants ? editQuest.variants : undefined);
+          <Modal trigger={<Button onClick={() => {
+            this.handleOpen();
+            this.insertCurrentData(editQuest && editQuest.variants ? editQuest.variants : undefined);
 
-        }}
-          className='sequenceTrigger'>Последовательность</Button>}
-          open={this.state.modalOpen}
-          centered={false}>
-          <Modal.Header>{"Последовательность"}</Modal.Header>
-          <Modal.Content image>
-            <Image wrapped size='small' src='https://react.semantic-ui.com/images/avatar/large/rachel.png' />
-            <Modal.Description>
-              <div>
-                <form onSubmit={handleSubmit} name='SequenceVariantForm'>
-                  <div className='inputQuest'>
-                    <label>Введите вопрос:</label>
-                    <div className='quest'>
-                      <textarea
-                        name="question"
-                        placeholder="Текст результата"
-                        defaultValue={editQuest ? editQuest.question : ""}
-                      >
-                      </textarea>
+          }}
+            className='quest-block__trigger'>Последовательность</Button>}
+            open={this.state.modalOpen}
+            centered={false}>
+            <Modal.Header>{"Последовательность"}</Modal.Header>
+            <Modal.Content image>
+              <Image wrapped size='small' src={this.state.actualImg ? this.state.actualImg : 'https://react.semantic-ui.com/images/avatar/large/rachel.png'} />
+              <Modal.Description>
 
-                      <div>
-                        <label>Количество баллов за ответ</label>
-                        <input name="priceQuestion"
-                          defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1} disabled={this.state.notFullPriceState}></input>
-                      </div>
-                      <div>
-                        <label>Неполный ответ</label>
-                        <input name="notFullPriceQuestion"
-                          defaultChecked={this.state.notFullPriceState}
-                          type="checkBox"
-                          onClick={() => { this.setState({ notFullPriceState: !this.state.notFullPriceState }) }}></input>
-                      </div>
-                      <input
-                        name="questImg"
-                        type="file"
-                        onChange={this.FileSelectedHendler}
-                      />
+                <form className="quest-block__form" onSubmit={handleSubmit} name='SequenceVariantForm'>
 
-                      {groupsState ? <div>
-                        <label>Номер/название группы</label>
-                        <input
-                          name="groupName"
-                          type="string"
-                          defaultValue={editQuest && editQuest.group ? editQuest.group : 0}
-                          onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}
-                          onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}></input>
-                      </div>
-                        : ""}
-                      {groupsTimerState ? <div>
-                        <label>Таймер группы</label>
-                        <input name="groupTimer"
-                          id="groupTimer"
-                          type="string"
-                          placeholder="10:22 = 10 минут 22 секунды"
-                          defaultValue={editQuest && editQuest.group ? this.props.groupsObject[editQuest.group] : "0:0"}></input>
-                      </div> : ""}
-
-                      <div>
-                        <label>Таймер для вопроса</label>
-                        <input name="timerQuestion"
-                          type="string"
-                          placeholder="10:22 = 10 минут 22 секунды"
-                          defaultValue={editQuest && editQuest.timer_question ? editQuest.timer_question : "0:0"}></input>
-                      </div>
-
-                    </div>
+                  <div className="quest-block__div">
+                    <label className="quest-block__label">Введите вопрос:</label>
+                    <textarea
+                      className="quset-block__quest-text"
+                      name="question"
+                      placeholder="Текст результата"
+                      defaultValue={editQuest ? editQuest.question : ""}
+                    >
+                    </textarea>
                   </div>
-                  <label>Варианты ответа</label>
+                  <div className="quest-block__div">
+                    <label className="quest-block__label">Количество баллов за ответ</label>
+                    <input
+                      className="quest-block__input"
+                      name="priceQuestion"
+                      defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1} disabled={this.state.notFullPriceState}></input>
+                  </div>
+                  <div className="quest-block__div">
+
+                    <input
+                      id="nf-answer"
+                      className="quest-block__check"
+                      name="notFullPriceQuestion"
+                      defaultChecked={this.state.notFullPriceState}
+                      type="checkBox"
+                      onClick={() => { this.setState({ notFullPriceState: !this.state.notFullPriceState }) }}></input>
+                    <label className="quest-block__label" for="nf-answer">Неполный ответ</label>
+                  </div>
+                  <div className="quest-block__div">
+                    <label className="quest-block__label">Изображение</label>
+                    <input
+                      name="questImg"
+                      type="file"
+                      onChange={this.FileSelectedHendler}
+                    />
+                  </div>
+
+                  {groupsState ? <div className="quest-block__div">
+                    <label className="quest-block__label">Номер/название группы</label>
+                    <input
+                      className="quest-block__input"
+                      name="groupName"
+                      type="string"
+                      defaultValue={editQuest && editQuest.group ? editQuest.group : 0}
+                      onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}
+                      onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}></input>
+                  </div>
+                    : ""}
+                  {groupsTimerState ? <div className="quest-block__div">
+                    <label className="quest-block__label">Таймер группы</label>
+                    <input
+                      className="quest-block__input"
+                      name="groupTimer"
+                      id="groupTimer"
+                      type="string"
+                      placeholder="10:22 = 10 минут 22 секунды"
+                      defaultValue={editQuest && editQuest.group ? this.props.groupsObject[editQuest.group] : "0:0"}></input>
+                  </div> : ""}
+
+                  <div className="quest-block__div">
+                    <label className="quest-block__label">Таймер для вопроса</label>
+                    <input
+                      className="quest-block__input"
+                      name="timerQuestion"
+                      type="string"
+                      placeholder="10:22 = 10 минут 22 секунды"
+                      defaultValue={editQuest && editQuest.timer_question ? editQuest.timer_question : "0:0"}></input>
+                  </div>
+
+
+                  <label className="quest-block__label">Варианты ответа</label>
                   <div className='answers'>
                     <FieldArray name="variants"
                       component={renderAnswers}
@@ -467,30 +482,31 @@ class sequenceQuestion extends Component {
 
                   </div>
                 </form>
-              </div>
-            </Modal.Description>
 
-          </Modal.Content>
-          <Modal.Actions>
-            <Button onClick={() => { this.handleClose(); reset(); this.setState({ notFullPriceArr: [] }); }} color="primary">
-              Отмена
+              </Modal.Description>
+
+            </Modal.Content>
+            <Modal.Actions>
+              <Button onClick={() => { this.handleClose(); reset(); this.setState({ notFullPriceArr: [] }); }} color="primary">
+                Отмена
             </Button>
-            <Button type="sumbit" onClick={() => {
-              this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex, variantsCount);
-              this.props.setGroups(new FormData(document.forms.SequenceVariantForm), this.props.groupsObject, this.props.setGroupObject);
-              this.handleClose();
-              reset();
-              this.props.updateList();
-              this.setState({ notFullPriceArr: [] });
-            }}
-              color="primary"
-              autoFocus>
-              Готово
+              <Button type="sumbit" onClick={() => {
+                this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex, variantsCount);
+                this.props.setGroups(new FormData(document.forms.SequenceVariantForm), this.props.groupsObject, this.props.setGroupObject);
+                this.handleClose();
+                reset();
+                this.props.updateList();
+                this.setState({ notFullPriceArr: [] });
+              }}
+                color="primary"
+                autoFocus>
+                Готово
             </Button>
 
-          </Modal.Actions>
-        </Modal>
-      </Container>
+            </Modal.Actions>
+          </Modal>
+        </Container>
+      </div>
     )
   }
 }

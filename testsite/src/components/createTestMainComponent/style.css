@@ -2,50 +2,68 @@ textarea {
     resize: none;
 }
 
-label {
-    margin-right: 20px;
-    font-weight: 500;
+
+.create-block__container {
+    position: relative;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    font-family: "Gilroy";
 }
 
-.createTestForm {
-    padding: 15px;
-    border: 2px solid black;
+.create-block__main-form {
+    padding: 35px;
     border-radius: 10px;
+    background-color: #efecec;
 }
 
-.absolute {
-    position: absolute;
-}
-
-.inputField {
-    margin-top: 35px;
+.create-block__input-field {
+    margin-top: 42px;
     width: 570px;
     display: flex;
     position: relative;
 }
 
-.inputField:first-child {
+.create-block__input-field:first-child {
     margin-top: 15px;
 }
 
-.inputField label {
-    font-size: 18px;
+.create-block__label {
+    font-size: 19px;
+    font-weight: 700;
 }
 
-.inputField textarea {
+.create-block__test-input {
+    position: absolute;
+    right: 0;
+    width: 300px;
+}
+
+.create-block__input-textarea {
+    padding-left: 6px;
+    padding-top: 4px;
     width: 300px;
     height: 40px;
+    border-radius: 10px;
+    border: 1px solid #b7b7b7;
+    background-color: #ffffff;
 }
 
-.inputField textarea:focus {
+.create-block__input-textarea:focus {
+    outline: none;
+    border: 1px solid black;
     background-color: rgb(190, 190, 190);
 }
 
-.inputField input[type=file]::-webkit-file-upload-button {
+.create-block__input-textarea_large {
+    height: 80px;
+}
+
+.create-block__input-field input[type=file]::-webkit-file-upload-button {
     visibility: hidden;
 }
 
-.inputField input[type=file] {
+.create-block__input-field input[type=file] {
     content: 'Select some files';
     background: linear-gradient(top, #f9f9f9, #e3e3e3);
     border: 1px solid #999;
@@ -59,9 +77,76 @@ label {
     font-size: 10pt;
 }
 
-.quest textarea {
-    width: 300px;
-    height: 100px;
+.create-block__switches {
+    padding-top: 60px;
+    width: 350px;
+}
+
+.create-block__check {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+
+.create-block__check+label {
+    position: relative;
+    display: block;
+    width: 270px;
+    cursor: pointer;
+}
+
+.create-block__check+label:after {
+    content: '\2714';
+    position: absolute;
+    right: -10%;
+    padding-top: 2px;
+    width: 23px;
+    height: 23px;
+    background-color: #a6aaab;
+    border-radius: 50%;
+    text-align: center;
+    color: white;
+}
+
+.create-block__check:checked+label:after {
+    background-color: #6b2a98;
+}
+.create-block__check:disabled+label:after {
+    background-color: #5e5d5f;
+}
+
+.create-block__button-div {
+    margin-top: 25px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.create-block__form-button {
+    width: 33%;
+    height: 45px;
+    cursor: pointer;
+    transition: .1s;
+    color:white;
+    background-color: #ff8400;
+    box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    border-radius: 10px;
+    font-size: 20px;
+}
+
+.create-block__form-button:hover {
+    background-color: #8527c6;
+}
+.create-block__form-button:active {
+    background-color: #943bd3;
+}
+
+.create-block__form-button:focus {
+    outline: 0;
+}
+
+.create-block__form-button:last-child {
+    margin-right: 0;
 }
 
 .answers {
@@ -76,12 +161,6 @@ label {
 .answers button {
     width: 200px;
     height: 30px;
-}
-
-.testInput {
-    position: absolute;
-    right: 0;
-    width: 300px;
 }
 
 button {
@@ -99,25 +178,6 @@ button {
     width: 400px;
 }
 
-.createTestBody {
-    position: relative;
-    margin: 0;
-    width: 100%;
-    display: flex;
-}
-
-/* .answerFeildSequence{
-    display: flex;
-}
-.answerFeildSequence textarea {
-    margin-right: 10px;
-}
-
-.answerFeildSequence input {
-    width: 50px;
-    height: 50px;
-} */
-
 .answerFeild {
     display: flex;
 }
@@ -131,57 +191,9 @@ button {
     height: 50px;
 }
 
-.triggerDiv {
-    position: absolute;
-    right: 0;
-    width: 300px;
-}
-
-.triggerDivItem {
-    margin-top: 10px;
-    width: 300px;
-}
-
-.triggerDivItem:first-child {
-    margin-top: 0;
-}
-
-.triggerDiv button {
-    width: 300px;
-}
-
-/* .oneVariantTrigger{
-    position: absolute;
-    right: 0;
-    z-index: 2;
-    width: 200px;
-  }
-  .manyVariantTrigger{
-    position: absolute;
-    right: 0;
-    top:60px;
-    z-index: 2;
-    width: 200px;
-  }
-  .sequenceTrigger{
-    position: absolute;
-    right: 0;
-    top:120px;
-    z-index: 2;
-    width: 200px;
-  } */
-
 select {
     width: 200px;
 }
-
-/* .resultsTrigger{
-    position: absolute;
-    right: 0;
-    top:190px;
-    z-index: 2;
-    width: 200px;
-  } */
 
 .resultGap label {
     display: block;
@@ -189,36 +201,6 @@ select {
 
 .questionCard {
     margin-top: 30px;
-}
-
-.createFormTestMainBtn {
-    margin-top: 25px;
-}
-
-.formButton {
-    width: 49%;
-    height: 45px;
-    cursor: pointer;
-    transition: .1s;
-    border: 1px solid black;
-    border-radius: 30px;
-    font-size: 20px;
-}
-
-.createFormTestMainBtn button:hover {
-    background-color: aliceblue;
-}
-
-.createFormTestMainBtn button:active {
-    background-color: rgb(189, 189, 189);
-}
-
-.createFormTestMainBtn button:focus {
-    outline: 0;
-}
-
-.createFormTestMainBtn button:last-child {
-    margin-right: 0;
 }
 
 #insertDataOneVariant {
@@ -237,6 +219,10 @@ select {
     display: none;
 }
 
-.testInput_hidden {
+.create-block__input-field_hidden {
     visibility: hidden;
+}
+
+.absolute {
+    position: absolute;
 }

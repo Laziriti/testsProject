@@ -1,0 +1,14 @@
+.trigger-block__container {
+    position: absolute;
+    right: 0;
+    width: 300px;
+}
+
+.trigger-block__item {
+    margin-top: 28px;
+    width: 300px;
+}
+
+.trigger-block__item:first-child {
+    margin-top: 0;
+}

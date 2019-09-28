@@ -142,127 +142,151 @@ class writeByYourselfQuest extends Component {
       editQuest } = this.props;
 
     return (
-      <Container>
-        <Modal trigger={<Button onClick={() => {
-          this.setState({ checkArr: [] });
-          this.handleOpen();
-          this.setCurrentQuestionImg()
-        }}
-          className='oneVariantTrigger'>Самописный вопрос</Button>}
-          open={this.state.modalOpen}
-          centered={false}>
+      <div className="quest-block">
+        <Container className="quest-block__container">
+          <Modal trigger={<Button onClick={() => {
+            this.setState({ checkArr: [] });
+            this.handleOpen();
+            this.setCurrentQuestionImg()
+          }}
+            className='quest-block__trigger'>Самописный вопрос</Button>}
+            open={this.state.modalOpen}
+            centered={false}>
 
-          <Modal.Header>{"Одновариантный вопрос"}</Modal.Header>
-          <Modal.Content image>
-            <Image wrapped size='small' src='https://react.semantic-ui.com/images/avatar/large/rachel.png' />
-            <Modal.Description>
-              <div>
-                <form onSubmit={handleSubmit} name='writeByYourselfForm'>
-                  <div className='inputQuest'>
-                    <label>Введите вопрос:</label>
-                    <div className='quest'>
-                      <textarea
-                        name="question"
-                        placeholder="Текст результата"
-                        defaultValue={editQuest ? editQuest.question : ""}
-                      >
-                      </textarea>
+            <Modal.Header>{"Одновариантный вопрос"}</Modal.Header>
+            <Modal.Content image>
+              <Image wrapped size='small' src={this.state.actualImg ? this.state.actualImg : 'https://react.semantic-ui.com/images/avatar/large/rachel.png'} />
+              <Modal.Description>
+              
+                  <form className="quest-block__form" onSubmit={handleSubmit} name='writeByYourselfForm'>
+
+                        <div className="quest-block__div">
+                          <label className="quest-block__label">Введите вопрос:</label>
+                          <textarea
+                            className="quset-block__quest-text"
+                            name="question"
+                            placeholder="Текст результата"
+                            defaultValue={editQuest ? editQuest.question : ""}
+                          >
+                          </textarea>
+                        </div>
+                        {
+                          this.state.everyWordPriceState ?
+                            <div className="quest-block__div">
+                              <label className="quest-block__label">Количество баллов за каждое слово</label>
+                              <input
+                                className="quest-block__input"
+                                disabled={!this.state.everyWordPriceState}
+                                name="wordPrice"
+                                defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}></input>
+                            </div>
+                            : <div className="quest-block__div">
+                              <label className="quest-block__label">Количество баллов за ответ</label>
+                              <input
+                                className="quest-block__input"
+                                name="priceQuestion"
+                                defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}></input>
+                            </div>
+                        }
+
+                        <div className="quest-block__div">
+                          <label className="quest-block__label">Изображение</label>
+                          <input
+                            name="questImg"
+                            type="file"
+                            onChange={this.FileSelectedHendler}
+                          />
+                        </div>
+
+                        {groupsState ? <div className="quest-block__div">
+                          <label className="quest-block__label">Номер/название группы</label>
+                          <input
+                            className="quest-block__input"
+                            name="groupName"
+                            type="string"
+                            defaultValue={editQuest && editQuest.group ? editQuest.group : 0}
+                            onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}
+                            onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}></input>
+                        </div>
+                          : ""}
+                        {groupsTimerState ? <div className="quest-block__div">
+                          <label className="quest-block__label">Таймер группы</label>
+                          <input
+                            className="quest-block__input"
+                            name="groupTimer"
+                            id="groupTimer"
+                            type="string"
+                            placeholder="10:22 = 10 минут 22 секунды"
+                            defaultValue={editQuest && editQuest.group ? this.props.groupsObject[editQuest.group] : "0:0"}></input>
+                        </div> : ""}
+
+                        <div className="quest-block__div">
+                          <label className="quest-block__label">Таймер для вопроса</label>
+                          <input
+                            className="quest-block__input"
+                            name="timerQuestion"
+                            type="string"
+                            placeholder="10:22 = 10 минут 22 секунды"
+                            defaultValue={editQuest && editQuest.timer_question ? editQuest.timer_question : "0:0"}></input>
+                        </div>
+                        <div className="quest-block__div">
+                          <input
+                            id="nf-answer"
+                            className="quest-block__check"
+                            type="checkbox"
+                            onClick={() => { this.setState({ everyWordPriceState: !this.state.everyWordPriceState }) }}
+                            defaultChecked={this.state.everyWordPriceState}></input>
+                          <label for="nf-answer" className="quest-block__label">Баллы за каждое правильное слово</label>
+
+                        </div>
+                    
                       {
-                        this.state.everyWordPriceState ?
-                          <div>
-                            <label>Количество баллов за каждое слово</label>
+                        !this.state.everyWordPriceState ?
+                          <div className="quest-block__div">
+                            <label className="quest-block__label">Количество ответов для ввода:</label>
                             <input
-                              disabled={!this.state.everyWordPriceState}
-                              name="wordPrice"
-                              defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}></input>
+                              className="quest-block__input"
+                              type="number"
+                              name="answers_count"
+                              defaultValue={editQuest && editQuest.answers_count ? editQuest.answers_count : ""}></input>
                           </div>
-                          : <div>
-                            <label>Количество баллов за ответ</label>
-                            <input name="priceQuestion" defaultValue={editQuest && editQuest.price_question ? editQuest.price_question : 1}></input>
-                          </div>
+                          : ""
                       }
 
-                      <input
-                        name="questImg"
-                        type="file"
-                        onChange={this.FileSelectedHendler}
-                      />
-
-                      {groupsState ? <div>
-                        <label>Номер/название группы</label>
-                        <input
-                          name="groupName"
-                          type="string"
-                          defaultValue={editQuest && editQuest.group ? editQuest.group : 0}
-                          onLoad={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}
-                          onChange={(event) => { this.props.handleGroups(event.target.value, groupsObject, groupsTimerState) }}></input>
+                      <div className="quest-block__div">
+                        <textarea
+                          className="quset-block__quest-text quset-block__quest-text_width"
+                          name="answersArr"
+                          placeholder="Возможные ответы через запятую, регистр значения не имеет"
+                          defaultValue={editQuest && editQuest.answers_arr ? editQuest.answers_arr : ""}>
+                        </textarea>
                       </div>
-                        : ""}
-                      {groupsTimerState ? <div>
-                        <label>Таймер группы</label>
-                        <input name="groupTimer"
-                          id="groupTimer"
-                          type="string"
-                          placeholder="10:22 = 10 минут 22 секунды"
-                          defaultValue={editQuest && editQuest.group ? this.props.groupsObject[editQuest.group] : "0:0"}></input>
-                      </div> : ""}
+                  
 
-                      <div>
-                        <label>Таймер для вопроса</label>
-                        <input name="timerQuestion"
-                          type="string"
-                          placeholder="10:22 = 10 минут 22 секунды"
-                          defaultValue={editQuest && editQuest.timer_question ? editQuest.timer_question : "0:0"}></input>
-                      </div>
-                      <div>
-                        <label>Баллы за каждое правильное слово</label>
-                        <input type="checkbox"
-                          onClick={() => { this.setState({ everyWordPriceState: !this.state.everyWordPriceState }) }}
-                          defaultChecked={this.state.everyWordPriceState}></input>
-                      </div>
-                    </div>
-                    {
-                      !this.state.everyWordPriceState ?
-                        <div>
-                          <label>Количество ответов для ввода:</label>
-                          <input type="number"
-                            name="answers_count"
-                            defaultValue={editQuest && editQuest.answers_count ? editQuest.answers_count : ""}></input>
-                        </div>
-                        : ""
-                    }
-
-                    <div className='quest'>
-                      <textarea name="answersArr"
-                        placeholder="Возможные ответы через запятую, регистр значения не имеет"
-                        defaultValue={editQuest && editQuest.answers_arr ? editQuest.answers_arr : ""}>
-                      </textarea>
-                    </div>
-                  </div>
-
-                </form>
-              </div>
-            </Modal.Description>
-          </Modal.Content>
-          <Modal.Actions>
-            <Button onClick={() => { this.handleClose(); reset(); }} color="primary">
-              Отмена
+                  </form>
+                
+              </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button onClick={() => { this.handleClose(); reset(); }} color="primary">
+                Отмена
             </Button>
 
-            <Button type="sumbit" onClick={() => {
-              this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex, editVariants);
-              this.props.setGroups(new FormData(document.forms.writeByYourselfForm), this.props.groupsObject, this.props.setGroupObject);
-              this.handleClose(); reset(); this.props.updateList();
-            }}
-              color="primary"
-              autoFocus>
-              Готово
+              <Button type="sumbit" onClick={() => {
+                this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex, editVariants);
+                this.props.setGroups(new FormData(document.forms.writeByYourselfForm), this.props.groupsObject, this.props.setGroupObject);
+                this.handleClose(); reset(); this.props.updateList();
+              }}
+                color="primary"
+                autoFocus>
+                Готово
             </Button>
 
 
-          </Modal.Actions>
-        </Modal>
-      </Container>
+            </Modal.Actions>
+          </Modal>
+        </Container>
+      </div>
     )
   }
 }
@@ -270,3 +294,4 @@ export default reduxForm({
   form: 'writeByYourselfForm'
 
 })(writeByYourselfQuest)
+// className='quest'

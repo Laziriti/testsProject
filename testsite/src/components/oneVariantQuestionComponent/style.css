@@ -1,0 +1,102 @@
+.quest-block__container .quest-block__trigger {
+    width: 323px;
+    height: 47px;
+    transition: .2s;
+    border-radius: 10px;
+    background-color: #efecec;
+}
+.quest-block__container .quest-block__trigger:hover {
+    color:white;
+    background-color: #8527c6;
+}
+.quest-block__container .quest-block__trigger:active {
+    background-color: #8f32d1;
+}
+
+.quest-block__div {
+    margin-top: 30px;
+}
+
+.quest-block__div:first-child {
+    margin-top: 0;
+}
+
+.quest-block__label {
+    display: inline-block;
+    width: 260px;
+    color: #2b2a2a;
+    font-family: "Gilroy";
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+}
+
+.quset-block__quest-text {
+    padding-top: 8px;
+    padding-left: 6px;
+    width: 438px;
+    height: 77px;
+    border-radius: 10px;
+    border: 1px solid #b7b7b7;
+    background-color: #ffffff;
+}
+.quset-block__quest-text_width{
+    width: 100%;
+}
+.quset-block__quest-text:focus {
+    outline: none;
+    background-color: #faf2f2;
+}
+
+.quest-block__input {
+    padding-top: 4px;
+    padding-left: 6px;
+    width: 439px;
+    height: 53px;
+    border-radius: 10px;
+    border: 1px solid #b7b7b7;
+    background-color: #ffffff;
+}
+
+.quest-block__input:focus {
+    outline: none;
+    background-color: #faf2f2;
+}
+
+.quest-block__input:disabled {
+    background-color: #a7a1a1;
+}
+
+.quest-block__check {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+
+.quest-block__check+label {
+    position: relative;
+    display: block;
+    width: 270px;
+    cursor: pointer;
+}
+
+.quest-block__check+label:after {
+    content: '\2714';
+    position: absolute;
+    right: -10%;
+    padding-top: 2px;
+    width: 23px;
+    height: 23px;
+    background-color: #a6aaab;
+    border-radius: 50%;
+    text-align: center;
+    color: white;
+}
+
+.quest-block__check:checked+label:after {
+    background-color: #6b2a98;
+}
+
+.quest-block__check:disabled+label:after {
+    background-color: #5e5d5f;
+}

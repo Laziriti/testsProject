@@ -3,7 +3,7 @@ import { Field, reduxForm } from 'redux-form'
 import { Grid, GridColumn } from 'semantic-ui-react';
 // import '../../indexStyles.css';
 // import './style.css';
-
+import './style.css';
 import OneVariantQuestion from '../oneVariantQuestionComponent/oneVariantQuestionContainer';
 import ManyVariantQuestion from '../manyVariantsQuestionComponent/manyVariantsQuestionContainer';
 import SequenceQuestion from '../sequenceQuestionComponent/sequenceQuestionContainer'
@@ -11,7 +11,7 @@ import WriteByYourselfQuestion from '../writeByYourselfQuestionCompoent/writeByY
 import TestResults from '../testResultsComponent/testResultsContainer';
 
 class createTestContentComponent extends Component {
-   
+
 
     render() {
 
@@ -19,8 +19,9 @@ class createTestContentComponent extends Component {
             testType,
             results } = this.props
         return (
-            <div className="triggerDiv">
-                <div className="triggerDivItem">
+            <div className="trigger-block">
+            <div className="trigger-block__container">
+                <div className="trigger-block__item">
                     <OneVariantQuestion
                         groupsState={this.props.groupsState}
                         groupsTimerState={this.props.groupsTimerState}
@@ -32,20 +33,20 @@ class createTestContentComponent extends Component {
                 </div>
 
                 {testType === 'third' ? "" :
-                    <div className="triggerDivItem">
+                    <div className="trigger-block__item">
                         <ManyVariantQuestion
                             groupsState={this.props.groupsState}
                             groupsTimerState={this.props.groupsTimerState}
                             setGroups={this.props.setGroups}
                             handleGroups={this.props.handleGroups}
                             updateList={this.props.updateList}
-                            firstTypeHandler={this.props.firstTypeHandler} 
-                            secondTypeHandler={this.props.secondTypeHandler}/>
+                            firstTypeHandler={this.props.firstTypeHandler}
+                            secondTypeHandler={this.props.secondTypeHandler} />
                     </div>}
                 {
                     testType === 'second' || testType === 'third' ?
                         ""
-                        : <div className="triggerDivItem">
+                        : <div className="trigger-block__item">
                             <SequenceQuestion
                                 groupsState={this.props.groupsState}
                                 groupsTimerState={this.props.groupsTimerState}
@@ -57,7 +58,7 @@ class createTestContentComponent extends Component {
                 {
                     testType === 'second' || testType === 'third' ?
                         ""
-                        : <div className="triggerDivItem">
+                        : <div className="trigger-block__item">
                             <WriteByYourselfQuestion
                                 groupsState={this.props.groupsState}
                                 groupsTimerState={this.props.groupsTimerState}
@@ -66,9 +67,10 @@ class createTestContentComponent extends Component {
                                 updateList={this.props.updateList} />
                         </div>
                 }
-                <div className="triggerDivItem">
+                <div className="trigger-block__item">
                     <TestResults editResults={results} groupResultsState={this.props.groupResultsState} />
                 </div>
+            </div>
             </div>
         )
     }

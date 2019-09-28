@@ -304,17 +304,19 @@ class createTestForm extends Component {
     if (a.group > b.group) return 1;   // any positive number works
     return 0; // equal values MUST yield zero
   }
+
   render() {
 
     const { pristine, reset, submitting, questions, editTest, editTestResults, editTestContent } = this.props
     return (
-      <div className='wrapper'>
-        <div className='createTestBody'>
-          <form name="createTestForm" className="createTestForm" >
-            <div className='inputField'>
-              <label>Название теста</label>
-              <div className='testInput'>
+      <div className="create-block">
+        <div className='create-block__container'>
+          <form name="createTestForm" className="create-block__main-form" >
+            <div className='create-block__input-field'>
+              <label className="create-block__label">Название теста</label>
+              <div className='create-block__test-input'>
                 <textarea
+                  className="create-block__input-textarea"
                   name="test_name"
                   type="text"
                   placeholder="Название теста"
@@ -322,10 +324,11 @@ class createTestForm extends Component {
                 />
               </div>
             </div>
-            <div className='inputField'>
-              <label>Имя автора</label>
-              <div className='testInput'>
+            <div className='create-block__input-field'>
+              <label className="create-block__label">Имя автора</label>
+              <div className='create-block__test-input'>
                 <textarea
+                  className="create-block__input-textarea"
                   name="test_author"
                   type="text"
                   placeholder="Автор теста"
@@ -333,16 +336,17 @@ class createTestForm extends Component {
                 />
               </div>
             </div>
-            <div className='inputField'>
-              <label>Логотип теста</label>
-              <div className='testInput'>
+            <div className='create-block__input-field'>
+              <label className="create-block__label">Логотип теста</label>
+              <div className='create-block__test-input'>
                 <input type="file" name="test_img" onChange={this.FileSelectedHendler}></input><br></br>
               </div>
             </div>
-            <div className='inputField'>
-              <label>Комментарий к тесту</label>
-              <div className='testInput'>
+            <div className='create-block__input-field'>
+              <label className="create-block__label">Комментарий к тесту</label>
+              <div className='create-block__test-input'>
                 <textarea
+                  className="create-block__input-textarea create-block__input-textarea_large"
                   name="test_comment"
                   type="text"
                   placeholder="Комментарий"
@@ -350,47 +354,52 @@ class createTestForm extends Component {
                 />
               </div>
             </div>
-            <div className='inputField'>
-              <label>Включить группы</label>
-              <div className='testInput'>
+            <div className="create-block__switches">
+
+              <div className='create-block__input-field create-block__input-field_switch'>
                 <input
+                  id="sw-group"
+                  className="create-block__check"
                   onClick={() => this.switchGroupsHandler()}
                   name="switch_groups"
                   type="checkBox"
                   defaultChecked={editTest && (this.props.editTest.test_groups_object !== "null" || this.props.editTest.test_group_results_state) ? true : false}
                 />
+                <label for="sw-group" className="create-block__label">Включить группы</label>
               </div>
-            </div>
-            <div className='inputField'>
-              <label>Включить групповые таймеры</label>
-              <div className='testInput'>
+
+              <div className='create-block__input-field create-block__input-field_switch'>
                 <input
+                  className="create-block__check"
                   onClick={() => this.setState({ groupsTimerState: !this.state.groupsTimerState })}
                   name="switch_groups_timers"
                   id="switchGroupsTimers"
                   type="checkBox"
                   defaultChecked={editTest ? editTest.test_group_timers_state : false}
                 />
+                <label for="switchGroupsTimers" className="create-block__label">Включить групповые таймеры</label>
               </div>
-            </div>
-            <div className='inputField'>
-              <label>Включить ответы по группам</label>
-              <div className={this.props.testType === "first" ? "testInput" : "testInput testInput_hidden"}>
+
+              <div
+                className={this.props.testType === "first"
+                  ? "create-block__input-field create-block__input-field_switch"
+                  : "create-block__input-field create-block__input-field_hidden create-block__input-field_switch"}>
                 <input
+                  className="create-block__check"
                   onClick={() => this.setState({ groupResultsState: !this.state.groupResultsState })}
                   name="switch_groups_chapter_state"
                   id="switchGroupResults"
                   type="checkBox"
                   defaultChecked={editTest ? editTest.test_group_results_state : false}
                 />
+                <label for="switchGroupResults" className="create-block__label">Включить ответы по группам</label>
               </div>
             </div>
-
-            <div className="createFormTestMainBtn">
-              <button className="formButton" type="button" onClick={this.handleSubmit}>
+            <div className="create-block__button-div">
+              <button className="create-block__form-button" type="button" onClick={this.handleSubmit}>
                 Submit
         </button>
-              <button className="formButton" type="button" onClick={reset}>
+              <button className="create-block__form-button" type="button" onClick={reset}>
                 Clear Values
         </button>
             </div>
@@ -430,6 +439,7 @@ class createTestForm extends Component {
             }
           </Card.Group>
         </div>
+
 
       </div>
 
