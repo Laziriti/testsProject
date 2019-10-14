@@ -149,16 +149,6 @@ textarea {
     margin-right: 0;
 }
 
-.answers {
-    display: flex;
-}
-
-.answers textarea {
-    width: 300px;
-    white-space: normal;
-}
-
-
 
 button {
     margin: 10px 10px 0 0;
@@ -173,19 +163,6 @@ button {
 .mainInform {
     display: flex;
     width: 400px;
-}
-
-.answerFeild {
-    display: flex;
-}
-
-.answerFeild textarea {
-    margin-right: 10px;
-}
-
-.answerFeild input {
-    width: 50px;
-    height: 50px;
 }
 
 select {

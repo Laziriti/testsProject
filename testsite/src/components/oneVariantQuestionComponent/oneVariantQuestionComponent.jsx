@@ -220,36 +220,55 @@ class oneVarQuest extends Component {
 
         <label>{label}</label>
         {console.log(this.state.notFullPriceArr)}
-        <div>
-          <input type="number" id={index} name={answer + "priceVar"}
+        <div className="variants-block__variant-info">
+          <input
+            className="variants-block__price-var"
+            type="number" id={index} name={answer + "priceVar"}
             onChange={(e) => this.saveDataPriceArr(index, e.target.value, e.target.id)}
             disabled={!this.state.notFullPriceState}
-            defaultValue={this.state.notFullPriceArr[index] ? Number(this.state.notFullPriceArr[index]) : 0}>
+            defaultValue={this.state.notFullPriceArr[index] ? Number(this.state.notFullPriceArr[index]) : 0}
+          >
+
           </input>
-          <textarea {...input} type={type} ></textarea>
+          <textarea
+            className="variants-block__text"
+            {...input}
+            type={type}
+            placeholder="Введите вариант ответа" ></textarea>
           {
             testType === 'first' ?
-              <input type="radio"
-                name="answerState"
-                onChange={() => this.saveData(index)}
-                disabled={this.state.notFullPriceState}
-                defaultChecked={this.state.checkArr[index] ? this.state.checkArr[index] : ""} />
+              <div className="variants-block__state-div">
+                <input
+                  id={"state-variant" + index}
+                  className="variants-block__state-input"
+                  type="radio"
+                  name="answerState"
+                  onChange={() => this.saveData(index)}
+                  disabled={this.state.notFullPriceState}
+                  defaultChecked={this.state.checkArr[index] ? this.state.checkArr[index] : ""} />
+                <label className="variants-block__state-label" for={"state-variant" + index}> </label>
+              </div>
               : ""
           }
           {
             testType === 'second' ?
-              <select name="groupState" className="groupClass" onChange={(e) => this.saveDataSelect(index, e.target.value)}>
-                {this.createSelectItems(results, editVariants, index, editQuest ? editQuest.number_answers : "")}
-              </select>
+              <div className="variants-block__state-div">
+                <select name="groupState" className="groupClass" onChange={(e) => this.saveDataSelect(index, e.target.value)}>
+                  {this.createSelectItems(results, editVariants, index, editQuest ? editQuest.number_answers : "")}
+                </select>
+              </div>
               : ""
           }
           {touched && error && <span>{error}</span>}
+          <label className="variants-block__label-info">Отметьте вариант ответа,
+          если он правильный
+          </label>
         </div>
       </div>
     )
 
     const renderAnswers = ({ fields, editVariants, variantsImgArray }) => (
-      <div className="quest-block__add-answer">
+      <div className="variants-block__add-variant">
         {typeof editVariants !== "undefined" ?
           <button type="button" id="insertDataOneVariant" onClick={() => {
             setVariantsCount(editVariants.length);
@@ -291,8 +310,9 @@ class oneVarQuest extends Component {
         <ul>
           {fields.map((answer, index) =>
             <li key={index}>
-              <h4>Answer #{index + 1}</h4>
+              <h4 className="variants-block__title">Вариант {index + 1}</h4>
               <button
+                className="variants-block__delete-btn"
                 type="button"
                 title="Удалить вариант"
                 onClick={() => {
@@ -309,9 +329,8 @@ class oneVarQuest extends Component {
                 name={"variant_img" + index}
                 onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target); }} />
 
-              <div className='answerFeild'>
+              <div className='variants-block__answer-field'>
                 <Field
-                  className="answerVar"
                   name={answer + "variant"}
                   editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
                   editCount={editQuest ? editQuest.number_answers : ""}
@@ -429,12 +448,14 @@ class oneVarQuest extends Component {
 
 
                   <label className="quest-block__label quest-block__label_margin">Варианты ответа:</label>
-                  <div className='answers'>
-                    <FieldArray name="variants"
-                      component={renderAnswers}
-                      editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
-                      variantsImgArray={this.state.variantImg}
-                    />
+                  <div className="variants-block">
+                    <div className='variants-block__container'>
+                      <FieldArray name="variants"
+                        component={renderAnswers}
+                        editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
+                        variantsImgArray={this.state.variantImg}
+                      />
+                    </div>
                   </div>
                 </form>
 
@@ -443,8 +464,8 @@ class oneVarQuest extends Component {
             <Modal.Actions>
               <Button onClick={() => {
                 this.handleClose(); reset();
-                 this.setState({ notFullPriceArr: [] });
-                 setVariantsCount(0);
+                this.setState({ notFullPriceArr: [] });
+                setVariantsCount(0);
               }} color="primary">
                 Отмена
             </Button>
@@ -458,7 +479,7 @@ class oneVarQuest extends Component {
                     this.setState({ notFullPriceArr: [] });
                     reset();
                     this.props.updateList();
-                    
+
                   }} color="primary" autoFocus>
                     Готово
             </Button>

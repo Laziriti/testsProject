@@ -202,39 +202,60 @@ class manyVarQuest extends Component {
     const renderField = ({ input, index, label, type, meta: { touched, error }, answer }) => (
       <div>
         <label>{label}</label>
-        <div>
-          <input type="number" id={index} name={answer + "priceVar"}
+        <div className="variants-block__variant-info">
+          <input
+            className="variants-block__price-var"
+            type="number"
+            id={index}
+            name={answer + "priceVar"}
             onChange={(e) => this.saveDataPriceArr(index, e.target.value, e.target.id)}
             disabled={!this.state.notFullPriceState}
             defaultValue={this.state.notFullPriceArr[index] ? this.state.notFullPriceArr[index] : 0}>
           </input>
-          <textarea {...input} type={type} placeholder={label} />
+          <textarea
+            className="variants-block__text"
+            {...input}
+            type={type}
+            placeholder={label} />
           {touched && error && <span>{error}</span>}
         </div>
       </div>
     )
     const renderFieldCheck = ({ input, label, editVariants, editCount, index, type, meta: { touched, error } }) => (
-      <div>
-        <label>{label}</label>
-        <div>
+      <div className="variants-block__variant-info">
+        
           {
             testType === "first" ?
               this.state.notFullPriceState ?
-                <input type="checkbox"
-                  name="answerState"
-                  onChange={() => this.saveData(index)}
-                  checked={
-                    this.state.notFullPriceState ? true :
-                      this.state.checkBoxArr[index] ? this.state.checkBoxArr[index] : ""
-                  } />
+                <div className="variants-block__state-div">
+                  <input
+                    id={"state-variant" + index}
+                    className="variants-block__state-input variants-block__state-input_check"
+                    type="checkbox"
+                    name="answerState"
+                    onChange={() => this.saveData(index)}
+                    checked={
+                      this.state.notFullPriceState ? true :
+                        this.state.checkBoxArr[index] ? this.state.checkBoxArr[index] : ""
+                    } />
+                  <label className="variants-block__state-label" for={"state-variant" + index}> </label>
+
+                </div>
                 :
-                <input type="checkbox"
-                  name="answerState"
-                  onChange={() => this.saveData(index)}
-                  defaultChecked={
-                    this.state.notFullPriceState ? true :
-                      this.state.checkBoxArr[index] ? this.state.checkBoxArr[index] : ""
-                  } />
+                <div className="variants-block__state-div">
+                  <input
+                    id={"state-variant" + index}
+                    className="variants-block__state-input variants-block__state-input_check"
+                    type="checkbox"
+                    name="answerState"
+                    onChange={() => this.saveData(index)}
+                    defaultChecked={
+                      this.state.notFullPriceState ? true :
+                        this.state.checkBoxArr[index] ? this.state.checkBoxArr[index] : ""
+                    } />
+                  <label className="variants-block__state-label" for={"state-variant" + index}> </label>
+
+                </div>
               : ""
           }
           {
@@ -245,12 +266,15 @@ class manyVarQuest extends Component {
               : ""
           }
           {touched && error && <span>{error}</span>}
-        </div>
+          <label className="variants-block__label-info">Отметьте вариант ответа,
+          если он правильный
+          </label>
+        
       </div>
     )
 
     const renderAnswers = ({ fields, editVariants, variantsImgArray }) => (
-      <div>
+      <div className="variants-block__add-variant">
         {typeof editVariants !== "undefined" ?
           <button type="button" id="insertDataManyVariant" onClick={() => {
             setVariantsCount(editVariants.length);
@@ -293,8 +317,9 @@ class manyVarQuest extends Component {
           {fields.map((answer, index) =>
 
             <li key={index}>
-              <h4>Answer #{index + 1}</h4>
+              <h4 className="variants-block__title">Вариант {index + 1}</h4>
               <button
+                className="variants-block__delete-btn"
                 type="button"
                 title="Удалить вариант"
 
@@ -310,10 +335,9 @@ class manyVarQuest extends Component {
                 name={"variant_img" + index}
                 onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }}></input>
 
-              <div className='answerFeild'>
+              <div className='variants-block__answer-field'>
 
                 <Field
-                  className="answerVar"
                   name={answer + "variant"}
                   answer={answer}
                   editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
@@ -324,7 +348,6 @@ class manyVarQuest extends Component {
                 />
 
                 <Field
-                  className="answerVar"
                   name={answer + "variant"}
                   editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
                   editCount={editQuest ? editQuest.number_answers : ""}
@@ -440,13 +463,15 @@ class manyVarQuest extends Component {
 
 
                   <label className="quest-block__label">Варианты ответа:</label>
-                  <div className='answers'>
-                    <FieldArray
-                      name="variants"
-                      component={renderAnswers}
-                      editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
-                      variantsImgArray={this.state.variantImg}
-                    />
+                  <div className="variants-block">
+                    <div className='variants-block__container'>
+                      <FieldArray
+                        name="variants"
+                        component={renderAnswers}
+                        editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
+                        variantsImgArray={this.state.variantImg}
+                      />
+                    </div>
                   </div>
                 </form>
 
@@ -454,10 +479,12 @@ class manyVarQuest extends Component {
 
             </Modal.Content>
             <Modal.Actions>
-              <Button onClick={() => { this.handleClose();
-                 this.setState({ notFullPriceArr: [] });
-                  reset();
-                  setVariantsCount(0); }} color="primary">
+              <Button onClick={() => {
+                this.handleClose();
+                this.setState({ notFullPriceArr: [] });
+                reset();
+                setVariantsCount(0);
+              }} color="primary">
                 Отмена
             </Button>
               {variantsCount > 1 ? <Button

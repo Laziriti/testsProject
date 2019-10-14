@@ -256,36 +256,48 @@ class sequenceQuestion extends Component {
       title } = this.props
     console.log(this.state.notFullPriceState)
     const renderField = ({ input, label, type, answer, index, meta: { touched, error } }) => (
-      <div>
+      <div className="variants-block__variant-info">
         {console.log(this.state.notFullPriceArr)}
         <label>{label}</label>
-        <div>
-          <input type="number" name={answer + "priceVar"}
-            onChange={(e) => this.saveDataPriceArr(index, e.target.value)}
-            disabled={!this.state.notFullPriceState}
-            defaultValue={this.state.notFullPriceArr[index] || this.state.notFullPriceArr[index] === 0 ? this.state.notFullPriceArr[index] : 0}>
-          </input>
-          <textarea {...input} type={type} placeholder={label} />
-          {touched && error && <span>{error}</span>}
-        </div>
+
+        <input
+          className="variants-block__price-var"
+          type="number"
+          name={answer + "priceVar"}
+          onChange={(e) => this.saveDataPriceArr(index, e.target.value)}
+          disabled={!this.state.notFullPriceState}
+          defaultValue={this.state.notFullPriceArr[index] || this.state.notFullPriceArr[index] === 0 ? this.state.notFullPriceArr[index] : 0}>
+        </input>
+        <textarea
+          className="variants-block__text"
+          {...input}
+          type={type}
+          placeholder={label} />
+        {touched && error && <span>{error}</span>}
+
       </div>
     )
 
     const renderFieldInput = ({ input, label, type, editCount, editVariants, index, meta: { touched, error } }) => (
-      <div>
-        <label>{label}</label>
-        <div>
-          {
-            editCount > index ?
-              delete input.value
-              && <input {...input}
-
-                type={type} placeholder={label}
-                defaultValue={this.state.checkArr[index] ? this.state.checkArr[index] : 0} />
-              : <input {...input} type={type} placeholder={label} />
-          }
-          {touched && error && <span>{error}</span>}
-        </div>
+      <div className="variants-block__variant-info">
+        {
+          editCount > index ?
+            delete input.value
+            && <input
+              className="variants-block__seq-input"
+              {...input}
+              type={type}
+              placeholder={label}
+              defaultValue={this.state.checkArr[index] ? this.state.checkArr[index] : 0} />
+            : <input
+              className="variants-block__seq-input"
+              {...input}
+              type={type}
+              placeholder={label} />
+        }
+        {touched && error && <span>{error}</span>}
+        <label className="variants-block__label-info variants-block__label-info_seq">Присвойте нужный номер
+        варианту ответа </label>
       </div>
     )
 
@@ -332,8 +344,9 @@ class sequenceQuestion extends Component {
 
           {fields.map((answer, index, item) =>
             <li key={index}>
-              <h4>Answer #{index + 1}</h4>
+              <h4 className="variants-block__title">Вариант {index + 1}</h4>
               <button
+                className="variants-block__delete-btn"
                 type="button"
                 title="Удалить вариант"
 
@@ -349,7 +362,7 @@ class sequenceQuestion extends Component {
               <input type="file"
                 name={"variant_img" + index}
                 onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }}></input>
-              <div className='answerFeild'>
+              <div className='variants-block__answer-field'>
 
                 <Field
                   className="answerVar"
@@ -477,14 +490,16 @@ class sequenceQuestion extends Component {
 
 
                   <label className="quest-block__label">Варианты ответа:</label>
-                  <div className='answers'>
-                    <FieldArray name="variants"
-                      component={renderAnswers}
-                      editIndex={editIndex}
-                      editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
-                      editCount={editQuest ? editQuest.number_answers : ""}
-                      variantsImgArray={this.state.variantImg} />
+                  <div className="variants-block">
+                    <div className='variants-block__container'>
+                      <FieldArray name="variants"
+                        component={renderAnswers}
+                        editIndex={editIndex}
+                        editVariants={editQuest && editQuest.variants ? editQuest.variants : ""}
+                        editCount={editQuest ? editQuest.number_answers : ""}
+                        variantsImgArray={this.state.variantImg} />
 
+                    </div>
                   </div>
                 </form>
 
@@ -492,11 +507,12 @@ class sequenceQuestion extends Component {
 
             </Modal.Content>
             <Modal.Actions>
-              <Button onClick={() => { this.handleClose(); 
+              <Button onClick={() => {
+                this.handleClose();
                 reset();
-                 this.setState({ notFullPriceArr: [] });
-                 setVariantsCount(0);
-             }} color="primary">
+                this.setState({ notFullPriceArr: [] });
+                setVariantsCount(0);
+              }} color="primary">
                 Отмена
             </Button>
               {variantsCount > 1 ? <Button type="sumbit" onClick={() => {
