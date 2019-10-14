@@ -252,7 +252,8 @@ class sequenceQuestion extends Component {
       groupsObject,
       groupsState,
       groupsTimerState,
-      editQuest } = this.props
+      editQuest,
+      title } = this.props
     console.log(this.state.notFullPriceState)
     const renderField = ({ input, label, type, answer, index, meta: { touched, error } }) => (
       <div>
@@ -395,7 +396,7 @@ class sequenceQuestion extends Component {
             this.insertCurrentData(editQuest && editQuest.variants ? editQuest.variants : undefined);
 
           }}
-            className='quest-block__trigger'>Последовательность</Button>}
+            className='quest-block__trigger'>{title}</Button>}
             open={this.state.modalOpen}
             centered={false}>
             <Modal.Header>{"Последовательность"}</Modal.Header>
@@ -491,10 +492,14 @@ class sequenceQuestion extends Component {
 
             </Modal.Content>
             <Modal.Actions>
-              <Button onClick={() => { this.handleClose(); reset(); this.setState({ notFullPriceArr: [] }); }} color="primary">
+              <Button onClick={() => { this.handleClose(); 
+                reset();
+                 this.setState({ notFullPriceArr: [] });
+                 setVariantsCount(0);
+             }} color="primary">
                 Отмена
             </Button>
-              <Button type="sumbit" onClick={() => {
+              {variantsCount > 1 ? <Button type="sumbit" onClick={() => {
                 this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex, variantsCount);
                 this.props.setGroups(new FormData(document.forms.SequenceVariantForm), this.props.groupsObject, this.props.setGroupObject);
                 this.handleClose();
@@ -506,6 +511,7 @@ class sequenceQuestion extends Component {
                 autoFocus>
                 Готово
             </Button>
+                : ""}
 
             </Modal.Actions>
           </Modal>

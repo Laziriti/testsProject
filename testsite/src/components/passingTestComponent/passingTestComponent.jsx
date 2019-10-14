@@ -130,6 +130,7 @@ class passForm extends Component {
       }
       axios.post(url, this.props.passingTest)
         .then((response) => {
+          console.log(response)
           this.setState({ testComplete: true })
           document.getElementById("passBlock").remove();
           document.getElementById("questionMapContainer").remove();
@@ -157,7 +158,7 @@ class passForm extends Component {
     if (this.props.questIndex === testContent.length - 1) {
       this.setState({ chapterBtnState: false })
     }
-    let url = 'https://psychotestmodule.herokuapp.com/group/';
+    let url = 'https://psychotestmodule.herokuapp.com/exam/group/';
     this.props.passingTest.test_content = JSON.stringify(testContent);
     let passTest = this.props.passingTest;
     passTest.current_group = this.state.currentGroup.toString();

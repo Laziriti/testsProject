@@ -119,17 +119,17 @@ class createTestForm extends Component {
     }
 
   }
-  firstTypeHandler(object, variantImg, variantsCount, notFullPriceState) {
+  firstTypeHandler(object, currentForm, variantImg, variantsCount, notFullPriceState) {
     let rightCount = 0;
     var objectVariant = {};
     var allVariants = [];
     var roll = 0;
     var index = 0;
-    var formData = new FormData(document.forms.oneVariantForm);
+    var formData = new FormData(currentForm);
     var variantIndex = 0;
 
     formData.forEach(function (value, key) {
-
+      console.log(key)
       if (key !== 'questImg' && key !== 'question') {
 
         if (key === "variant_img" + index) {
@@ -157,6 +157,7 @@ class createTestForm extends Component {
           index++;
         }
         if (key === "answerState") {
+          console.log("Выпало")
           objectVariant["answer_state"] = 1;
           rightCount++;
           allVariants[roll] = objectVariant;
@@ -164,7 +165,6 @@ class createTestForm extends Component {
           roll++;
         }
         if (!objectVariant.hasOwnProperty("answer_state") && index === variantsCount && key === "variants[" + Number(index - 1) + "]variant") {
-          console.log(notFullPriceState)
           if (notFullPriceState) {
             objectVariant["answer_state"] = 1;
           }
@@ -179,15 +179,16 @@ class createTestForm extends Component {
     }
     );
     object["variants"] = allVariants;
+    console.log(allVariants)
     object["number_answers"] = rightCount;
     return object;
   }
-  secondTypeHandler(object, variantImg, variantsCountProp) {
+  secondTypeHandler(object, currentForm, variantImg, variantsCountProp) {
     var objectVariant = {};
     var allVariants = [];
     var roll = 0;
     let variantsCount = variantsCountProp;
-    var formData = new FormData(document.forms.oneVariantForm);
+    var formData = new FormData(currentForm);
     var variantIndex = 0;
     var index = 0;
     formData.forEach(function (value, key) {

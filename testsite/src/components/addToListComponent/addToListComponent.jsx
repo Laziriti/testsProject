@@ -72,6 +72,7 @@ class mapQuest extends Component {
               editQuest={editQuest}
               editIndex={index}
               updateList={updateList}
+              title="Редактировать"
             />
             : ""}
           {type_question === "many_answers" ?
@@ -85,6 +86,7 @@ class mapQuest extends Component {
               handleGroups={handleGroups}
               editIndex={index}
               updateList={updateList}
+              title="Редактировать"
             />
             : ""}
           {type_question === "sequence_answer" ?
@@ -96,6 +98,7 @@ class mapQuest extends Component {
               handleGroups={handleGroups}
               editIndex={index}
               updateList={updateList}
+              title="Редактировать"
             />
             : ""}
           {type_question === "write_by_yourself_answer" ?
@@ -107,6 +110,7 @@ class mapQuest extends Component {
               handleGroups={handleGroups}
               editIndex={index}
               updateList={updateList}
+              title="Редактировать"
             />
             : ""}
         </Card.Content>

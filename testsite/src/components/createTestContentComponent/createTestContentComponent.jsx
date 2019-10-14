@@ -29,7 +29,9 @@ class createTestContentComponent extends Component {
                         handleGroups={this.props.handleGroups}
                         updateList={this.props.updateList}
                         firstTypeHandler={this.props.firstTypeHandler}
-                        secondTypeHandler={this.props.secondTypeHandler} />
+                        secondTypeHandler={this.props.secondTypeHandler} 
+                        title="Одновариантный вопрос"
+                        />
                 </div>
 
                 {testType === 'third' ? "" :
@@ -41,7 +43,8 @@ class createTestContentComponent extends Component {
                             handleGroups={this.props.handleGroups}
                             updateList={this.props.updateList}
                             firstTypeHandler={this.props.firstTypeHandler}
-                            secondTypeHandler={this.props.secondTypeHandler} />
+                            secondTypeHandler={this.props.secondTypeHandler} 
+                            title="Многовариантный вопрос"/>
                     </div>}
                 {
                     testType === 'second' || testType === 'third' ?
@@ -52,7 +55,8 @@ class createTestContentComponent extends Component {
                                 groupsTimerState={this.props.groupsTimerState}
                                 setGroups={this.props.setGroups}
                                 handleGroups={this.props.handleGroups}
-                                updateList={this.props.updateList} />
+                                updateList={this.props.updateList} 
+                                title="Последовательность"/>
                         </div>
                 }
                 {
@@ -64,7 +68,9 @@ class createTestContentComponent extends Component {
                                 groupsTimerState={this.props.groupsTimerState}
                                 setGroups={this.props.setGroups}
                                 handleGroups={this.props.handleGroups}
-                                updateList={this.props.updateList} />
+                                updateList={this.props.updateList} 
+                                title="Самописный вопрос"
+                                />
                         </div>
                 }
                 <div className="trigger-block__item">

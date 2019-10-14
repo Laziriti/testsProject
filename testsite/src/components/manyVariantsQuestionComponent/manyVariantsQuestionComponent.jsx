@@ -104,10 +104,10 @@ class manyVarQuest extends Component {
       object["not_full_price_question"] = false;
     }
     if (testType === 'first') {
-      object = this.props.firstTypeHandler(object, variantImg, this.props.variantsCount)
+      object = this.props.firstTypeHandler(object, document.forms.ManyVariantForm, variantImg, this.props.variantsCount)
     }
     else if (testType === 'second') {
-      object = this.props.secondTypeHandler(object, variantImg, this.props.variantsCount);
+      object = this.props.secondTypeHandler(object, document.forms.ManyVariantForm, variantImg, this.props.variantsCount);
     }
 
     if (typeof editIndex === "number") {
@@ -197,7 +197,8 @@ class manyVarQuest extends Component {
       groupsObject,
       groupsState,
       groupsTimerState,
-      editQuest } = this.props;
+      editQuest,
+      title } = this.props;
     const renderField = ({ input, index, label, type, meta: { touched, error }, answer }) => (
       <div>
         <label>{label}</label>
@@ -358,7 +359,7 @@ class manyVarQuest extends Component {
             this.handleOpen();
             this.insertCurrentData(editQuest && editQuest.variants ? editQuest.variants : undefined);
           }}
-            className='quest-block__trigger'>Многовариантный вопрос</Button>}
+            className='quest-block__trigger'>{title}</Button>}
             open={this.state.modalOpen} centered={false}>
             <Modal.Header>{"Многовариантный вопрос"}</Modal.Header>
             <Modal.Content image>
@@ -453,10 +454,13 @@ class manyVarQuest extends Component {
 
             </Modal.Content>
             <Modal.Actions>
-              <Button onClick={() => { this.handleClose(); this.setState({ notFullPriceArr: [] }); reset(); }} color="primary">
+              <Button onClick={() => { this.handleClose();
+                 this.setState({ notFullPriceArr: [] });
+                  reset();
+                  setVariantsCount(0); }} color="primary">
                 Отмена
             </Button>
-              <Button
+              {variantsCount > 1 ? <Button
                 type="sumbit"
                 onClick={() => {
                   this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex);
@@ -468,6 +472,7 @@ class manyVarQuest extends Component {
                 }} color="primary" autoFocus>
                 Готово
             </Button>
+                : ""}
             </Modal.Actions>
           </Modal>
 

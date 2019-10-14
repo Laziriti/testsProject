@@ -13,7 +13,6 @@ class oneVarQuest extends Component {
     currentIndexVariantImg: null,
     imgArr: [],
     checkArr: [],
-    questionsCount: 0,
     notFullPriceArr: [],
     notFullPriceState: false || (this.props.editQuest && this.props.editQuest.not_full_price_question ? this.props.editQuest.not_full_price_question : false)
   }
@@ -116,10 +115,10 @@ class oneVarQuest extends Component {
     }
 
     if (testType === 'first') {
-      object = this.props.firstTypeHandler(object, variantImg, this.props.variantsCount, this.state.notFullPriceState)
+      object = this.props.firstTypeHandler(object, document.forms.ManyVariantForm, variantImg, this.props.variantsCount, this.state.notFullPriceState)
     }
     else if (testType === 'second') {
-      object = this.props.secondTypeHandler(object, variantImg, this.state.notFullPriceState);
+      object = this.props.secondTypeHandler(object, document.forms.ManyVariantForm, variantImg, this.state.notFullPriceState);
     }
 
     object["number_answers"] = this.props.variantsCount;
@@ -213,7 +212,8 @@ class oneVarQuest extends Component {
       editIndex,
       groupsState,
       groupsTimerState,
-      editQuest } = this.props;
+      editQuest,
+      title } = this.props;
 
     const renderField = ({ input, answer, label, type, editVariants, index, meta: { touched, error } }) => (
       <div>
@@ -254,8 +254,7 @@ class oneVarQuest extends Component {
           <button type="button" id="insertDataOneVariant" onClick={() => {
             setVariantsCount(editVariants.length);
             this.setState({ actualImg: editQuest.questImg })
-            //загатовка для ограничения по минимуму вариантов
-            this.setState({ questionsCount: editVariants.length });
+
             if (fields.length <= editVariants.length) {
               editVariants.forEach((elem, index) => {
                 if (elem.price_var || elem.price_var === 0) {
@@ -288,7 +287,7 @@ class oneVarQuest extends Component {
           ""
         }
 
-       
+
         <ul>
           {fields.map((answer, index) =>
             <li key={index}>
@@ -302,7 +301,6 @@ class oneVarQuest extends Component {
                   this.FileVariantsRemove(index);
                   this.delFromArr(index);
                   this.delFromArrPriceArr(index);
-                  this.setState({ questionsCount: this.state.questionsCount - 1 });
                 }}
               >Удалить</button>
               <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
@@ -326,16 +324,15 @@ class oneVarQuest extends Component {
             </li>
           )}
         </ul>
-        <button 
-        className="quest-block__btn"
-        type="button"
-        onClick={() => {
-          fields.push({});
-          setVariantsCount(variantsCount + 1);
-          this.setState({ questionsCount: this.state.questionsCount + 1 });
-          this.addToArr(false);
-          this.addToArrPriceArr(0);
-        }}>Добавить вариант ответа</button>
+        <button
+          className="quest-block__btn"
+          type="button"
+          onClick={() => {
+            fields.push({});
+            setVariantsCount(variantsCount + 1);
+            this.addToArr(false);
+            this.addToArrPriceArr(0);
+          }}>Добавить вариант ответа</button>
       </div>
     )
 
@@ -349,7 +346,7 @@ class oneVarQuest extends Component {
               this.setState({ notFullPriceArr: [] });
               this.insertCurrentData(editQuest && editQuest.variants ? editQuest.variants : undefined);
             }}
-              className='quest-block__trigger' >Одновариантный вопрос</Button>}
+              className='quest-block__trigger' >{title}</Button>}
             open={this.state.modalOpen}
             centered={false}>
             <Modal.Header>{"Одновариантный вопрос"}</Modal.Header>
@@ -445,14 +442,15 @@ class oneVarQuest extends Component {
             </Modal.Content>
             <Modal.Actions>
               <Button onClick={() => {
-                this.handleClose(); reset(); this.setState({ notFullPriceArr: [] });
-                this.setState({ questionsCount: 0 });
+                this.handleClose(); reset();
+                 this.setState({ notFullPriceArr: [] });
+                 setVariantsCount(0);
               }} color="primary">
                 Отмена
             </Button>
 
               {
-                this.state.questionsCount > 1 ?
+                variantsCount > 1 ?
                   <Button type="sumbit" onClick={() => {
                     this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex);
                     this.props.setGroups(new FormData(document.forms.oneVariantForm), this.props.groupsObject, this.props.setGroupObject);
@@ -460,7 +458,7 @@ class oneVarQuest extends Component {
                     this.setState({ notFullPriceArr: [] });
                     reset();
                     this.props.updateList();
-                    this.setState({ questionsCount: 0 });
+                    
                   }} color="primary" autoFocus>
                     Готово
             </Button>

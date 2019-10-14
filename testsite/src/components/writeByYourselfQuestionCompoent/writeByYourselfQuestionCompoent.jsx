@@ -139,7 +139,8 @@ class writeByYourselfQuest extends Component {
       groupsObject,
       groupsState,
       groupsTimerState,
-      editQuest } = this.props;
+      editQuest,
+      title } = this.props;
 
     return (
       <div className="quest-block">
@@ -149,7 +150,7 @@ class writeByYourselfQuest extends Component {
             this.handleOpen();
             this.setCurrentQuestionImg()
           }}
-            className='quest-block__trigger'>Самописный вопрос</Button>}
+            className='quest-block__trigger'>{title}</Button>}
             open={this.state.modalOpen}
             centered={false}>
 

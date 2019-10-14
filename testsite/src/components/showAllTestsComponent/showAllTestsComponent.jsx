@@ -9,7 +9,7 @@ class ShowAllTests extends Component {
   componentDidMount() {
     const { setTests } = this.props
 
-    axios.get('https://psychotestmodule.herokuapp.com/tests2/')
+    axios.get('https://psychotestmodule.herokuapp.com/tests/')
       .then((response) => {
         setTests(response.data);
         console.log(response.data);

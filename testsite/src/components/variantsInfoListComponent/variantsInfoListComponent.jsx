@@ -4,7 +4,8 @@ class variantsInfo extends Component {
 
 
   render() {
-    const { variant, answer_state, index, variant_img, results } = this.props
+    const { variant, answer_state, index, variant_img, results } = this.props;
+    const varStatus=["Неверно","Верно"]
     return (
       
       <div className="variantBlock">
@@ -20,7 +21,9 @@ class variantsInfo extends Component {
         <div className="variantsText">{variant}</div>
           
           <div className="variantsState">
-            {results[answer_state] && results[answer_state].description ? results[answer_state].description : answer_state}
+            {results[answer_state] && results[answer_state].description 
+              ? results[answer_state].description 
+              : varStatus[answer_state]}
           </div>
         </div>
       </div>
