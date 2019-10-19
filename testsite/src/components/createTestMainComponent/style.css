@@ -2,7 +2,6 @@ textarea {
     resize: none;
 }
 
-
 .create-block__container {
     position: relative;
     margin: 0;
@@ -111,6 +110,7 @@ textarea {
 .create-block__check:checked+label:after {
     background-color: #6b2a98;
 }
+
 .create-block__check:disabled+label:after {
     background-color: #5e5d5f;
 }
@@ -126,7 +126,7 @@ textarea {
     height: 45px;
     cursor: pointer;
     transition: .1s;
-    color:white;
+    color: white;
     background-color: #ff8400;
     box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.1);
     border: none;
@@ -137,6 +137,7 @@ textarea {
 .create-block__form-button:hover {
     background-color: #8527c6;
 }
+
 .create-block__form-button:active {
     background-color: #943bd3;
 }
@@ -148,7 +149,6 @@ textarea {
 .create-block__form-button:last-child {
     margin-right: 0;
 }
-
 
 button {
     margin: 10px 10px 0 0;
@@ -167,10 +167,6 @@ button {
 
 select {
     width: 200px;
-}
-
-.resultGap label {
-    display: block;
 }
 
 .questionCard {

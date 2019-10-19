@@ -1,0 +1,137 @@
+.result-block__container .result-block__trigger {
+    width: 323px;
+    height: 47px;
+    transition: .2s;
+    border-radius: 10px;
+    background-color: #efecec;
+}
+
+.result-block__container .result-block__trigger:hover {
+    color: white;
+    background-color: #8527c6;
+}
+
+.result-block__container .result-block__trigger:active {
+    background-color: #8f32d1;
+}
+
+.result-block__btn {
+    display: block;
+    width: 270px;
+    height: 46px;
+    box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    border: none;
+    background-color: #ff8400;
+    color: #ffffff;
+    cursor: pointer;
+    font-family: "Gilroy";
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.result-block__btn:hover {
+    background-color: #6b2a98;
+}
+
+.result-block__btn_delete {
+    margin: 7px 0;
+    background-color: #ff8400;
+}
+
+.result-block__btn_delete:hover {
+    padding-left: 10px;
+    background-color: #fd911d;
+}
+
+.result-block__img-inpt {
+    position: absolute;
+    z-index: -1;
+}
+
+.result-block__img-inpt+.result-block__file-label {
+    display: inline-block;
+    width: 270px;
+    height: 45px;
+    padding-top: 5px;
+    cursor: pointer;
+    transition: .1s;
+    color: white;
+    background-color: #8527c6;
+    box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.1);
+    border: none;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.result-block__img-inpt+.result-block__file-label:hover {
+    padding-left: 5px;
+    background-color: #9233d6;
+}
+
+.result-block__top {
+    display: flex;
+}
+
+.result-block__image {
+    display: inline-block;
+    top: 0;
+    width: 300px;
+    margin: 5px;
+    border: 3px white solid;
+    outline: black 2px solid;
+}
+
+.result-block_li {
+    position: relative;
+}
+
+.result-block__gap {
+    display: flex;
+}
+
+.result-block__input {
+    display: inline-block;
+    margin: 4px;
+    padding-top: 4px;
+    padding-left: 6px;
+    width: 150px;
+    height: 53px;
+    border-radius: 10px;
+    border: 1px solid #b7b7b7;
+    background-color: #ffffff;
+}
+
+.result-block__input:focus {
+    outline: none;
+    background-color: #faf2f2;
+}
+
+.result-block__label {
+    display: inline-block;
+    color: #2b2a2a;
+    font-family: "Gilroy";
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 24px;
+}
+
+.result-block__text {
+    padding-left: 20px;
+    padding-top: 20px;
+    width: 495px;
+    height: 68px;
+    border-radius: 10px;
+    border: 1px solid #b7b7b7;
+    background-color: #ffffff;
+    color: #bab7b7;
+    font-family: "Gilroy";
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.result-block__text:focus {
+    outline: none;
+    color: black;
+}

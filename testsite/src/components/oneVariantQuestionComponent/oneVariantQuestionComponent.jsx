@@ -139,10 +139,10 @@ class oneVarQuest extends Component {
     let items = [];
 
     for (let i = 0; i < results.length; i++) {
-      let item = <option key={i} value={i} >{results[i].result} </option>;
+      let item = <option className="variants-block__option" key={i} value={i} >{results[i].result} </option>;
 
       if (this.state.checkArr[index] === i) {
-        item = <option key={i} value={i} selected>{results[i].result} </option>;
+        item = <option className="variants-block__option" key={i} value={i} selected>{results[i].result} </option>;
       }
       items.push(item);
     }
@@ -253,16 +253,19 @@ class oneVarQuest extends Component {
           {
             testType === 'second' ?
               <div className="variants-block__state-div">
-                <select name="groupState" className="groupClass" onChange={(e) => this.saveDataSelect(index, e.target.value)}>
+                <select className="variants-block__text variants-block__text_select" name="groupState" onChange={(e) => this.saveDataSelect(index, e.target.value)}>
                   {this.createSelectItems(results, editVariants, index, editQuest ? editQuest.number_answers : "")}
                 </select>
               </div>
               : ""
           }
           {touched && error && <span>{error}</span>}
-          <label className="variants-block__label-info">Отметьте вариант ответа,
-          если он правильный
+          {testType === 'first' ? <label className="variants-block__label-info">Отметьте вариант ответа,
+           если он правильный
           </label>
+            :
+            ""
+          }
         </div>
       </div>
     )
@@ -305,7 +308,18 @@ class oneVarQuest extends Component {
           }}> Загрузить свои ответы </button> :
           ""
         }
-
+        <div className="variants-block__main-info">
+          <label className="variants-block__label variants-block__label_margin">Варианты ответа:{variantsCount}</label>
+          <button
+            className="quest-block__btn"
+            type="button"
+            onClick={() => {
+              fields.push({});
+              setVariantsCount(variantsCount + 1);
+              this.addToArr(false);
+              this.addToArrPriceArr(0);
+            }}>Добавить вариант ответа</button>
+        </div>
 
         <ul>
           {fields.map((answer, index) =>
@@ -323,12 +337,16 @@ class oneVarQuest extends Component {
                   this.delFromArrPriceArr(index);
                 }}
               >Удалить</button>
-              <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
-              <input type="file"
+
+              <input
+                className="quest-block__img-inpt"
+                type="file"
                 id={index}
                 name={"variant_img" + index}
                 onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target); }} />
 
+              <label className="quest-block__file-label" for={index}>Выберите файл</label>
+              <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
               <div className='variants-block__answer-field'>
                 <Field
                   name={answer + "variant"}
@@ -343,15 +361,7 @@ class oneVarQuest extends Component {
             </li>
           )}
         </ul>
-        <button
-          className="quest-block__btn"
-          type="button"
-          onClick={() => {
-            fields.push({});
-            setVariantsCount(variantsCount + 1);
-            this.addToArr(false);
-            this.addToArrPriceArr(0);
-          }}>Добавить вариант ответа</button>
+
       </div>
     )
 
@@ -408,10 +418,13 @@ class oneVarQuest extends Component {
                   <div className="quest-block__div">
                     <label className="quest-block__label">Изображение</label>
                     <input
+                      className="quest-block__img-inpt"
+                      id="file"
                       name="questImg"
                       type="file"
                       onChange={this.FileSelectedHendler}
                     />
+                    <label className="quest-block__file-label" for="file">Выберите файл</label>
                   </div>
 
                   {groupsState ? <div className="quest-block__div">
@@ -447,7 +460,7 @@ class oneVarQuest extends Component {
                   </div>
 
 
-                  <label className="quest-block__label quest-block__label_margin">Варианты ответа:</label>
+
                   <div className="variants-block">
                     <div className='variants-block__container'>
                       <FieldArray name="variants"
@@ -465,6 +478,7 @@ class oneVarQuest extends Component {
               <Button onClick={() => {
                 this.handleClose(); reset();
                 this.setState({ notFullPriceArr: [] });
+                this.setState({ actualImg: null })
                 setVariantsCount(0);
               }} color="primary">
                 Отмена
@@ -477,6 +491,7 @@ class oneVarQuest extends Component {
                     this.props.setGroups(new FormData(document.forms.oneVariantForm), this.props.groupsObject, this.props.setGroupObject);
                     this.handleClose();
                     this.setState({ notFullPriceArr: [] });
+                    this.setState({ actualImg: null })
                     reset();
                     this.props.updateList();
 

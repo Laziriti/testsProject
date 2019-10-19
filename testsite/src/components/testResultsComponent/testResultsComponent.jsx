@@ -4,6 +4,7 @@ import { Button, Image, Modal } from 'semantic-ui-react'
 // import validate from '../validate';
 import axios from 'axios';
 import { Container } from 'semantic-ui-react';
+import './style.css';
 
 class testResults extends Component {
   state = {
@@ -143,7 +144,7 @@ class testResults extends Component {
       }
     }
 
-      array[index][prop] = value;
+    array[index][prop] = value;
 
     this.state.currentResults = array;
     // this.setState({ currentResults: array })
@@ -179,16 +180,18 @@ class testResults extends Component {
 
         {groupResultsState && testType === "first"
           ? <div>
-            <label>Группа:</label>
+            <label className="result-block__label">Группа:</label>
             <select id="group" name={index + "group"} onChange={(e) => { this.addToArr(index, "group", e.target.value) }}>
               {this.createSelectItems(index, this.props.groupsObject)}
             </select>
           </div> : ""}
 
-        <label>{label}</label>
+        <label className="result-block__label">{label}</label>
         {delete input.value}
         <div>
-          <textarea {...input}
+          <textarea
+            className="result-block__text"
+            {...input}
             type={type}
             defaultValue={textValue}
             onChange={(e) => { this.addToArr(index, "result", e.target.value) }} />
@@ -202,15 +205,18 @@ class testResults extends Component {
         {
           testType === "first" ?
             <div>
-              <label>{label}</label>
+              <label className="result-block__label">{label}</label>
               {this.state.currentResults[index] ? delete input.value : ""}
               {delete input.value}
               {label === "Промежуток от:" ? <input
+                className="result-block__input"
                 {...input}
                 type={type}
                 onChange={(e) => { this.addToArr(index, "min", e.target.value) }}
                 defaultValue={this.state.currentResults[index] ? this.state.currentResults[index].min : 0} />
-                : <input {...input}
+                : <input
+                  className="result-block__input"
+                  {...input}
                   type={type}
                   onChange={(e) => { this.addToArr(index, "max", e.target.value) }}
                   defaultValue={this.state.currentResults[index] ? this.state.currentResults[index].max : 0} />}
@@ -246,24 +252,34 @@ class testResults extends Component {
           }}> Загрузить свои ответы </button> :
           ""
         }
-        <button type="button" onClick={() => { fields.push({}); }}>Добавить результат</button>
-        <ul>
+        <button className="result-block__btn" type="button" onClick={() => { fields.push({}); }}>Добавить результат</button>
+        <ul className="result-block__ul">
           {fields.map((answer, index) =>
-            <li key={index}>
-              <h4>Результат #{index + 1}</h4>
-              <button
-                type="button"
-                title="Удалить результат"
-                onClick={() => { fields.remove(index); this.deleteFromArr(index); }}>Удалить</button>
-              {variantsImgArray[index] ? <img src={variantsImgArray[index]} alt='' />
-                : ""}
-              <input type="file"
-                name={"result_img" + index}
-                onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }}></input>
-              <div className="resultGap">
+            <li className="result-block_li" key={index}>
+              <h4>Результат {index + 1}</h4>
+              <div className="result-block__top">
+                <div className="result-block__btn-container">
+                  <button
+                    className="result-block__btn result-block__btn_delete"
+                    type="button"
+                    title="Удалить результат"
+                    onClick={() => { fields.remove(index); this.deleteFromArr(index); }}>Удалить</button>
+
+                  <input
+                    className="result-block__img-inpt"
+                    type="file"
+                    id="resultFile"
+                    name={"result_img" + index}
+                    onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }} />
+
+                  <label className="result-block__file-label" for="resultFile">Выберите файл</label>
+                </div>
+
+                <img className="result-block__image" src={variantsImgArray[index] ? variantsImgArray[index] : "https://react.semantic-ui.com/images/avatar/large/rachel.png"} alt='' />
+              </div>
+              <div className="result-block__gap">
                 <Field
                   label="Промежуток от:"
-                  className="answerVar"
                   name={index + `from`}
                   type="number"
                   component={renderNumberField}
@@ -272,7 +288,6 @@ class testResults extends Component {
                 />
                 <Field
                   label="до:"
-                  className="answerVar"
                   name={index + `to`}
                   type="number"
                   component={renderNumberField}
@@ -314,43 +329,44 @@ class testResults extends Component {
     )
 
     return (
-      <Container>
-        <Modal trigger={<Button onClick={() => { this.handleOpen(); this.insertCurrentData(editResults); }}
-          className='resultsTrigger' id="22">Результаты</Button>}
-          open={this.state.modalOpenResult}
-          centered={false}>
-          <Modal.Header>{"Результаты"}</Modal.Header>
-          <Modal.Content image>
-            <Image wrapped size='medium' src='https://react.semantic-ui.com/images/avatar/large/rachel.png' />
-            <Modal.Description>
-              <div>
-                <form name='resultsForm'>
-                  <label>Результаты</label>
-                  <div className='answers'>
-                    <FieldArray
-                      name="allResults"
-                      component={renderAnswers}
-                      globalField={editResults}
-                      editResults={editResults}
-                      variantsImgArray={this.state.variantImg} />
-                  </div>
-                </form>
-              </div>
-            </Modal.Description>
-          </Modal.Content>
-          <Modal.Actions>
-            <Button onClick={() => { this.handleClose(); reset(); this.setState({ currentResults: [] }) }} color="primary">
-              Отмена
+      <div className="result-block">
+        <Container className="result-block__container">
+          <Modal trigger={<Button onClick={() => { this.handleOpen(); this.insertCurrentData(editResults); }}
+            className='result-block__trigger' id="22">Результаты</Button>}
+            open={this.state.modalOpenResult}
+            centered={false}>
+            <Modal.Header>{"Результаты"}</Modal.Header>
+            <Modal.Content image>
+              <Modal.Description>
+                <div>
+                  <form name='resultsForm'>
+                    <label>Результаты</label>
+                    <div className='answers'>
+                      <FieldArray
+                        name="allResults"
+                        component={renderAnswers}
+                        globalField={editResults}
+                        editResults={editResults}
+                        variantsImgArray={this.state.variantImg} />
+                    </div>
+                  </form>
+                </div>
+              </Modal.Description>
+            </Modal.Content>
+            <Modal.Actions>
+              <Button onClick={() => { this.handleClose(); reset(); this.setState({ currentResults: [] }) }} color="primary">
+                Отмена
             </Button>
-            <Button type="submit"
-              onClick={() => { this.createResults(results, setResults, questions, this.state.variantImg, testType); this.handleClose(); this.setState({ currentResults: [] }); reset(); }}
-              color="primary"
-              autoFocus>
-              Готово
+              <Button type="submit"
+                onClick={() => { this.createResults(results, setResults, questions, this.state.variantImg, testType); this.handleClose(); this.setState({ currentResults: [] }); reset(); }}
+                color="primary"
+                autoFocus>
+                Готово
             </Button>
-          </Modal.Actions>
-        </Modal>
-      </Container>
+            </Modal.Actions>
+          </Modal>
+        </Container>
+      </div>
     )
   }
 }

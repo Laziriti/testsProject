@@ -339,7 +339,18 @@ class sequenceQuestion extends Component {
           ""
         }
 
-
+        <div className="variants-block__main-info">
+          <label className="variants-block__label variants-block__label_margin">Варианты ответа:{variantsCount}</label>
+          <button
+            className="quest-block__btn"
+            type="button"
+            onClick={() => {
+              fields.push({});
+              setVariantsCount(variantsCount + 1);
+              this.addToArr(false);
+              this.addToArrPriceArr(0);
+            }}>Добавить вариант ответа</button>
+        </div>
         <ul>
 
           {fields.map((answer, index, item) =>
@@ -358,10 +369,16 @@ class sequenceQuestion extends Component {
                   this.delFromArrPriceArr(index)
                   this.delFromArr(index);
                 }}>Удалить</button>
-              <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
-              <input type="file"
+
+                <input
+                className="quest-block__img-inpt"
+                type="file"
+                id={index}
                 name={"variant_img" + index}
-                onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }}></input>
+                onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }} />
+              
+              <label className="quest-block__file-label" for={index}>Выберите файл</label>
+              <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
               <div className='variants-block__answer-field'>
 
                 <Field
@@ -388,15 +405,6 @@ class sequenceQuestion extends Component {
             </li>
           )}
         </ul>
-        <button
-          className="quest-block__btn"
-          type="button"
-          onClick={() => {
-            fields.push({});
-            setVariantsCount(variantsCount + 1);
-            this.addToArrPriceArr(0)
-            this.addToArr(0)
-          }}>Добавить вариант ответа</button>
       </div>
     )
 
@@ -450,10 +458,13 @@ class sequenceQuestion extends Component {
                   <div className="quest-block__div">
                     <label className="quest-block__label">Изображение</label>
                     <input
+                    className="quest-block__img-inpt"
                       name="questImg"
                       type="file"
+                      id="file"
                       onChange={this.FileSelectedHendler}
                     />
+                    <label className="quest-block__file-label" for="file">Выберите файл</label>
                   </div>
 
                   {groupsState ? <div className="quest-block__div">
@@ -489,7 +500,6 @@ class sequenceQuestion extends Component {
                   </div>
 
 
-                  <label className="quest-block__label">Варианты ответа:</label>
                   <div className="variants-block">
                     <div className='variants-block__container'>
                       <FieldArray name="variants"
@@ -511,6 +521,7 @@ class sequenceQuestion extends Component {
                 this.handleClose();
                 reset();
                 this.setState({ notFullPriceArr: [] });
+                this.setState({actualImg:null})
                 setVariantsCount(0);
               }} color="primary">
                 Отмена
@@ -522,6 +533,7 @@ class sequenceQuestion extends Component {
                 reset();
                 this.props.updateList();
                 this.setState({ notFullPriceArr: [] });
+                this.setState({actualImg:null})
               }}
                 color="primary"
                 autoFocus>

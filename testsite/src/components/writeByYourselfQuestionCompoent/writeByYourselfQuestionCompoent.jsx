@@ -193,10 +193,13 @@ class writeByYourselfQuest extends Component {
                         <div className="quest-block__div">
                           <label className="quest-block__label">Изображение</label>
                           <input
+                          className="quest-block__img-inpt"
                             name="questImg"
                             type="file"
+                            id="file"
                             onChange={this.FileSelectedHendler}
                           />
+                          <label className="quest-block__file-label" for="file">Выберите файл</label>
                         </div>
 
                         {groupsState ? <div className="quest-block__div">
@@ -269,7 +272,7 @@ class writeByYourselfQuest extends Component {
               </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-              <Button onClick={() => { this.handleClose(); reset(); }} color="primary">
+              <Button onClick={() => { this.handleClose(); reset(); this.setState({actualImg:null})}} color="primary">
                 Отмена
             </Button>
 
@@ -277,6 +280,7 @@ class writeByYourselfQuest extends Component {
                 this.createQuestion(questions, setQuests, this.state.actualImg, this.state.variantImg, testType, editIndex, editVariants);
                 this.props.setGroups(new FormData(document.forms.writeByYourselfForm), this.props.groupsObject, this.props.setGroupObject);
                 this.handleClose(); reset(); this.props.updateList();
+                this.setState({actualImg:null})
               }}
                 color="primary"
                 autoFocus>

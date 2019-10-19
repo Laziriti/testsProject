@@ -124,9 +124,9 @@ class manyVarQuest extends Component {
   createSelectItems(results, editVariants, index, editCount) {
     let items = [];
     for (let i = 0; i < results.length; i++) {
-      let item = <option key={i} value={i} >{results[i].result} </option>;
+      let item = <option className="variants-block__option" key={i} value={i} >{results[i].result} </option>;
       if (this.state.checkBoxArr[index] === i) {
-        item = <option key={i} value={i} selected>{results[i].result} </option>;
+        item = <option className="variants-block__option" key={i} value={i} selected>{results[i].result} </option>;
       }
       items.push(item);
     }
@@ -223,53 +223,53 @@ class manyVarQuest extends Component {
     )
     const renderFieldCheck = ({ input, label, editVariants, editCount, index, type, meta: { touched, error } }) => (
       <div className="variants-block__variant-info">
-        
-          {
-            testType === "first" ?
-              this.state.notFullPriceState ?
-                <div className="variants-block__state-div">
-                  <input
-                    id={"state-variant" + index}
-                    className="variants-block__state-input variants-block__state-input_check"
-                    type="checkbox"
-                    name="answerState"
-                    onChange={() => this.saveData(index)}
-                    checked={
-                      this.state.notFullPriceState ? true :
-                        this.state.checkBoxArr[index] ? this.state.checkBoxArr[index] : ""
-                    } />
-                  <label className="variants-block__state-label" for={"state-variant" + index}> </label>
 
-                </div>
-                :
-                <div className="variants-block__state-div">
-                  <input
-                    id={"state-variant" + index}
-                    className="variants-block__state-input variants-block__state-input_check"
-                    type="checkbox"
-                    name="answerState"
-                    onChange={() => this.saveData(index)}
-                    defaultChecked={
-                      this.state.notFullPriceState ? true :
-                        this.state.checkBoxArr[index] ? this.state.checkBoxArr[index] : ""
-                    } />
-                  <label className="variants-block__state-label" for={"state-variant" + index}> </label>
+        {
+          testType === "first" ?
+            this.state.notFullPriceState ?
+              <div className="variants-block__state-div">
+                <input
+                  id={"state-variant" + index}
+                  className="variants-block__state-input variants-block__state-input_check"
+                  type="checkbox"
+                  name="answerState"
+                  onChange={() => this.saveData(index)}
+                  checked={
+                    this.state.notFullPriceState ? true :
+                      this.state.checkBoxArr[index] ? this.state.checkBoxArr[index] : ""
+                  } />
+                <label className="variants-block__state-label" for={"state-variant" + index}> </label>
 
-                </div>
-              : ""
-          }
-          {
-            testType === 'second' ?
-              <select name="groupState" className="groupClass" onChange={(e) => this.saveDataSelect(index, e.target.value)}>
-                {this.createSelectItems(results, editVariants, index, editCount)}
-              </select>
-              : ""
-          }
-          {touched && error && <span>{error}</span>}
-          <label className="variants-block__label-info">Отметьте вариант ответа,
-          если он правильный
+              </div>
+              :
+              <div className="variants-block__state-div">
+                <input
+                  id={"state-variant" + index}
+                  className="variants-block__state-input variants-block__state-input_check"
+                  type="checkbox"
+                  name="answerState"
+                  onChange={() => this.saveData(index)}
+                  defaultChecked={
+                    this.state.notFullPriceState ? true :
+                      this.state.checkBoxArr[index] ? this.state.checkBoxArr[index] : ""
+                  } />
+                <label className="variants-block__state-label" for={"state-variant" + index}> </label>
+
+              </div>
+            : ""
+        }
+        {
+          testType === 'second' ?
+            <select name="groupState" className="variants-block__text variants-block__text_select" onChange={(e) => this.saveDataSelect(index, e.target.value)}>
+              {this.createSelectItems(results, editVariants, index, editCount)}
+            </select>
+            : ""
+        }
+        {touched && error && <span>{error}</span>}
+        <label className="variants-block__label-info">Отметьте вариант ответа,
+        если он правильный
           </label>
-        
+
       </div>
     )
 
@@ -311,7 +311,18 @@ class manyVarQuest extends Component {
           ""
         }
 
-
+        <div className="variants-block__main-info">
+          <label className="variants-block__label variants-block__label_margin">Варианты ответа:{variantsCount}</label>
+          <button
+            className="quest-block__btn"
+            type="button"
+            onClick={() => {
+              fields.push({});
+              setVariantsCount(variantsCount + 1);
+              this.addToArr(false);
+              this.addToArrPriceArr(0);
+            }}>Добавить вариант ответа</button>
+        </div>
         <ul>
 
           {fields.map((answer, index) =>
@@ -330,11 +341,15 @@ class manyVarQuest extends Component {
                   this.delFromArr(index);
                   this.delFromArrPriceArr(index)
                 }}>Удалить</button>
-              <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
-              <input type="file"
+                <input
+                className="quest-block__img-inpt"
+                type="file"
+                id={index}
                 name={"variant_img" + index}
-                onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }}></input>
-
+                onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }} />
+              
+              <label className="quest-block__file-label" for={index}>Выберите файл</label>
+              <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
               <div className='variants-block__answer-field'>
 
                 <Field
@@ -360,15 +375,7 @@ class manyVarQuest extends Component {
             </li>
           )}
         </ul>
-        <button
-          className="quest-block__btn"
-          type="button"
-          onClick={() => {
-            fields.push({});
-            setVariantsCount(variantsCount + 1);
-            this.addToArr(false);
-            this.addToArrPriceArr(0);
-          }}>Добавить вариант ответа</button>
+
       </div>
     )
 
@@ -423,10 +430,13 @@ class manyVarQuest extends Component {
                   <div className="quest-block__div">
                     <label className="quest-block__label">Изображение</label>
                     <input
+                    className="quest-block__img-inpt"
                       name="questImg"
                       type="file"
+                      id="file"
                       onChange={this.FileSelectedHendler}
                     />
+                    <label className="quest-block__file-label" for="file">Выберите файл</label>
                   </div>
 
                   {groupsState ? <div className="quest-block__div">
@@ -462,7 +472,6 @@ class manyVarQuest extends Component {
                   </div>
 
 
-                  <label className="quest-block__label">Варианты ответа:</label>
                   <div className="variants-block">
                     <div className='variants-block__container'>
                       <FieldArray
@@ -482,6 +491,7 @@ class manyVarQuest extends Component {
               <Button onClick={() => {
                 this.handleClose();
                 this.setState({ notFullPriceArr: [] });
+                this.setState({actualImg:null})
                 reset();
                 setVariantsCount(0);
               }} color="primary">
@@ -495,6 +505,7 @@ class manyVarQuest extends Component {
                   this.handleClose();
                   reset();
                   this.setState({ notFullPriceArr: [] });
+                  this.setState({actualImg:null})
                   this.props.updateList();
                 }} color="primary" autoFocus>
                 Готово
