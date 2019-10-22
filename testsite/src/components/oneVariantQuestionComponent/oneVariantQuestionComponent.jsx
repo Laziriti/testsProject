@@ -115,10 +115,11 @@ class oneVarQuest extends Component {
     }
 
     if (testType === 'first') {
-      object = this.props.firstTypeHandler(object, document.forms.ManyVariantForm, variantImg, this.props.variantsCount, this.state.notFullPriceState)
+      console.log(testType)
+      object = this.props.firstTypeHandler(object, document.forms.oneVariantForm, variantImg, this.props.variantsCount, this.state.notFullPriceState)
     }
     else if (testType === 'second') {
-      object = this.props.secondTypeHandler(object, document.forms.ManyVariantForm, variantImg, this.state.notFullPriceState);
+      object = this.props.secondTypeHandler(object, document.forms.oneVariantForm, variantImg, this.state.notFullPriceState);
     }
 
     object["number_answers"] = this.props.variantsCount;

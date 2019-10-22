@@ -22,7 +22,7 @@ class variantsInfo extends Component {
           
           <div className="variantsState">
             {results[answer_state] && results[answer_state].description 
-              ? results[answer_state].description 
+              ? results[answer_state].result 
               : varStatus[answer_state]}
           </div>
         </div>

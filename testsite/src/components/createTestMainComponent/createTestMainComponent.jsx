@@ -102,13 +102,36 @@ class createTestForm extends Component {
       object[key] = value;
     })
     formData.append("test_question_count", this.props.questions.length)
+
     if (this.props.editTest) {
-      axios.put('https://psychotestmodule.herokuapp.com/tests/' + this.props.editTest.id + "/", formData)
-        .then((response) => {
-          console.log("изменено")
-        }).catch(e => {
-          console.log(e)
-        })
+      let saveOldTest = window.confirm("Сохранять предыдущую версию теста?");
+      if (saveOldTest) {
+        let OldTestName = null;
+        OldTestName = prompt('Введите имя предыдущей версии теста или отмените сохранение', "");
+        if (OldTestName) {
+          axios.get('https://psychotestmodule.herokuapp.com/save_old_version/?id=' + this.props.editTest.id + "&name=" + OldTestName, formData)
+            .then((response) => {
+              console.log("пред версия сохранена")
+              axios.put('https://psychotestmodule.herokuapp.com/tests/' + this.props.editTest.id + "/", formData)
+                .then((response) => {
+                  console.log("изменено")
+                }).catch(e => {
+                  console.log(e)
+                })
+            }).catch(e => {
+              console.log(e)
+            })
+        }
+      }
+      else {
+        axios.put('https://psychotestmodule.herokuapp.com/tests/' + this.props.editTest.id + "/", formData)
+          .then((response) => {
+            console.log("изменено")
+          }).catch(e => {
+            console.log(e)
+          })
+      }
+
     }
     else {
       axios.post('https://psychotestmodule.herokuapp.com/tests/', formData)
@@ -125,8 +148,8 @@ class createTestForm extends Component {
     var allVariants = [];
     var roll = 0;
     var index = 0;
-    var formData = new FormData(currentForm);
     var variantIndex = 0;
+    var formData = new FormData(currentForm);
 
     formData.forEach(function (value, key) {
       console.log(key)
@@ -228,7 +251,7 @@ class createTestForm extends Component {
     console.log(form)
     let groupObj = groupsObject;
     formData.forEach((value, key) => {
-      console.log(key)
+      
       if (key === "groupName") {
         console.log(value)
         propName = value;
