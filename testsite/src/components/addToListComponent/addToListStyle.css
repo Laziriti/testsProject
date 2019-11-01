@@ -19,3 +19,6 @@
     border-radius: 3px;
     background-color: rgb(182, 174, 174);
 }
+.title{
+    cursor: pointer;
+}

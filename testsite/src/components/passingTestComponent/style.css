@@ -24,14 +24,17 @@
 }
 
 .passing-block__button:first-child {
-    margin-left: 100px;
+    margin-left: 120px;
 }
-
+.passing-block__button_large{
+    width: 310px;
+}
 .passing-block__results {
     display: none;
 }
 .passing-block__question-map-container{
     width: 100%;
+    margin-bottom: 10px;
     overflow-y: auto;
 }
 .passing-block__question-map {

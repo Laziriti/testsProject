@@ -482,7 +482,7 @@ class passForm extends Component {
                   this.state.chapterBtnState &&
                   (this.props.questIndex === testContent.length - 1
                     || testContent[this.props.questIndex + 1].group !== testContent[this.props.questIndex].group) ?
-                  <button className="passing-block__button"
+                  <button className="passing-block__button passing-block__button_large"
                     onClick={() => { this.resultChapterAxios(testContent); this.changeSuperObj(this.props.questIndex); }}>Завершить текущую часть теста</button>
 
                   : this.props.questIndex < testContent.length - 1 ?
