@@ -1,0 +1,32 @@
+.show-tests-block__switch {
+    margin: 20px auto;
+    display: flex;
+    justify-content: center;
+    width: 40%;
+}
+
+.show-test-block__swbtn {
+    display: block;
+    width: 130px;
+    height: 46px;
+    box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    border: none;
+    background-color: #ff8400;
+    color: #ffffff;
+    cursor: pointer;
+    font-family: "Gilroy";
+    font-size: 18px;
+    font-weight: 400;
+}
+.show-test-block__swbtn:focus{
+    outline: none;
+}
+.show-test-block__swbtn_left:hover{
+    padding-left: 5px;
+    background-color: #fd911e;
+}
+.show-test-block__swbtn_right:hover{
+    padding-right: 5px;
+    background-color: #fd911e;
+}

@@ -31,7 +31,7 @@ class Filter extends Component {
 
   }
   goToTheTests() {
-    this.props.history.push('/');
+    this.props.history.push('/0');
   }
   goSearchResults(){
     this.props.history.push('/searchResults');
