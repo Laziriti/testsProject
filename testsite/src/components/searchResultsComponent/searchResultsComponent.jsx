@@ -10,11 +10,11 @@ class SearchResults extends Component {
   }
 
 
-tableToExcel(tableId){
-  var htmltable= document.getElementById(tableId);
-  var html = htmltable.outerHTML;
-  window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
-}
+  tableToExcel(tableId) {
+    var htmltable = document.getElementById(tableId);
+    var html = htmltable.outerHTML;
+    window.open('data:application/vnd.ms-excel,' + encodeURIComponent(html));
+  }
 
 
 
@@ -48,26 +48,28 @@ tableToExcel(tableId){
             <input className="search-res-block__input" type="text" id="testID"></input>
 
             <button className="search-res-block__btn" onClick={() => { this.checkResTes() }}>Найти</button>
-            <button className="search-res-block__btn" onClick={()=>{this.tableToExcel('testTable')}}>Экспорт в Excel</button>
-        
+            <button className="search-res-block__btn" onClick={() => { this.tableToExcel('testTable') }}>Экспорт в Excel</button>
+
 
           </div>
 
           <table className="search-res-block__table" id="testTable">
-            <tr className="search-res-block__tr">
-              <td className="search-res-block__td search-res-block__td_title">ID</td>
-              <td className="search-res-block__td search-res-block__td_title">PERSON ID</td>
-              <td className="search-res-block__td search-res-block__td_title">TEST ID</td>
-              <td className="search-res-block__td search-res-block__td_title">КОЛИЧЕСТВО БАЛЛОВ</td>
-              <td className="search-res-block__td search-res-block__td_title search-res-block__td_result">РЕЗУЛЬТАТ</td>
-            </tr>
-            {this.state.results ? this.state.results.map((res, ind) => <tr className="search-res-block__tr">
-              <td className="search-res-block__td">{res.id}</td>
-              <td className="search-res-block__td">{res.person_id}</td>
-              <td className="search-res-block__td">{res.test_id}</td>
-              <td className="search-res-block__td">{res.test_count_point}</td>
-              <td className="search-res-block__td">{res.test_result}</td>
-            </tr>) : ""}
+            <tbody>
+              <tr className="search-res-block__tr">
+                <td className="search-res-block__td search-res-block__td_title">ID</td>
+                <td className="search-res-block__td search-res-block__td_title">PERSON ID</td>
+                <td className="search-res-block__td search-res-block__td_title">TEST ID</td>
+                <td className="search-res-block__td search-res-block__td_title">КОЛИЧЕСТВО БАЛЛОВ</td>
+                <td className="search-res-block__td search-res-block__td_title search-res-block__td_result">РЕЗУЛЬТАТ</td>
+              </tr>
+              {this.state.results ? this.state.results.map((res, ind) => <tr key={ind} className="search-res-block__tr">
+                <td className="search-res-block__td">{res.id}</td>
+                <td className="search-res-block__td">{res.person_id}</td>
+                <td className="search-res-block__td">{res.test_id}</td>
+                <td className="search-res-block__td">{res.test_count_point}</td>
+                <td className="search-res-block__td">{res.test_result}</td>
+              </tr>) : ""}
+            </tbody>
           </table>
 
         </div>
