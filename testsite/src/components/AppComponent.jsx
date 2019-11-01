@@ -5,6 +5,7 @@ import Show from './showAllTestsComponent/showAllTestsContainer';
 import CreateTestMain from '../components/createTestMainComponent/createTestMainContainer';
 import PassingTest from './passingTestComponent/passingTestContainer';
 import Filter from './userComponent/UserContainer';
+import SearchResults from './searchResultsComponent/searchResultsContainer'
 class App extends Component {
 
   constructor(props) {
@@ -24,6 +25,7 @@ class App extends Component {
         <Route exact path='/createTest/:testType' component={CreateTestMain} />
         <Route exact path='/editTest' component={CreateTestMain} />
         <Route exact path='/passingTest/:testId' component={PassingTest} />
+        <Route exact path='/searchResults' component={SearchResults} />
       </Container>
     )
 

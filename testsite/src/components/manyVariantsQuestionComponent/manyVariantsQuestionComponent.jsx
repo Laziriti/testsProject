@@ -312,9 +312,9 @@ class manyVarQuest extends Component {
         }
 
         <div className="variants-block__main-info">
-          <label className="variants-block__label variants-block__label_margin">Варианты ответа:{variantsCount}</label>
+          <label className="variants-block__label variants-block__label_margin">Варианты ответа: {variantsCount}</label>
           <button
-            className="quest-block__btn"
+            className="quest-block__btn quest-block__btn_add"
             type="button"
             onClick={() => {
               fields.push({});

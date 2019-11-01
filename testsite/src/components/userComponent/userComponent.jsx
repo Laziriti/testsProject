@@ -11,7 +11,7 @@ class Filter extends Component {
 
   goCreateTest(testType) {
     let alert = true;
-    if(this.props.editTestState){
+    if (this.props.editTestState) {
       this.props.clearEditTest();
       this.props.setQuests([]);
       this.props.setResults([]);
@@ -31,7 +31,10 @@ class Filter extends Component {
 
   }
   goToTheTests() {
-    this.props.history.push('/')
+    this.props.history.push('/');
+  }
+  goSearchResults(){
+    this.props.history.push('/searchResults');
   }
   render() {
     const { setFilter, searchQuery, setSearchQuery, changeTestType } = this.props;
@@ -85,7 +88,13 @@ class Filter extends Component {
               </li>
             </ul>
 
+            <ul className="user-block__config-container">
+              <li className="user-block__search-container" ></li>
+
+              <li className="user-block_search-res" onClick={() => { this.goSearchResults() }}>Поиск результатов</li>
+            </ul>
           </div>
+
         </div>
 
       </div >

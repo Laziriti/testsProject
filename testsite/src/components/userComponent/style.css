@@ -85,6 +85,7 @@
 }
 
 .user-block__tests-config {
+    position: relative;
     height: 300px;
     width: 65%;
 }
@@ -152,7 +153,26 @@
     transition: 0.2s;
     background-color: #fdad00;
 }
-
+.user-block_search-res{
+    width: 30%;
+    height: 53px;
+    box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background-color: #6b2a98;
+    cursor: pointer;
+    text-align: center;
+    line-height: 53px;
+    color: #ffffff;
+    font-family: "Gilroy";
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+.user-block_search-res:hover {
+    padding-left: 3px;
+    transition: 0.2s;
+    background-color: #8036b4;
+}
 .user-block__all-tests {
     width: 30%;
     height: 53px;
