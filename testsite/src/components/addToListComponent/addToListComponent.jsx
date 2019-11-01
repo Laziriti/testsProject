@@ -12,6 +12,9 @@ class mapQuest extends Component {
   state = {
     openSw: false
   }
+  componentDidMount(){
+    this.setState({ openSw: false })
+  }
   deleteHandler(index, questions, setQuests) {
     questions.splice(index, 1);
     setQuests(questions);
