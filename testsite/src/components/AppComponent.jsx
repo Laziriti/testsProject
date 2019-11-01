@@ -21,7 +21,9 @@ class App extends Component {
       <Container>
 
         <UserComponent />
-   
+        <Route exact path='/'>
+        <Redirect to='/0'/>
+        </Route>
 
         <Route exact path='/:Npage' component={Show} />
         <Route exact path='/createTest/:testType' component={CreateTestMain} />
