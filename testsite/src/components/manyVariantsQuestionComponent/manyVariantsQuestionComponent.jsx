@@ -323,12 +323,13 @@ class manyVarQuest extends Component {
               this.addToArrPriceArr(0);
             }}>Добавить вариант ответа</button>
         </div>
-        <ul>
+        <ul className="variants-block__ul">
 
           {fields.map((answer, index) =>
 
-            <li key={index}>
+            <li className="variants-block__item" key={index}>
               <h4 className="variants-block__title">Вариант {index + 1}</h4>
+              <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
               <button
                 className="variants-block__delete-btn"
                 type="button"
@@ -349,7 +350,7 @@ class manyVarQuest extends Component {
                 onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }} />
               
               <label className="quest-block__file-label" for={index}>Выберите файл</label>
-              <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
+       
               <div className='variants-block__answer-field'>
 
                 <Field

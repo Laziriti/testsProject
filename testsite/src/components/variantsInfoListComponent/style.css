@@ -1,45 +1,47 @@
-.variantBlock {
+.variant-block__container {
     margin-top: 10px;
     padding: 6px;
-    background-color: rgb(211, 204, 204);
+    border-radius: 10px;
+    border: 1px solid #b7b7b7;
+    background-color: #ffffff;
+    color: #212121;
+    font-family: Gilroy;
+    font-size: 18px;
+    font-weight: 500;
 }
 
-.variantsLogo {
-    display: flex;
-}
-
-.variantNumber {
-    text-align: center;
-    vertical-align: middle;
-    width: 40px;
-    height: 40px;
-    margin-bottom: 3px;
-    border: black 1px solid;
-    border-radius: 50%;
-}
-
-.variantNumber p {
-    padding-top: 20%;
-}
-
-.variantsContent {
+.variant-block__content {
     position: relative;
     display: flex;
-
 }
 
-.variantsState {
-    position: absolute;
-    right: 0;
-    bottom:100%;
-    width: 20%;
-}
-
-.variantImg {
-    width: 150px;
+.variant-block__img {
+    display: block;
+    width: 160px;
     margin-left: 5px;
-    margin-bottom: 4px;
 }
-.variantsText{
+
+.variant-block__left {
+    width: 27%;
+    display: flex;
+}
+
+.variant-block__right {
+    width: 73%;
+    display: flex;
+}
+
+.variant-block__text {
+    position: relative;
+    word-wrap: break-word;
     width: 80%;
+}
+
+.variant-block__nfPrice {
+    width: 4%;
+}
+
+.variant-block__state {
+    width: 16%;
+    padding-left: 6px;
 }

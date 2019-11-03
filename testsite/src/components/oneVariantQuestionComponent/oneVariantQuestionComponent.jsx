@@ -322,10 +322,11 @@ class oneVarQuest extends Component {
             }}>Добавить вариант ответа</button>
         </div>
 
-        <ul>
+        <ul className="variants-block__ul">
           {fields.map((answer, index) =>
-            <li key={index}>
-              <h4 className="variants-block__title">Вариант {index + 1}</h4>
+            <li className="variants-block__item" key={index}>
+                <h4 className="variants-block__title">Вариант {index + 1}</h4>
+                <img className="variants-block__var-img" src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
               <button
                 className="variants-block__delete-btn"
                 type="button"
@@ -347,7 +348,7 @@ class oneVarQuest extends Component {
                 onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target); }} />
 
               <label className="quest-block__file-label" for={index}>Выберите файл</label>
-              <img src={variantsImgArray[index] ? variantsImgArray[index] : ""} alt='' />
+              
               <div className='variants-block__answer-field'>
                 <Field
                   name={answer + "variant"}
@@ -376,7 +377,7 @@ class oneVarQuest extends Component {
               this.setState({ notFullPriceArr: [] });
               this.insertCurrentData(editQuest && editQuest.variants ? editQuest.variants : undefined);
             }}
-              className='quest-block__trigger' >{title}</Button>}
+              className={title === "Редактировать" ? 'quest-block__trigger quest-block__trigger_edit' : 'quest-block__trigger'} >{title}</Button>}
             open={this.state.modalOpen}
             centered={false}>
             <Modal.Header>{"Одновариантный вопрос"}</Modal.Header>

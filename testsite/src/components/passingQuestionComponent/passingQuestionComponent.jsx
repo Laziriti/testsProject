@@ -93,7 +93,7 @@ class passQuest extends Component {
 
                   {
                     testContent[this.props.questIndex].questImg ?
-                      <img src={testContent[this.props.questIndex].questImg} alt=""></img>
+                      <img className="passing-block__img" src={testContent[this.props.questIndex].questImg} alt=""></img>
                       : ""
                   }
                   <div>

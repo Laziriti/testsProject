@@ -3,11 +3,14 @@
 }
 
 .quest-block__container .quest-block__trigger {
+    margin-top: 10px;
     width: 323px;
-    height: 47px;
+    height: 46px;
     transition: .2s;
     border-radius: 10px;
     background-color: #efecec;
+    font-family: "Gilroy";
+    font-size: 18px;
 }
 
 .quest-block__container .quest-block__trigger:hover {
@@ -17,6 +20,12 @@
 
 .quest-block__container .quest-block__trigger:active {
     background-color: #8f32d1;
+}
+
+.quest-block__container .quest-block__trigger_edit {
+    color: #ffffff;
+    background-color: #6b2a98;
+    font-weight: 400;
 }
 
 .quest-block__div {
@@ -158,17 +167,20 @@
     font-size: 18px;
     font-weight: 400;
 }
-.quest-block__btn_add{
+
+.quest-block__btn_add {
     margin-left: 60px;
 }
 
 .quest-block__btn:hover {
     background-color: #6b2a98;
 }
+
 .quest-block__btn:active {
     outline: none;
     background-color: #8b3bc4;
 }
+
 /* VARIANTS BLOCK */
 
 .variants-block__container {
@@ -360,3 +372,18 @@
 .variants-block__state-input:disabled+label:after {
     background-color: #5e5d5f;
 }
+.variants-block__ul{
+    list-style: none;
+}
+.variants-block__item{
+    position: relative;
+}
+.variants-block__var-img{
+    display: block;
+    width: 200px;
+    transition: .3s;
+}
+/* .variants-block__var-img:hover{
+    width: 100%;
+ 
+} */

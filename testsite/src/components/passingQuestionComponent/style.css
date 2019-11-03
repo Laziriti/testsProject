@@ -96,7 +96,9 @@
     font-weight: 600;
     line-height: 26px;
 }
-
-img {
+.passing-block__img{
+    width: 200px;
+}
+.passing-block__variant-img {
     width: 200px;
 }
