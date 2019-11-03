@@ -371,15 +371,15 @@ class sequenceQuestion extends Component {
                   this.delFromArr(index);
                 }}>Удалить</button>
 
-                <input
+              <input
                 className="quest-block__img-inpt"
                 type="file"
                 id={index}
                 name={"variant_img" + index}
                 onChange={(e) => { this.setIndex(index); this.FileSelectedHendlerVariants(e.target.files[0]); }} />
-              
+
               <label className="quest-block__file-label" for={index}>Выберите файл</label>
-              
+
               <div className='variants-block__answer-field'>
 
                 <Field
@@ -418,7 +418,7 @@ class sequenceQuestion extends Component {
             this.insertCurrentData(editQuest && editQuest.variants ? editQuest.variants : undefined);
 
           }}
-            className='quest-block__trigger'>{title}</Button>}
+            className={title === "Редактировать" ? 'quest-block__trigger quest-block__trigger_edit' : 'quest-block__trigger'}>{title}</Button>}
             open={this.state.modalOpen}
             centered={false}>
             <Modal.Header>{"Последовательность"}</Modal.Header>
@@ -459,7 +459,7 @@ class sequenceQuestion extends Component {
                   <div className="quest-block__div">
                     <label className="quest-block__label">Изображение</label>
                     <input
-                    className="quest-block__img-inpt"
+                      className="quest-block__img-inpt"
                       name="questImg"
                       type="file"
                       id="file"
@@ -522,7 +522,7 @@ class sequenceQuestion extends Component {
                 this.handleClose();
                 reset();
                 this.setState({ notFullPriceArr: [] });
-                this.setState({actualImg:null})
+                this.setState({ actualImg: null })
                 setVariantsCount(0);
               }} color="primary">
                 Отмена
@@ -534,7 +534,7 @@ class sequenceQuestion extends Component {
                 reset();
                 this.props.updateList();
                 this.setState({ notFullPriceArr: [] });
-                this.setState({actualImg:null})
+                this.setState({ actualImg: null })
               }}
                 color="primary"
                 autoFocus>

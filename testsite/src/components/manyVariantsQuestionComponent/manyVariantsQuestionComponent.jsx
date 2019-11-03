@@ -390,7 +390,7 @@ class manyVarQuest extends Component {
             this.handleOpen();
             this.insertCurrentData(editQuest && editQuest.variants ? editQuest.variants : undefined);
           }}
-            className='quest-block__trigger'>{title}</Button>}
+          className={title === "Редактировать" ? 'quest-block__trigger quest-block__trigger_edit' : 'quest-block__trigger'}>{title}</Button>}
             open={this.state.modalOpen} centered={false}>
             <Modal.Header>{"Многовариантный вопрос"}</Modal.Header>
             <Modal.Content image>

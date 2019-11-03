@@ -24,10 +24,18 @@
 .list-block__variants-array-item {
     display: inline-block;
     margin: 4px 3px;
-    padding: 3px;
-    border: solid black 1px;
-    border-radius: 3px;
-    background-color: rgb(182, 174, 174);
+    padding: 3px 8px;
+    border-radius: 10px;
+    background-color: #c7c6c5;
+    color: #141414;
+    font-family: Gilroy;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.list-block__variants-array-item:hover {
+    background-color: #fe9f3a;
+    cursor: pointer;
 }
 
 .list-block__p {
@@ -67,7 +75,7 @@
     font-size: 22px;
     font-weight: 500;
     line-height: 24px;
-    word-wrap:break-word;
+    word-wrap: break-word;
 }
 
 .list-block__buttons {
@@ -93,6 +101,8 @@
 }
 
 .list-block__delete-btn:active {
-    outline: none;
     background-color: #f8a247;
+}
+.list-block__delete-btn:focus {
+   outline: none;
 }
