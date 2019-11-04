@@ -29,7 +29,13 @@ class createTestForm extends Component {
       this.props.setQuests(this.props.editTestContent);
       this.props.setResults(this.props.editTestResults);
       this.props.setGroupObject(JSON.parse(this.props.editTest.test_groups_object))
+      if(this.props.editTest.test_type){
+        this.props.clearEditTest();
+      this.props.setQuests([]);
+      this.props.setResults([]);
+      }
     }
+  
   }
 
 
