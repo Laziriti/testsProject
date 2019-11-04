@@ -169,8 +169,32 @@ select {
     width: 200px;
 }
 
-.questionCard {
+.create-block__questions-cards {
     margin-top: 30px;
+}
+
+.create-block__sort-btn{
+    width: 300px;
+    height: 46px;
+    margin: 10px;
+    box-shadow: 3px 5px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    border: none;
+    background-color: #ff8400;
+    color: #ffffff;
+    cursor: pointer;
+    font-family: "Gilroy";
+    font-size: 18px;
+    font-weight: 400;
+}
+.create-block__sort-btn:hover{
+    background-color: #fc8e19;
+}
+.create-block__sort-btn:active{
+    background-color: #f8ab58;
+}
+.create-block__sort-btn:focus{
+    outline: none;
 }
 
 #insertDataOneVariant {

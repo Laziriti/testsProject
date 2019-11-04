@@ -448,8 +448,8 @@ class createTestForm extends Component {
           ></CreateTestContent>
         </div>
 
-        <div className="questionCard">
-          {this.state.groupsState ? <button onClick={() => this.sortQuestions()}>Сортировать по группам</button> : ""}
+        <div className="create-block__questions-cards">
+          {this.state.groupsState ? <button className="create-block__sort-btn" onClick={() => this.sortQuestions()}>Сортировать по группам</button> : ""}
           <Card.Group itemsPerRow={1}>
             {
 
