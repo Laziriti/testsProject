@@ -24,27 +24,27 @@ class createTestForm extends Component {
   }
   componentWillMount() {
     this.props.changeTestType(this.props.match.params.testType);
+    console.log(this.props.editTest)
     if (this.props.editTest) {
       this.props.changeTestType(this.props.editTest.test_type);
       this.props.setQuests(this.props.editTestContent);
       this.props.setResults(this.props.editTestResults);
       this.props.setGroupObject(JSON.parse(this.props.editTest.test_groups_object))
-      if(this.props.editTest.test_type){
-        this.props.clearEditTest();
-      this.props.setQuests([]);
-      this.props.setResults([]);
-      }
     }
   
   }
 
 
   componentWillUnmount() {
-    if (this.props.editTest) {
-      this.props.clearEditTest();
-      this.props.setQuests([]);
-      this.props.setResults([]);
-    }
+    //найдено альтернативное решение, пока в коменты
+
+    // if (this.props.editTest) {
+    //   console.log("2222222222")
+    //   this.props.clearEditTest();
+    //   this.props.setQuests([]);
+    //   this.props.setResults([]);
+    // }
+
   }
   componentDidMount() {
     // this.setState({ groupsTimerState: false })
