@@ -57,6 +57,7 @@ class SearchResults extends Component {
             <tbody>
               <tr className="search-res-block__tr">
                 <td className="search-res-block__td search-res-block__td_title">ID</td>
+                <td className="search-res-block__td search-res-block__td_title">NICKNAME</td>
                 <td className="search-res-block__td search-res-block__td_title">PERSON ID</td>
                 <td className="search-res-block__td search-res-block__td_title">TEST ID</td>
                 <td className="search-res-block__td search-res-block__td_title">КОЛИЧЕСТВО БАЛЛОВ</td>
@@ -64,6 +65,7 @@ class SearchResults extends Component {
               </tr>
               {this.state.results ? this.state.results.map((res, ind) => <tr key={ind} className="search-res-block__tr">
                 <td className="search-res-block__td">{res.id}</td>
+                <td className="search-res-block__td">Иванов Иван Иванович</td>
                 <td className="search-res-block__td">{res.person_id}</td>
                 <td className="search-res-block__td">{res.test_id}</td>
                 <td className="search-res-block__td">{res.test_count_point}</td>

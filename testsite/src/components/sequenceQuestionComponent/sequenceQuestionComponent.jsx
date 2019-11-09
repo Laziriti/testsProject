@@ -431,7 +431,7 @@ class sequenceQuestion extends Component {
                   <div className="quest-block__div">
                     <label className="quest-block__label">Введите вопрос</label>
                     <textarea
-                      className="quset-block__quest-text"
+                      className="quest-block__quest-text"
                       name="question"
                       placeholder="Текст результата"
                       defaultValue={editQuest ? editQuest.question : ""}

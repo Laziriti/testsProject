@@ -164,7 +164,7 @@ class writeByYourselfQuest extends Component {
                   <div className="quest-block__div">
                     <label className="quest-block__label">Введите вопрос</label>
                     <textarea
-                      className="quset-block__quest-text"
+                      className="quest-block__quest-text"
                       name="question"
                       placeholder="Текст результата"
                       defaultValue={editQuest ? editQuest.question : ""}
@@ -259,7 +259,7 @@ class writeByYourselfQuest extends Component {
 
                   <div className="quest-block__div">
                     <textarea
-                      className="quset-block__quest-text quset-block__quest-text_width"
+                      className="quest-block__quest-text quest-block__quest-text_width"
                       name="answersArr"
                       placeholder="Возможные ответы через запятую, регистр значения не имеет"
                       defaultValue={editQuest && editQuest.answers_arr ? editQuest.answers_arr : ""}>

@@ -4,7 +4,7 @@ import { Button, Image, Modal } from 'semantic-ui-react'
 // import validate from '../../validate';
 import axios from 'axios';
 import { Container } from 'semantic-ui-react';
-import './style.css';
+import './style.scss';
 class oneVarQuest extends Component {
   state = {
     modalOpen: false,
@@ -390,7 +390,7 @@ class oneVarQuest extends Component {
                   <div className="quest-block__div">
                     <label className="quest-block__label quest-block__label_position">Введите вопрос</label>
                     <textarea
-                      className="quset-block__quest-text"
+                      className="quest-block__quest-text"
                       name="question"
                       placeholder="Текст результата"
                       defaultValue={editQuest ? editQuest.question : ""}
